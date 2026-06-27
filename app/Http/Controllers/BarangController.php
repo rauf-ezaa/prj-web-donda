@@ -43,8 +43,7 @@ class BarangController extends Controller
      */
     public function create()
     {
-        $data = KIB::get();
-        
+
         $dataKategori = Kategori::with('kib')
         ->get()
         ->map(fn ($item) => [
@@ -53,7 +52,7 @@ class BarangController extends Controller
             'kib_id' => $item->kode_kib,
             'kode_kib' => $item->kib?->kode_kib,
             ]);
-            
+
         //  dd($dataKategori);
 
         return view('pages.admin.data-barang.create-barang',compact('data','dataKategori'));
@@ -69,10 +68,10 @@ class BarangController extends Controller
 
          try {
            Barang::create($request->validated());
-           
+
            Alert::success('Data Barang Berhasil Ditambahkan.');
            return redirect()->route('data-barang.index');
-           
+
         } catch (\Throwable $e) {
             return redirect()
             ->back()
