@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 @php
     use Illuminate\Support\HtmlString;
@@ -20,26 +21,24 @@
 @section('content')
 @section('content')
 
-    <x-common.page-breadcrumb pageTitle="Edit Data Barang"
-    parentTitle="Data Barang"
-    :parentRoute="route('data-barang.index')" />
+<x-common.page-breadcrumb pageTitle="Input Data Barang Masuk"
+parentTitle="Data Persediaan"
+:parentRoute="route('persediaan.index')" />
 
-     @if($errors->any())
+    @if($errors->any())
         <div class="space-y-5 sm:space-y-6">
             <x-ui.alert
             variant="error"
-            title="Gagal Menambahkan Data Karyawan."
-            message="gagal menambahkan data karyawan"
+            title="Gagal Menambahkan Data Persediaan."
+            message="gagal menambahkan data Persediaan"
                         linkHref="/"
                         />
         </div>
         <br>
     @endif
 
-     <x-form.form-data-barang.edit-barang
-            :detailBarangUpdate="$detailBarangUpdate"
-						:dataKategori="$dataKategori"
-			/>
-
+		 <x-form.form-data-persediaan.data-persediaan
+		 :dataBarang="$dataBarang"
+            />
 
 @endsection

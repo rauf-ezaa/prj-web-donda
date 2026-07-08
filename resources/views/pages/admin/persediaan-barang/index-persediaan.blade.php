@@ -19,27 +19,19 @@
 @endphp
 @section('content')
 @section('content')
+    <x-common.page-breadcrumb pageTitle="Data Persediaan" />
+    <div class="flex items-center gap-5">
+        <x-ui.button size="sm" onclick="window.location='{{ route('persediaan.create') }}'" variant="primary" :startIcon="$BoxIcon">Tambah Persediaan Barang</x-ui.button>
+        <!-- <x-ui.button size="sm" variant="danger" :startIcon="$BoxIcon">Hapus Barang</x-ui.button>
+        <x-ui.button size="sm" variant="success" :startIcon="$BoxIcon">Berhasil</x-ui.button> -->
 
-    <x-common.page-breadcrumb pageTitle="Edit Data Barang"
-    parentTitle="Data Barang"
-    :parentRoute="route('data-barang.index')" />
+    </div>
+    <br>
 
-     @if($errors->any())
-        <div class="space-y-5 sm:space-y-6">
-            <x-ui.alert
-            variant="error"
-            title="Gagal Menambahkan Data Karyawan."
-            message="gagal menambahkan data karyawan"
-                        linkHref="/"
-                        />
-        </div>
-        <br>
-    @endif
+        <!-- Table -->
+				  <x-tables.tables-list.tables-persediaan
+							:dataPersediaan="$dataPersediaan"
+           />
 
-     <x-form.form-data-barang.edit-barang
-            :detailBarangUpdate="$detailBarangUpdate"
-						:dataKategori="$dataKategori"
-			/>
-
-
+    </div>
 @endsection

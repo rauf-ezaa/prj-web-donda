@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama_barang', 100);
             $table->float('harga_barang');
-            $table->integer('stok_tersedia');
+            $table->integer('stok_tersedia')->default(0);
             $table->text('description');
             $table->unsignedBigInteger('klasifikasi_kib');
             $table->foreign('klasifikasi_kib')->references('id')->on('kib')->onDelete('cascade');
             $table->timestamps();
-            // yang belum ada kategori KIB dan asal dana 
+            // yang belum ada kategori KIB dan asal dana
         });
     }
 

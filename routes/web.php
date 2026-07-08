@@ -106,4 +106,4 @@ require __DIR__ .'/Pengembalian/pengembalian.php';
 require __DIR__ .'/karyawan/karyawan.php';
 require __DIR__.'/kib/kib.php';
 require __DIR__.'/kategori/kategori.php';
-
+require __DIR__.'/persediaan/persediaan.php';

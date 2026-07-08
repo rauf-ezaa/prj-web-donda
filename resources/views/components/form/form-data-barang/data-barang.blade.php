@@ -2,6 +2,8 @@
     kibId: '',
     kib_id: '',
 
+		hargaDisplay: '',
+		hargaRaw: 0,
     dataKategori: @js($dataKategori),
 
     get filteredKategori() {
@@ -21,8 +23,22 @@
         </label>
         <input type="text" placeholder="Masukkan Nama Barang" name="nama_barang" value="{{ old('nama_barang') }}"
             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-           
+
             @error('nama_barang')
+            <p class="mt-1 text-sm text-error-500">
+                {{ $message }}
+            </p>
+            @enderror
+    </div>
+
+		 <div>
+        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+           Deskripsi Barang
+        </label>
+        <input type="text" placeholder="Masukkan Deskripsi Barang" name="description" value="{{ old('description') }}"
+            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+
+            @error('description')
             <p class="mt-1 text-sm text-error-500">
                 {{ $message }}
             </p>
@@ -34,39 +50,21 @@
         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
             Harga Barang
         </label>
-        <input type="text" placeholder="Masukkan Harga Barang" name="harga_barang" value="{{ old('harga_barang') }}"
-            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+        <input type="text"
+						placeholder="Masukkan Harga Barang"
+            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+        		x-model="hargaDisplay"
+        		@input="
+            hargaRaw = $event.target.value.replace(/\D/g, '');
+            hargaDisplay = hargaRaw ? new Intl.NumberFormat('id-ID').format(hargaRaw) : '';
+        		"
+						/>
          @error('harga_barang')
             <p class="mt-1 text-sm text-error-500">
                 {{ $message }}
             </p>
             @enderror
-    </div>
-
-    <div>
-        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-            Stock Barang
-        </label>
-        <input type="text" placeholder="Masukkan Stock Barang" name="stok_tersedia" value="{{ old('stok_tersedia') }}"
-            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-         @error('stok_tersedia')
-            <p class="mt-1 text-sm text-error-500">
-                {{ $message }}
-            </p>
-            @enderror
-    </div>
-
-     <div>
-        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-           deskripsi
-        </label>
-        <input type="text" placeholder="Masukkan Stock Barang" name="description" value="{{ old('description') }}"
-            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-         @error('description')
-            <p class="mt-1 text-sm text-error-500">
-                {{ $message }}
-            </p>
-            @enderror
+		 <input type="hidden" name="harga_barang" :value="hargaRaw">
     </div>
 
 
@@ -90,7 +88,7 @@
                         {{ $data['kode_kib'] }}
                     </option>
                 @endforeach
-                        
+
             </select>
             <span
                 class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -110,7 +108,7 @@
 
      <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-           Klasifikasi Aset
+          Kategori Aset
         </label>
         <div x-data="{ isOptionSelected: false }" class="relative z-20 bg-transparent">
             <select
@@ -118,7 +116,7 @@
                 name="kategori_id"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :class="isOptionSelected && 'text-gray-800 dark:text-white/90'" @change="isOptionSelected = true">
-                
+
                 <option value="" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
                 -- Pilih Jenis Aset --
                 </option>
@@ -129,7 +127,7 @@
                             x-text="item.nama_kategori"
                         ></option>
                     </template>
-        
+
             </select>
             <span
                 class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -140,7 +138,7 @@
                 </svg>
             </span>
         </div>
-            @error('kategori_id')
+            @error('stok_tersedia')
                 <p class="mt-1 text-sm text-error-500">
                     {{ $message }}
                 </p>
@@ -157,10 +155,10 @@
                 name="kategori_aset"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :class="isOptionSelected && 'text-gray-800 dark:text-white/90'" @change="isOptionSelected = true">
-                
+
                  <option value="">Pilih Kategori Aset</option>
 
-               
+
 
             </select>
             <span

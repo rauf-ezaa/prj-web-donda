@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Alert;
 use App\Http\Requests\Kategori\StoreKategoriRequest;
+use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\KIB;
 use Illuminate\Http\Request;
@@ -32,7 +33,11 @@ class KategoriController extends Controller
         ]);
 
         // dd($kategori);
-        
+
+				$title = 'Delete User!';
+					$text = "Are you sure you want to delete?";
+					confirmDelete($title, $text);
+
          return view('pages.admin.data-kategori.index-kategori', compact('kategori'), ['title' => 'List Data Kategori']);
     }
 
@@ -45,7 +50,7 @@ class KategoriController extends Controller
         $dataKategori =  KIB::all();
 
         return view('pages.admin.data-kategori.create-kategori', compact('dataKategori'), ['title' => 'Create Data Kategori']);
-        
+
     }
 
     /**
@@ -58,7 +63,7 @@ class KategoriController extends Controller
            Kategori::create($request->validated());
            Alert::success('Data Kategori Berhasil Ditambahkan.');
            return redirect()->route('category.index');
-           
+
         } catch (\Throwable $e) {
             return redirect()
             ->back()
@@ -95,7 +100,7 @@ class KategoriController extends Controller
         ];
 
         return view('pages.admin.data-kategori.edit-kategori', ['title' => 'Create Data Kategori']);
-        
+
 
 
     }
@@ -111,8 +116,17 @@ class KategoriController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Kategori $kategori)
+    public function destroy(Kategori $kategori, $id)
     {
-        //
+			$dataDeleteCategory = Barang::with('kategori')->where('kategori_id',$id)->count();
+
+			if($dataDeleteCategory > 0){
+				Alert::error('gagal','Terdapat Data Barang berkaitan kategori tersebut.');
+				return redirect()->back();
+			}
+			// dd($dataDeleteCategory);
+			Alert::success('info','Data Kategori Berhasil Dihapus !');
+			return redirect()->back();
+
     }
 }

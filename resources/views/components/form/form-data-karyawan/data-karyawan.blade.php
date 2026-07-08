@@ -8,7 +8,7 @@
         </label>
         <input type="text" placeholder="Nama Pegawai" name="nama_karyawan" value="{{ old('nama_karyawan') }}"
             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-           
+
             @error('nama_karyawan')
             <p class="mt-1 text-sm text-error-500">
                 {{ $message }}
@@ -36,18 +36,20 @@
         </label>
         <input type="text" placeholder="NIP" name = "nip" value="{{ old('nip') }}"
             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-         @error('nip')
+
+						@error('nip')
             <p class="mt-1 text-sm text-error-500">
                 {{ $message }}
             </p>
-            @enderror
+          @enderror
+
     </div>
 
 
     <!-- Elements -->
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-            Password 
+            Password
         </label>
         <div x-data="{ showPassword: false }" class="relative">
             <input :type="showPassword ? 'text' : 'password'" placeholder="Masukkan Password" name="password"
@@ -76,7 +78,7 @@
 
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-            Konfirmasi Password 
+            Konfirmasi Password
         </label>
         <div x-data="{ showPassword: false }" class="relative">
             <input :type="showPassword ? 'text' : 'password'" placeholder=" Masukkan Konfirmasi Password" name="confirmation_password"

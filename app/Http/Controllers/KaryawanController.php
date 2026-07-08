@@ -48,14 +48,14 @@ class KaryawanController extends Controller
      */
     public function store(StoreKaryawanRequest $request)
     {
-        
+
         // dd($request->all());
         try {
            Karyawan::create($request->validated());
-            
+
            Alert::success('Data Karyawan Berhasil Ditambahkan');
            return redirect()->route('data-karyawan.index');
-           
+
         } catch (\Throwable $e) {
             return redirect()
             ->back()
@@ -70,7 +70,7 @@ class KaryawanController extends Controller
      */
     public function show(Karyawan $karyawan)
     {
-        
+
     }
 
     /**
@@ -79,7 +79,7 @@ class KaryawanController extends Controller
     public function edit(Karyawan $karyawan, $id)
     {
         $data = Karyawan::find($id);
-        
+
          return view('pages.admin.data-karyawan.edit-karyawan', compact('data'), ['title' => 'edit Data Karyawan']);
     }
 
@@ -92,7 +92,7 @@ class KaryawanController extends Controller
             $dataUpdate = Karyawan::find($id);
              $dataUpdate->update($request->validated());
 
-            
+
 
         Alert::success('Data Karyawan Berhasil Diperbarui');
         return redirect()->route('data-karyawan.index');
@@ -115,7 +115,7 @@ class KaryawanController extends Controller
     {
         $a = Karyawan::find($id);
 
-        // dd($a);
+        dd($a);
         // Alert::success('iyaa');
         // return redirect()->back();
     }

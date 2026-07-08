@@ -25,12 +25,14 @@ class StoreKaryawanRequest extends FormRequest
         return [
         'nama_karyawan' => ['required'],
 
-        'nrk' => [
+        'nrk' =>
+				[
             'required',
             Rule::unique('karyawans', 'nrk')
         ],
 
-        'nip' => [
+        'nip' =>
+				[
             'nullable',
             Rule::unique('karyawans', 'nip')
         ],
@@ -52,4 +54,3 @@ class StoreKaryawanRequest extends FormRequest
         ];
     }
 }
-
