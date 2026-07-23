@@ -132,56 +132,9 @@
 
 
 
-					<td class="px-4 py-4">
-						<div class="flex items-center gap-2">
 
-										<!-- Tombol Edit -->
-										<a :href="'/data-barang/' + transaction.id + '/edit'"
-												class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-												>
 
-												<svg xmlns="http://www.w3.org/2000/svg"
-														class="w-4 h-4"
-														fill="none"
-														viewBox="0 0 24 24"
-														stroke="currentColor">
 
-														<path stroke-linecap="round"
-																stroke-linejoin="round"
-																stroke-width="2"
-																d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z" />
-												</svg>
-										</a>
-
-										<!-- Tombol Delete -->
-										<form :action="'/data-barang/' + transaction.id"
- 												x-ref="deleteForm"
-												method="POST"
-												>
-
-												@csrf
-												@method('DELETE')
-
-												<button type="button" @click="confirmDelete($el.closest('form'))"
-												class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
-
-														<svg xmlns="http://www.w3.org/2000/svg"
-																class="w-4 h-4"
-																fill="none"
-																viewBox="0 0 24 24"
-																stroke="currentColor">
-
-																<path stroke-linecap="round"
-																		stroke-linejoin="round"
-																		stroke-width="2"
-																		d="M19 7H5m5 4v6m4-6v6m-5-10V5a1 1 0 011-1h4a1 1 0 011 1v2m-9 0h10l-1 12a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z" />
-														</svg>
-												</button>
-
-										</form>
-
-								</div>
-							</td>
 																<!-- pembatas -->
 
                 </template>

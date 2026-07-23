@@ -19,23 +19,24 @@
     ');
 @endphp
 @section('content')
-@section('content')
 
-<x-common.page-breadcrumb pageTitle="Create Data Karyawan"
-parentTitle="Data Karyawan"
-:parentRoute="route('data-karyawan.index')" />
+<x-common.page-breadcrumb pageTitle="Create Permintaan Barang"
+parentTitle="Data Permintaan"
+:parentRoute="route('permintaan.index')" />
 
     @if($errors->any())
         <div class="space-y-5 sm:space-y-6">
             <x-ui.alert
             variant="error"
-            title="Gagal Menambahkan Data Karyawan."
-            message="gagal menambahkan data karyawan"
+            title="Gagal Menambahkan Data permintaan."
+            message="gagal menambahkan data permintaan"
                         linkHref="/"
                         />
         </div>
         <br>
     @endif
 
-            <x-form.form-data-karyawan.data-karyawan />
+            <x-form.form-data-permintaan.data-permintaan
+						:dataBarang="$dataBarang"
+						/>
 @endsection

@@ -15,6 +15,8 @@ class Persedian extends Model
 			'harga_satuan_unit',
 			'harga_total',
 			'tanggal_masuk',
+			'approval_status',
+			'catatan__approval'
 		];
 
 		public function barang()

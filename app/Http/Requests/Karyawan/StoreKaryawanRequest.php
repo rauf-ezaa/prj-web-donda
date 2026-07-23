@@ -36,6 +36,13 @@ class StoreKaryawanRequest extends FormRequest
             'nullable',
             Rule::unique('karyawans', 'nip')
         ],
+
+				 'password' =>
+				[
+            'required',
+						'min:3',
+						'confirmed'
+        ],
     ];
     }
 
@@ -48,6 +55,7 @@ class StoreKaryawanRequest extends FormRequest
     {
         return [
             'nama_karyawan.required' => 'Nama pegawai wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
             'nrk.required' => 'NRK wajib diisi.',
             'nip.unique' => 'NIP sudah terdaftar.',
             'nrk.unique' => 'NRK sudah terdaftar.',

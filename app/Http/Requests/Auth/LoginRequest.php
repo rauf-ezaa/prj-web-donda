@@ -28,11 +28,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
 
+		public function messages(): array
+		{
+			return [
+				'email.required' => 'NRP wajib diisi',
+				'password.required' => 'Password wajib diisi',
+			];
+		}
     /**
      * Attempt to authenticate the request's credentials.
      *

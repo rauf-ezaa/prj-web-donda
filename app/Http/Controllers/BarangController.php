@@ -94,60 +94,42 @@ class BarangController extends Controller
      */
     public function edit(Barang $barang, $id)
     {
-			  $dataKategori = Kategori::with('kib')
+
+    $dataKategori = Kategori::with('kib')
         ->get()
         ->map(fn ($item) => [
             'id' => $item->id,
             'nama_kategori' => $item->nama_kategori,
             'kib_id' => $item->kode_kib,
             'kode_kib' => $item->kib?->kode_kib,
-            ]);
+        ]);
 
-			// $item = Barang::where('id',$id)
-			// ->with(['kib','kategori'])
-			// ->select([
-			// 	'id',
-			// 	'nama_barang',
-			// 	'harga_barang',
-			// 	'stok_tersedia',
-			// 	'klasifikasi_kib',
-			// 	'kategori_id',
-      //   ])
-      //   ->first();
+    $item = Barang::where('id', $id)
+        ->with(['kib', 'kategori'])
+        ->select([
+            'id',
+            'nama_barang',
+            'harga_barang',
+            'stok_tersedia',
+            'klasifikasi_kib',
+            'kategori_id',
+        ])
+        ->first();
 
-				// dd();
+    $detailBarangUpdate = [
+        'id' => $item->id,
+        'nama' => $item->nama_barang,
+        'stok' => $item->stok_tersedia,
+        'harga' => $item->harga_barang,
+        'deskripsi' => $item->kib?->klasifikasi,
+        'klasifikasi_kib' => $item->klasifikasi_kib,
+        'kategori_id' => $item->kategori_id,
+        'nama_kategori' => $item->kategori?->nama_kategori,
+    ];
 
-				$detailBarangUpdate =
-				[
-					'id' => $item->id,
-					'nama' => $item->nama_barang,
-					'stok' => $item->stok_tersedia,
-					'harga' => $item->harga_barang,
-					'deskripsi' => $item->kib?->klasifikasi,
-					'klasifikasi_kib' => $item->klasifikasi_kib,
-					'kategori_id'=> $item->kategori_id,
-					'nama_kategori' => $item->kategori?->nama_kategori,
-				];
+    return view('pages.admin.data-barang.edit-barang', compact('detailBarangUpdate', 'dataKategori'));
+}
 
-
-        // ->map(fn ($item) => [
-				// 	'id' => $item->id,
-				// 	'nama' => $item->nama_barang,
-				// 	'stok' => $item->stok_tersedia,
-				// 	'harga' => $item->harga_barang,
-				// 	'deskripsi' => $item->kib?->klasifikasi,
-				// 	'klasifikasi_kib' => $item->kib?->kode_kib
-				// 	]);
-
-    // return view('barang.edit', compact(
-    //     'barang',
-    //     'dataKategori'
-    // ));
-
-        // dd($data);
-        return view('pages.admin.data-barang.edit-barang',compact('detailBarangUpdate','dataKategori'));
-
-    }
 
     /**
      * Update the specified resource in storage.
@@ -172,11 +154,22 @@ class BarangController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Barang $barang, $id)
-    {
-			$dataBeforedelete = Barang::with('kategori')->find($id);
-			// dd($dataBeforedelete);
-			Alert::success('info','Data Berhasil Dihapus');
-			return redirect()->back();
-    }
-}
+
+		public function destroy(Barang $barang)
+			{
+					$relasiTerpakai = $barang->persediaan()->exists()
+							|| $barang->permintaanDetail()->exists()
+							|| $barang->pengajuanDetail()->exists()
+							|| $barang->peminjamanDetail()->exists();
+
+					if ($relasiTerpakai) {
+							return back()->with('error', "Barang \"{$barang->nama_barang}\" tidak bisa dihapus karena sudah memiliki histori transaksi (persediaan/permintaan/pengajuan/peminjaman).");
+					}
+
+					Alert::success('berhasil');
+
+					return redirect()
+							->route('data-barang.index')
+							->with('success', "Barang \"{$barang->nama_barang}\" berhasil dihapus.");
+			}
+		}

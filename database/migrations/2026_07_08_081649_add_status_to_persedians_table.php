@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('persedians', function (Blueprint $table) {
-            //
+            $table->enum('approval_status', ['menunggu', 'diterima','ditolak'])->default('menunggu');
+						$table->text('catatan_approval')->nullable();
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('persedians', function (Blueprint $table) {
-            //
+             $table->enum('approval_status', ['menunggu', 'diterima','ditolak'])->default('menunggu');
+						$table->text('catatan_approval')->nullable()->default('text');
         });
     }
 };

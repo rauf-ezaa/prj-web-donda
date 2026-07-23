@@ -7,6 +7,10 @@ use Alert;
 use App\Http\Requests\Karyawan\StoreKaryawanRequest;
 use App\Http\Requests\Karyawan\UpdateKaryawanRequest;
 use App\Models\Karyawan;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class KaryawanController extends Controller
 {
@@ -48,18 +52,30 @@ class KaryawanController extends Controller
      */
     public function store(StoreKaryawanRequest $request)
     {
+			// StoreKaryawanRequest
+
 
         // dd($request->all());
         try {
-           Karyawan::create($request->validated());
+					// DB::BeginTransaction();
+
+					 $user = User::create([
+						'nama_karyawan' => $request->nama_karyawan,
+						'email'=> $request->nrk,
+						'password' => Hash::make($request->password),
+					 ]);
+
+					 $user->karyawan()->create($request->validated());
+					//  DB::commit();
 
            Alert::success('Data Karyawan Berhasil Ditambahkan');
            return redirect()->route('data-karyawan.index');
 
         } catch (\Throwable $e) {
+					 DB::rollback();
             return redirect()
             ->back()
-            ->with('error','ayooo')
+            ->with('error')
             ->withInput();
         }
 
@@ -111,12 +127,19 @@ class KaryawanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Karyawan $karyawan, $id)
-    {
-        $a = Karyawan::find($id);
+   public function destroy(User $user)
+		{
+			$relasiTerpakai = $user->permintaan()->exists()
+					|| $user->pengajuan()->exists()
+					|| $user->peminjaman()->exists();
 
-        dd($a);
-        // Alert::success('iyaa');
-        // return redirect()->back();
-    }
+			if ($relasiTerpakai) {
+					return back()->with('error', "Karyawan \"{$user->nama_karyawan}\" tidak bisa dihapus karena memiliki histori pengajuan/permintaan/peminjaman.");
+			}
+
+
+			Alert::success('Berhasil');
+			return redirect()
+					->route('data-karyawan.index');
+		}
 }

@@ -108,6 +108,7 @@ window.addEventListener('resize', checkMobile);">
     <x-common.preloader/>
     {{-- preloader end --}}
 
+		 @include('sweetalert::alert')
     @yield('content')
 
 </body>

@@ -86,20 +86,30 @@ class KategoriController extends Controller
     public function edit(Kategori $kategori, $id)
     {
 
-        // $detailKategori = Kategori::with(['kib'])
-        // ->find($id);
+        $dataKib = KIB::select(['id', 'kode_kib', 'klasifikasi'])->get();
 
-        $detailKategori = Kategori::find($id);
+        $detailKategori = Kategori::where('id',$id)
+				->with(['kib'])
+				->select([
+					'id',
+					'nama_kategori',
+					'jenis_barang',
+					'kode_kib',
+				])
+				->first();
 
         $data = [
             'id' => $detailKategori->id,
             'nama_kategori' => $detailKategori->nama_kategori,
             'kode_kib' => $detailKategori->kode_kib,
             'jenis_barang' => $detailKategori->jenis_barang,
-            // 'detail' => $detailKategori->kib?->klasifikasi,
+            'detail' => $detailKategori->kib?->klasifikasi,
         ];
 
-        return view('pages.admin.data-kategori.edit-kategori', ['title' => 'Create Data Kategori']);
+				// dd($data);
+				// dd($dataKib);
+
+        return view('pages.admin.data-kategori.edit-kategori', compact('data','dataKib'), ['title' => 'Edit Data Kategori']);
 
 
 
@@ -108,25 +118,40 @@ class KategoriController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kategori $kategori)
-    {
-        //
-    }
+					public function update(Request $request, $id)
+			{
+				// dd($request->all());
+					$validated = $request->validate([
+							'nama_kategori' => 'required|string|max:255',
+							'jenis_barang'  => 'required|in:persediaan,aset',
+							'kode_kib'        => 'required|exists:kib,id',
+					]);
+
+					$kategori = Kategori::findOrFail($id);
+
+					$kategori->update($validated);
+
+					Alert::success('Berhasil', 'Data kategori berhasil diperbarui.');
+
+					return redirect()->route('category.index');
+			}
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Kategori $kategori, $id)
-    {
-			$dataDeleteCategory = Barang::with('kategori')->where('kategori_id',$id)->count();
 
-			if($dataDeleteCategory > 0){
-				Alert::error('gagal','Terdapat Data Barang berkaitan kategori tersebut.');
-				return redirect()->back();
-			}
-			// dd($dataDeleteCategory);
-			Alert::success('info','Data Kategori Berhasil Dihapus !');
-			return redirect()->back();
+		{
+				if ($kategori->barang()->exists()) {
+						return back()->with('error', "Kategori \"{$kategori->nama_kategori}\" tidak bisa dihapus karena masih digunakan oleh barang.");
+				}
 
-    }
-}
+					Alert::success('Berhasil');
+
+
+				return redirect()
+						->route('category.index')
+						->with('success', "Kategori \"{$kategori->nama_kategori}\" berhasil dihapus.");
+				}
+		}

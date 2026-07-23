@@ -3,14 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Karyawan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
+
+		public function karyawan()
+		{
+			return $this->hasOne(Karyawan::class,'users_id');
+		}
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +25,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nama_karyawan',
         'email',
         'password',
     ];
@@ -45,4 +52,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+				public function permintaan()
+		{
+				return $this->hasMany(Permintaan::class, 'requested_by');
+		}
+
+		public function pengajuan()
+		{
+				return $this->hasMany(Pengajuan::class, 'requested_by');
+		}
+
+		public function peminjaman()
+		{
+				return $this->hasMany(Peminjaman::class, 'requested_by');
+		}
+
+		public function persediaan()
+		{
+				return $this->hasMany(Persedian::class, 'requested_by'); // sesuaikan kalau kolomnya beda
+		}
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Alert;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-    
+
     return view('pages.auth.signin', ['title' => 'Sign In']);
 
     }
@@ -26,11 +27,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+			// dd($request->all());
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+				$authententicated = Auth::user();
+
+				 Alert::success('Berhasil', 'Selamat datang kembali, ' . $authententicated->nama_karyawan . '!');
+
+				return match (true) {
+						$authententicated->hasRole('staf') => redirect()->intended(route('dashboard')),
+						$authententicated->hasRole('admin') => redirect()->intended(route('dashboard-spv')),
+
+
+						default => redirect()->intended(route('dashboard', absolute: false)),
+				};
+
     }
 
     /**
@@ -44,6 +56,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+				 Alert::success('Berhasil', 'Berhasil Logout ');
+        return redirect('/login');
     }
 }

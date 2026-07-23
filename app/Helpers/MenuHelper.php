@@ -5,6 +5,73 @@ namespace App\Helpers;
 class MenuHelper
 {
 
+// pembuka block admin //supervisor
+
+public static function saldoAwal(){
+		return  [
+			[
+				'icon' => 'dashboard',
+				'name' => 'Setup',
+				'title' => 'Setup',
+				 'subItems' => [
+                    ['name' => 'Saldo Awal',
+										'path' => '/bop',
+                    'icon' => 'dashboard',
+                    ],
+				 ],
+					'roles' => 'admin',
+					],
+		];
+}
+
+		public static function verifikasiPermintaan(){
+			return [
+				[
+					 			'icon' => 'archive',
+                'name' => 'Verifikasi Permintaan',
+                'path' => '/spv/permintaan',
+								'roles' => 'admin'
+				],
+
+				[
+					 			'icon' => 'archive',
+                'name' => ' Verifikasi Peminjaman',
+                'path' => '/spv/peminjaman',
+								'roles' => 'admin'
+				],
+
+					[
+					 			'icon' => 'archive',
+                'name' => ' Verifikasi Pengembalian',
+                'path' => '/spv/pengembalian',
+								'roles' => 'admin'
+				],
+
+					[
+					 			'icon' => 'archive',
+                'name' => ' Verifikasi Pengajuan',
+                'path' => '/spv/pengajuan',
+								'roles' => 'admin'
+				],
+
+
+				[
+					 			'icon' => 'archive',
+                'name' => ' Verifikasi Persediaan',
+                'path' => '/spv/persediaan',
+								'roles' => 'admin'
+				],
+			];
+		}
+
+		// penutup block admin // supervisor
+
+
+
+		// pembuka block admin // admin
+
+
+
     public static function getTest()
     {
         return [
@@ -12,12 +79,17 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Pengajuan',
                 'path' => '/pengajuan',
+								'roles' =>  'staf',
+
+
             ],
 
             [
                 'icon' => 'dashboard',
                 'name' => 'Permintaan',
-                'path' => '/permintaan',
+								'path' => '/permintaan',
+                // 'path' => '/permintaan',
+								'roles' => 'staf',
             ],
         ];
     }
@@ -27,33 +99,28 @@ class MenuHelper
         return [
             [
                 'icon' => 'dashboard',
-                'name' => 'Data Master',
-                'subItems' => [
-                    ['name' => 'Data Barang', 'path' => '/data-barang',
-                     'icon' => 'dashboard',
-                    ],
+                'name' => 'Aset Tetap (KIB-B)',
+								'roles' =>  'spv',
+								'path' => '/bop',
 
-                    ['name' => 'Data KIB', 'path' => '/kartu-inventaris-barang',
-                      'icon' => 'dashboard',
-                    ],
 
-                    ['name' => 'Kategori Barang', 'path' => '/category',
-                      'icon' => 'dashboard',
-                    ],
-
-                ],
             ],
             [
                 'icon' => 'dashboard',
-                'name' => 'Aset',
+                'name' => 'Aset lancar',
                 'subItems' => [
-                    ['name' => 'BOP', 'path' => '/bop',
-                     'icon' => 'dashboard',
+                    ['name' => 'Sarpras',
+										'path' => '/bop',
+                    'icon' => 'dashboard',
                     ],
-                    ['name' => 'BOS', 'path' => '/bos',
+                    ['name' => 'ATK',
+										'path' => '/bos',
                     'icon' => 'dashboard',
                    ],
+
+
                 ],
+								'roles' => 'spv',
             ],
             // [
             //     'icon' => 'dashboard',
@@ -72,9 +139,12 @@ class MenuHelper
             // ],
             [
                 'icon' => 'archive',
-                'name' => 'Persedian',
+                'name' => 'Saldo Awal',
                 'path' => '/persediaan',
+								'roles' => 'spv'
+								// 'roles' => 'view-laporan',
             ],
+
             // [
             //     'name' => 'Forms',
             //     'icon' => 'forms',
@@ -98,6 +168,8 @@ class MenuHelper
             //     ],
             // ],
         ];
+
+				 return self::filterByroles($groups);
     }
 
 
@@ -137,15 +209,39 @@ class MenuHelper
                 'icon' => 'archive',
                 'name' => 'Peminjaman',
                 'path' => '/peminjaman',
+								'roles' => 'staf'
             ],
 
-            [
-                'icon' => 'archive',
-                'name' => 'Pengembalian',
-                'path' => '/pengembalian',
-            ],
+
+						[
+								'icon' => 'dashboard',
+								'name' => 'Pengembalian',
+								'title' => 'Pengembalian',
+								'subItems' => [
+														['name' => 'Data Pengembalian',
+														'path' => '/pengembalian',
+														'icon' => 'dashboard',
+														],
+
+
+														['name' => 'Riwayat Pengembalian',
+														'path' => '/pengembalian/riwayat',
+														'icon' => 'dashboard',
+														],
+								],
+									'roles' => 'staf',
+									],
+
+            // [
+            //     'icon' => 'archive',
+            //     'name' => 'Pengembalian',
+            //     'path' => '/pengembalian',
+						// 			'roles' => 'staf'
+            // ],
 
         ];
+
+
     }
 
     public static function getKaryawanItems(){
@@ -153,19 +249,88 @@ class MenuHelper
         return [
             [
                 'icon' => 'archive',
-                'name' => 'Data Pegawai',
+                'name' => 'Pembelian',
                 'path' => '/data-karyawan',
+								'roles' => 'spv'
             ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Stock Opname',
+                'path' => '/data-karyawan',
+								'roles' => 'spv'
+            ],
+
         ];
     }
 
-    public static function getMenuGroups()
-    {
+		 public static function getVerificationDataAdmin(){
+
         return [
             [
-                'title' => 'Menu Utama',
+                'icon' => 'archive',
+                'name' => 'Permintaan',
+                'path' => '/admin/permintaan',
+								'roles' => 'spv'
+            ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Pembelian',
+                'path' => '/admin/pembelian',
+								'roles' => 'spv'
+            ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Peminjaman',
+                'path' => '/admin/peminjaman',
+								'roles' => 'spv'
+            ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Pengembalian',
+                'path' => '/admin/pengembalian',
+								'roles' => 'spv'
+            ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Pengajuan',
+                'path' => '/admin/pengajuan',
+								'roles' => 'spv'
+            ],
+
+        ];
+    }
+
+
+
+    public static function getMenuGroups()
+    {
+        $groups = [
+            [
+                'title' => 'Data Master',
                 'items' => self::getMainNavItems()
             ],
+
+						[
+								'title' => 'Setup',
+								'items' => self::saldoAwal()
+						],
+
+						[
+								'title' => 'Verifikasi Permintaan ',
+                'items' => self::getVerificationDataAdmin()
+						],
+
+
+						[
+								'title' => 'Verifikasi Permintaan ',
+                'items' => self::verifikasiPermintaan()
+
+						],
             [
                 'title' => 'Pengajuan & Permintaan Barang',
                 'items' => self::getTest()
@@ -177,8 +342,11 @@ class MenuHelper
             [
                 'title' => 'Kelola Data Pegawai',
                 'items' => self::getKaryawanItems()
+
             ],
+
         ];
+				 return self::filterByroles($groups);
     }
 
     public static function isActive($path)
@@ -186,9 +354,38 @@ class MenuHelper
         return request()->is(ltrim($path, '/'));
     }
 
+		protected static function filterByroles(array $groups)
+	{
+		$user = auth()->user();
+
+    return collect($groups)
+        ->filter(function ($group) use ($user) {
+            if (!isset($group['roles'])) {
+                return true;
+            }
+            return $user?->hasAnyRole($group['roles']) ?? false;
+        })
+        ->map(function ($group) use ($user) {
+            $group['items'] = collect($group['items'])
+                ->filter(function ($item) use ($user) {
+                    if (!isset($item['roles'])) {
+                        return true;
+                    }
+                    return $user?->hasAnyRole($item['roles']) ?? false;
+                })
+                ->values()
+                ->toArray();
+            return $group;
+        })
+        ->filter(fn ($group) => count($group['items']) > 0)
+        ->values()
+        ->toArray();
+	}
+
     public static function getIconSvg($iconName)
     {
         $icons = [
+
             'dashboard' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V8.99998C3.25 10.2426 4.25736 11.25 5.5 11.25H9C10.2426 11.25 11.25 10.2426 11.25 8.99998V5.5C11.25 4.25736 10.2426 3.25 9 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H9C9.41421 4.75 9.75 5.08579 9.75 5.5V8.99998C9.75 9.41419 9.41421 9.74998 9 9.74998H5.5C5.08579 9.74998 4.75 9.41419 4.75 8.99998V5.5ZM5.5 12.75C4.25736 12.75 3.25 13.7574 3.25 15V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H9C10.2426 20.75 11.25 19.7427 11.25 18.5V15C11.25 13.7574 10.2426 12.75 9 12.75H5.5ZM4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H9C9.41421 14.25 9.75 14.5858 9.75 15V18.5C9.75 18.9142 9.41421 19.25 9 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15ZM12.75 5.5C12.75 4.25736 13.7574 3.25 15 3.25H18.5C19.7426 3.25 20.75 4.25736 20.75 5.5V8.99998C20.75 10.2426 19.7426 11.25 18.5 11.25H15C13.7574 11.25 12.75 10.2426 12.75 8.99998V5.5ZM15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V8.99998C14.25 9.41419 14.5858 9.74998 15 9.74998H18.5C18.9142 9.74998 19.25 9.41419 19.25 8.99998V5.5C19.25 5.08579 18.9142 4.75 18.5 4.75H15ZM15 12.75C13.7574 12.75 12.75 13.7574 12.75 15V18.5C12.75 19.7426 13.7574 20.75 15 20.75H18.5C19.7426 20.75 20.75 19.7427 20.75 18.5V15C20.75 13.7574 19.7426 12.75 18.5 12.75H15ZM14.25 15C14.25 14.5858 14.5858 14.25 15 14.25H18.5C18.9142 14.25 19.25 14.5858 19.25 15V18.5C19.25 18.9142 18.9142 19.25 18.5 19.25H15C14.5858 19.25 14.25 18.9142 14.25 18.5V15Z" fill="currentColor"></path></svg>',
 
             'ai-assistant' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.75 2.42969V7.70424M9.42261 13.673C10.0259 14.4307 10.9562 14.9164 12 14.9164C13.0438 14.9164 13.9742 14.4307 14.5775 13.673M20 12V18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5V12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18.75 2.42969V2.43969M9.50391 9.875L9.50391 9.885M14.4961 9.875V9.885" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',

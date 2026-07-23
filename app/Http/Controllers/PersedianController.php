@@ -20,6 +20,7 @@ class PersedianController extends Controller
 				$dataPersediaan = Persedian::with('barang')
 				->get()
 				->map(fn ($item) => [
+							'id' => $item->id,
 							'nama_barang' => $item->barang?->nama_barang,
 							'harga_barang' => $item->harga_satuan_unit,
 							'jumlah_barang_masuk' => $item->harga_satuan_unit,
@@ -58,55 +59,31 @@ class PersedianController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StorePersediaanRequest $request)
-    {
+{
+    try {
+        DB::beginTransaction();
 
-			try {
+        $validated = $request->validated();
+        $totalHarga = $validated['qty'] * $validated['harga_satuan'];
 
-						DB::BeginTransaction();
+        Persedian::create([
+            'barang_id' => $validated['barang_id'],
+            'asal_dana' => $validated['asal_dana'],
+            'qty' => $validated['qty'],
+            'harga_satuan_unit' => $validated['harga_satuan'],
+            'harga_total' => $totalHarga,
+            'tanggal_masuk' => now(),
+        ]);
 
-						$SpefiedBarang = Barang::where('id',$request->barang_id)->first();
-						$validated = $request->validated();
+        DB::commit();
+        Alert::success('Input Barang Berhasil Ditambahkan, menunggu persetujuan SPV');
+        return redirect()->route('persediaan.index');
 
-						$totalHarga = $validated['qty'] * $validated['harga_satuan'];
-						$SpefiedBarang->increment('stok_tersedia',$validated['qty']);
-
-
-					  Persedian::create([
-						// $aaa= [
-							'barang_id' => $validated['barang_id'],
-							'asal_dana' => $validated['asal_dana'],
-							'qty' => $validated['qty'],
-							'harga_satuan_unit' => $validated['harga_satuan'],
-							'harga_total' => $totalHarga,
-							'tanggal_masuk' => now(),
-						// ];
-						// dd($aaa);
-
-            ]);
-
-						DB::Commit();
-
-						Alert::success('Input Barang Berhasil Ditambahkan');
-						return redirect()->route('persediaan.index');
-
-			} catch (\Throwable $th) {
-			  return redirect()
-            ->back()
-            ->with('error','ayooo')
-            ->withInput();
-			}
-			// $hasil =
-			// [
-			// 	'barang_id' => $request->barang_id,
-			// 	'asal_dana' => $request->asal_dana,
-			// 	'qty' => $request->qty,
-			// 	'tanggal_masuk' => Carbon::now()->format('Y-m-d'),
-			// 	'harga_satuan' => $request->harga_satuan,
-			// 	'total' => $request->harga_satuan * $request->qty
-			// ];
-
-			// dd($hasil);
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Gagal menyimpan data')->withInput();
     }
+}
 
     /**
      * Display the specified resource.

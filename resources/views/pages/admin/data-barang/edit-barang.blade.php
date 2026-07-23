@@ -18,7 +18,6 @@
     ');
 @endphp
 @section('content')
-@section('content')
 
     <x-common.page-breadcrumb pageTitle="Edit Data Barang"
     parentTitle="Data Barang"

@@ -72,7 +72,7 @@
 
                      @foreach ($dataKategori as $data)
                         <option value="{{$data->id}}" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                            {{$data->kode_kib}}
+                            {{$data->kode_kib}} ( {{ $data->klasifikasi }} )
                         </option>
                      @endforeach
 

@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermintaanApprovalController;
+use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
-
-use App\Http\Controllers\DashboardController;
 
 // dashboard pages
 Route::get('/', function () {
@@ -90,20 +91,61 @@ Route::get('/videos', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-
 require __DIR__.'/auth.php';
-require __DIR__ .'/Peminjaman/peminjaman.php';
-require __DIR__ .'/MasterBarang/crudBarang.php';
-require __DIR__ .'/MasterBarang/pengajuanBarang.php';
-require __DIR__ .'/Pengajuan/pengajuan.php';
-require __DIR__ .'/Permintaan/permintaan.php';
-require __DIR__ .'/Pengembalian/pengembalian.php';
-require __DIR__ .'/karyawan/karyawan.php';
-require __DIR__.'/kib/kib.php';
-require __DIR__.'/kategori/kategori.php';
-require __DIR__.'/persediaan/persediaan.php';
+
+Route::middleware(['auth','role:admin'])->group(function () {
+		require __DIR__ .'/Peminjaman/spvPeminjaman.php';
+	});
+
+Route::post('/permintaan/{permintaan}/items', [PermintaanController::class, 'addItem'])->name('permintaan.items.add');
+Route::post('/permintaan/{permintaan}/verifikasi', [PermintaanController::class, 'verifikasi'])->name('permintaan.verifikasi');
+
+Route::middleware(['auth','role:spv'])->group(function () {
+
+	require __DIR__.'/persediaan/persediaan.php';
+	require __DIR__.'/kib/kib.php';
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('spv/dashboard', [DashboardController::class, 'index'])->name('dashboard-spv');
+});
+
+  require __DIR__ .'/Permintaan/adminPermintaan.php';
+  require __DIR__ .'/Peminjaman/adminPeminjaman.php';
+  require __DIR__ .'/Pengajuan/adminPengajuan.php';
+  require __DIR__ .'/Pengembalian/adminPengembalian.php';
+
+	require __DIR__ .'/karyawan/karyawan.php';
+	require __DIR__ .'/Pengajuan/spvPengajuan.php';
+	require __DIR__ .'/Peminjaman/spvPeminjaman.php';
+	require __DIR__.'/persediaan/spvPersediaan.php';
+
+	require __DIR__ .'/Pengembalian/pengembalian.php';
+	require __DIR__ .'/Pengembalian/adminPengembalian.php';
+	require __DIR__ .'/Pengembalian/spvPengembalian.php';
+
+Route::middleware(['auth','role:staf'])->group(function () {
+		require __DIR__ .'/Pengajuan/pengajuan.php';
+		require __DIR__ .'/Permintaan/permintaan.php';
+		require __DIR__ .'/Peminjaman/peminjaman.php';
+		// require __DIR__ .'/MasterBarang/pengajuanBarang.php';
+});
+
+Route::middleware(['auth','role:spv'])->group(function () {
+
+	// barang dan categori
+
+	require __DIR__ .'/MasterBarang/crudBarang.php';
+	require __DIR__.'/kategori/kategori.php';
+
+		Route::get('/verifikasi-permintaan', [PermintaanApprovalController::class, 'index'])->name('permintaan.index.admin');
+    Route::get('/verifkasi-permintaan/{permintaan}', [PermintaanApprovalController::class, 'show'])->name('permintaan.show.admin');
+    Route::post('/verifikasi-permintaan/{permintaan}/approve', [PermintaanApprovalController::class, 'approve'])->name('permintaan.approve');
+    Route::post('/verifikasi-permintaan/{permintaan}/reject', [PermintaanApprovalController::class, 'reject'])->name('permintaan.reject');
+		});
+
+
+	// Route::middlewarea
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

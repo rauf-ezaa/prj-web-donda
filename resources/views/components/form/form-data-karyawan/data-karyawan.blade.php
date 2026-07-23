@@ -52,7 +52,8 @@
             Password
         </label>
         <div x-data="{ showPassword: false }" class="relative">
-            <input :type="showPassword ? 'text' : 'password'" placeholder="Masukkan Password" name="password"
+            <input :type="showPassword ? 'text' : 'password'" placeholder="Masukkan Password"
+						name="password"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 pl-4 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
             <span @click="showPassword = !showPassword"
                 class="absolute top-1/2 right-4 z-30 -translate-y-1/2 cursor-pointer">
@@ -81,7 +82,8 @@
             Konfirmasi Password
         </label>
         <div x-data="{ showPassword: false }" class="relative">
-            <input :type="showPassword ? 'text' : 'password'" placeholder=" Masukkan Konfirmasi Password" name="confirmation_password"
+            <input :type="showPassword ? 'text' : 'password'" placeholder=" Masukkan Konfirmasi Password"
+						name="password_confirmation"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 pl-4 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
             <span @click="showPassword = !showPassword"
                 class="absolute top-1/2 right-4 z-30 -translate-y-1/2 cursor-pointer">
@@ -98,6 +100,11 @@
                 </svg>
             </span>
         </div>
+				  @error('password_confirmation')
+            <p class="mt-1 text-sm text-error-500">
+                {{ $message }}
+            </p>
+        @enderror
     </div>
     <x-ui.button size="sm" variant="primary" type="submit" >Simpan</x-ui.button>
 </div>

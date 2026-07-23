@@ -13,6 +13,11 @@ class Barang extends Model
 		protected $attributes = ['stok_tersedia' => 0];
     protected $fillable =   [ 'nama_barang','harga_barang','description','klasifikasi_kib','kategori_id'];
 
+		public function bolehDiminta(): bool
+		{
+				return $this->kib->kode_kib !== 'KIB-B';
+		}
+
     public function kib(){
         return $this->belongsTo(KIB::class,'klasifikasi_kib');
     }
@@ -26,5 +31,19 @@ class Barang extends Model
 			return $this->hasMany(Persedian::class);
 		}
 
-    // public
+				public function permintaanDetail()
+		{
+				return $this->hasMany(PermintaanDetail::class);
+		}
+
+		public function pengajuanDetail()
+		{
+				return $this->hasMany(PengajuanDetail::class);
+		}
+
+		public function peminjamanDetail()
+		{
+				return $this->hasMany(PeminjamanDetail::class);
+		}
+
 }
