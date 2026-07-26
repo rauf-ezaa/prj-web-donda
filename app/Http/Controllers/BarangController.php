@@ -63,11 +63,11 @@ class BarangController extends Controller
             ->back()
             ->with('error','ayooo')
             ->withInput();
+						return redirect()->route('data-barang.index')->with('success', 'Barang berhasil ditambahkan.');
         }
-    }
+				}
 
-        return redirect()->route('data-barang.index')->with('success', 'Barang berhasil ditambahkan.');
-    }
+
 
     public function edit(Barang $barang)
     {
