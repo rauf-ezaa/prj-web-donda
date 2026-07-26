@@ -50,7 +50,21 @@ class BarangController extends Controller
             'klasifikasi_kib'  => 'required|exists:kib,id',
         ]);
 
-        Barang::create($validated);
+        // dd($request->all());
+
+         try {
+           Barang::create($request->validated());
+
+           Alert::success('Data Barang Berhasil Ditambahkan.');
+           return redirect()->route('data-barang.index');
+
+        } catch (\Throwable $e) {
+            return redirect()
+            ->back()
+            ->with('error','ayooo')
+            ->withInput();
+        }
+    }
 
         return redirect()->route('data-barang.index')->with('success', 'Barang berhasil ditambahkan.');
     }
