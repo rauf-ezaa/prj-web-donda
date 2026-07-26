@@ -30,7 +30,7 @@
     <br>
 
         <!-- Table -->
-            <x-tables.tables-list.tables-barang 
+            <x-tables.tables-list.tables-barang
             :barang="$barang"/>
     </div>
 
@@ -64,7 +64,7 @@
                     <label for="nama_jenis" class="block text-sm font-medium text-gray-700 mb-1">
                         Nama Jenis Barang
                     </label>
-                    <input type="text" name="nama_jenis" id="nama_jenis" 
+                    <input type="text" name="nama_jenis" id="nama_jenis"
                         class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                         placeholder="Masukkan nama jenis barang" required>
                 </div>
@@ -73,7 +73,7 @@
                     <label for="kode" class="block text-sm font-medium text-gray-700 mb-1">
                         Kode
                     </label>
-                    <input type="text" name="kode" id="kode" 
+                    <input type="text" name="kode" id="kode"
                         class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                         placeholder="Masukkan kode" required>
                 </div>
@@ -89,7 +89,7 @@
 
                 <!-- Footer -->
                 <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-2">
-                    <button type="submit" 
+                    <button type="submit"
                         class="inline-flex w-full justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 sm:ml-3 sm:w-auto">
                         Simpan
                     </button>
@@ -103,6 +103,6 @@
     </div>
 </div>
 
+
+
 @endsection
-
-

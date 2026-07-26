@@ -1,109 +1,94 @@
 <?php
 
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardAssetAdminController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PermintaanApprovalController;
+use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RiwayatController;
 use Illuminate\Support\Facades\Route;
 
 
-use App\Http\Controllers\DashboardController;
-
-// dashboard pages
-Route::get('/', function () {
-    return view('pages.blank', ['title' => ' Dashboard Utama']);
-})->name('dashboard');
-
-// calender pages
-Route::get('/calendar', function () {
-    return view('pages.calender', ['title' => 'Calendar']);
-})->name('calendar');
-
-// profile pages
-Route::get('/profile', function () {
-    return view('pages.profile', ['title' => 'Profile']);
-})->name('profile');
-
-// form pages
-Route::get('/form-elements', function () {
-    return view('pages.form.form-elements', ['title' => 'Form Elements']);
-})->name('form-elements');
-
-// tables pages
-Route::get('/basic-tables', function () {
-    return view('pages.tables.basic-tables', ['title' => 'Basic Tables']);
-})->name('basic-tables');
-
-// pages
-
-Route::get('/blank', function () {
-    return view('pages.blank', ['title' => 'Blank']);
-})->name('blank');
-
-// error pages
-Route::get('/error-404', function () {
-    return view('pages.errors.error-404', ['title' => 'Error 404']);
-})->name('error-404');
-
-// chart pages
-Route::get('/line-chart', function () {
-    return view('pages.chart.line-chart', ['title' => 'Line Chart']);
-})->name('line-chart');
-
-Route::get('/bar-chart', function () {
-    return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
-})->name('bar-chart');
-
-
-// authentication pages
-Route::get('/signin', function () {
-    return view('pages.auth.signin', ['title' => 'Sign In']);
-})->name('signin');
-
-Route::get('/signup', function () {
-    return view('pages.auth.signup', ['title' => 'Sign Up']);
-})->name('signup');
-
-// ui elements pages
-Route::get('/alerts', function () {
-    return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
-})->name('alerts');
-
-Route::get('/avatars', function () {
-    return view('pages.ui-elements.avatars', ['title' => 'Avatars']);
-})->name('avatars');
-
-Route::get('/badge', function () {
-    return view('pages.ui-elements.badges', ['title' => 'Badges']);
-})->name('badges');
-
-Route::get('/buttons', function () {
-    return view('pages.ui-elements.buttons', ['title' => 'Buttons']);
-})->name('buttons');
-
-Route::get('/image', function () {
-    return view('pages.ui-elements.images', ['title' => 'Images']);
-})->name('images');
-
-Route::get('/videos', function () {
-    return view('pages.ui-elements.videos', ['title' => 'Videos']);
-})->name('videos');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-
 require __DIR__.'/auth.php';
-require __DIR__ .'/Peminjaman/peminjaman.php';
-require __DIR__ .'/MasterBarang/crudBarang.php';
-require __DIR__ .'/MasterBarang/pengajuanBarang.php';
-require __DIR__ .'/Pengajuan/pengajuan.php';
-require __DIR__ .'/Permintaan/permintaan.php';
-require __DIR__ .'/Pengembalian/pengembalian.php';
-require __DIR__ .'/karyawan/karyawan.php';
-require __DIR__.'/kib/kib.php';
-require __DIR__.'/kategori/kategori.php';
 
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route(auth()->user()->dashboardRoute());
+    }
+    return redirect()->route('login');
+})->name('guest.home');
+
+
+Route::middleware(['auth', 'role:admin|spv'])->prefix('laporan')->name('laporan.')->group(function () {
+    Route::get('/', [LaporanController::class, 'index'])->name('index');
+    Route::get('/{modul}', [LaporanController::class, 'modul'])->name('modul');
+		Route::get('/', [LaporanController::class, 'index'])->name('index');
+    Route::get('/{modul}', [LaporanController::class, 'modul'])->name('modul');
+    Route::get('/{modul}/export-pdf', [LaporanController::class, 'exportPdf'])->name('modul.export-pdf');
+});
+
+	Route::middleware(['auth','role.redirect:staf'])->group(function () {
+		Route::post('/permintaan/{permintaan}/items', [PermintaanController::class, 'addItem'])->name('permintaan.items.add');
+		Route::post('/permintaan/{permintaan}/verifikasi', [PermintaanController::class, 'verifikasi'])->name('permintaan.verifikasi');
+		Route::middleware('auth')->get('riwayat-saya', [RiwayatController::class, 'index'])->name('riwayat.index');
+		require __DIR__ .'/Pengajuan/pengajuan.php';
+		require __DIR__ .'/Permintaan/permintaan.php';
+		require __DIR__ .'/Peminjaman/peminjaman.php';
+		require __DIR__ .'/Pengembalian/pengembalian.php';
+		Route::get('riwayat-saya', [RiwayatController::class, 'index'])->name('riwayat.index');
+	});
+
+
+Route::middleware(['auth'])->group(function () {
+			require __DIR__ .'/dashboard.php';
+	});
+
+	Route::middleware(['auth', 'role.redirect:admin'])->prefix('admin')->group(function () {
+		require __DIR__.'/persediaan/persediaan.php';
+		require __DIR__.'/kib/kib.php';
+		require __DIR__ .'/Permintaan/adminPermintaan.php';
+		require __DIR__ .'/karyawan/karyawan.php';
+		require __DIR__ .'/Peminjaman/adminPeminjaman.php';
+		require __DIR__ .'/Pengajuan/adminPengajuan.php';
+		require __DIR__ .'/Pengembalian/adminPengembalian.php';
+		require __DIR__ .'/MasterBarang/crudBarang.php';
+		require __DIR__ .'/Pembelian/adminPembelian.php';
+		require __DIR__ .'/SaldoAwal/adminSaldoAwal.php';
+		require __DIR__ .'/StokOpname/adminStockOpname.php';
+
+
+			Route::get('/sarpras',[DashboardAssetAdminController::class,'getHalamanSarpras'])->name('admin.sarpas');
+			Route::get('/atk',[DashboardAssetAdminController::class,'getHalamanAtk'])->name('admin.atk');
+			Route::get('/asset-tetap',[DashboardAssetAdminController::class,'getHalamanKIB'])->name('kib');
+});
+
+Route::middleware(['auth', 'role.redirect:spv'])->group(function () {
+		require __DIR__ .'/Pengajuan/spvPengajuan.php';
+		require __DIR__ .'/Peminjaman/spvPeminjaman.php';
+		require __DIR__.'/persediaan/spvPersediaan.php';
+		require __DIR__ .'/Pengembalian/spvPengembalian.php';
+		require __DIR__.'/kategori/kategori.php';
+		require __DIR__ .'/Pembelian/spvPembelian.php';
+		require __DIR__ .'/SaldoAwal/spvSaldoAwal.php';
+		require __DIR__ .'/StokOpname/spvStockOpname.php';
+		require __DIR__ .'/Periode/spvPeriode.php';
+
+
+
+		Route::get('/verifikasi-permintaan', [PermintaanApprovalController::class, 'index'])->name('permintaan.index.admin');
+    Route::get('/verifkasi-permintaan/{permintaan}', [PermintaanApprovalController::class, 'show'])->name('permintaan.show.admin');
+    Route::post('/verifikasi-permintaan/{permintaan}/approve', [PermintaanApprovalController::class, 'approve'])->name('permintaan.approve');
+    Route::post('/verifikasi-permintaan/{permintaan}/reject', [PermintaanApprovalController::class, 'reject'])->name('permintaan.reject');
+
+});
+
+
+
+
+
+	// Route::middlewarea
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

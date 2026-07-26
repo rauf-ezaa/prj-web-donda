@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Route;
 //   return view('pages.admin.data-barang.create-barang', ['title' => 'Create Data Barang']);
 // })->name('barangCreate');
 
-Route::resource('data-barang', BarangController::class);
+Route::resource('data-barang', BarangController::class)
+  ->parameters(['data-barang' => 'barang']);
 
 
 
@@ -22,7 +23,3 @@ Route::resource('data-barang', BarangController::class);
 // Route::get('/kartu-inventaris-barang/create', function () {
 //   return view('pages.admin.kartu-inventaris-barang.create-inventaris', ['title' => 'Create Data KIB']);
 // })->name('createKib');
-
-
-
-

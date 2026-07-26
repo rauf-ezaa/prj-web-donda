@@ -5,6 +5,7 @@
     'color' => 'primary',
     'startIcon' => null,
     'endIcon' => null,
+		'status'
 ])
 
 @php
@@ -14,6 +15,23 @@
         'sm' => 'text-xs',
         'md' => 'text-sm',
     ];
+
+    $styles = match($status) {
+        'draft'    => 'bg-gray-100 text-gray-600 dark:bg-gray-500/15 dark:text-gray-400',
+        'pending'  => 'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-400',
+        'approved' => 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-400',
+        'rejected' => 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-400',
+        default    => 'bg-gray-100 text-gray-500 dark:bg-gray-500/15 dark:text-gray-400',
+    };
+
+    $label = match($status) {
+        'draft'    => 'Draft',
+        'pending'  => 'Menunggu Persetujuan',
+        'approved' => 'Disetujui',
+        'rejected' => 'Ditolak',
+        default    => ucfirst($status ?? '-'),
+    };
+
 
     $variants = [
         'light' => [
@@ -40,14 +58,6 @@
     $colorStyles = $variants[$variant][$color] ?? $variants['light']['primary'];
 @endphp
 
-<span class="{{ $baseStyles }} {{ $sizeClass }} {{ $colorStyles }}" {{ $attributes }}>
-    @if($startIcon)
-        {!! $startIcon !!}
-    @endif
-
-    {{ $slot }}
-
-    @if($endIcon)
-        {!! $endIcon !!}
-    @endif
+<span {{ $attributes->merge(['class' => "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium $styles"]) }}>
+    {{ $label }}
 </span>

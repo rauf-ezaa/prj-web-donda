@@ -7,6 +7,13 @@ use Alert;
 use App\Http\Requests\Karyawan\StoreKaryawanRequest;
 use App\Http\Requests\Karyawan\UpdateKaryawanRequest;
 use App\Models\Karyawan;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class KaryawanController extends Controller
 {
@@ -15,20 +22,7 @@ class KaryawanController extends Controller
      */
     public function index()
     {
-        $karyawans = Karyawan::query()
-        ->select([
-            'id',
-            'nama_karyawan',
-            'nrk',
-            'nip'
-        ])
-        ->get()
-        ->map(fn ($item) => [
-            'id' => $item->id,
-            'nama' => $item->nama_karyawan,
-            'nrk' => $item->nrk,
-            'nip' => $item->nip,
-        ]);
+       $karyawans = Karyawan::with('user.roles')->latest()->paginate(10);
 
         // dd($data);
         // dd($karyawans);
@@ -40,29 +34,44 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-         return view('pages.admin.data-karyawan.create-karyawan', ['title' => 'Create Data Karyawan']);
+         $roles = Role::all();
+
+        return view('pages.admin.data-karyawan.create-karyawan', compact('roles'), ['title' => 'Create Data Karyawan']);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreKaryawanRequest $request)
+   public function store(StoreKaryawanRequest $request)
     {
-        
-        // dd($request->all());
+        DB::beginTransaction();
         try {
-           Karyawan::create($request->validated());
-            
-           Alert::success('Data Karyawan Berhasil Ditambahkan');
-           return redirect()->route('data-karyawan.index');
-           
-        } catch (\Throwable $e) {
-            return redirect()
-            ->back()
-            ->with('error','ayooo')
-            ->withInput();
-        }
+            $user = User::create([
+                'nama_karyawan' => $request->nama_karyawan,
+                'email' => $request->nrk,
+                'password' => Hash::make($request->password),
+            ]);
 
+            $user->karyawan()->create([
+                'nama_karyawan' => $request->nama_karyawan,
+                'nrk' => $request->nrk,
+                'nip' => $request->nip,
+                'jabatan' => $request->jabatan,
+            ]);
+
+            $user->syncRoles([$request->role]);
+
+            DB::commit();
+
+            Alert::success('Data Pengguna Berhasil Ditambahkan');
+            return redirect()->route('data-pengguna.index');
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal menambahkan data Pengguna.')
+                ->withInput();
+        }
     }
 
     /**
@@ -70,53 +79,82 @@ class KaryawanController extends Controller
      */
     public function show(Karyawan $karyawan)
     {
-        
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Karyawan $karyawan, $id)
+    public function edit(Karyawan $karyawan)
     {
-        $data = Karyawan::find($id);
-        
-         return view('pages.admin.data-karyawan.edit-karyawan', compact('data'), ['title' => 'edit Data Karyawan']);
+        $roles = Role::all();
+        $userRole = $karyawan->user?->roles->first()?->name;
+
+
+        return view('pages.admin.data-karyawan.edit-karyawan', compact('karyawan', 'roles', 'userRole'), ['title' => 'Edit Data Karyawan']);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateKaryawanRequest $request, Karyawan $karyawan, $id)
+   public function update(Request $request, Karyawan $karyawan)
     {
+			// dd($request->all());
+        DB::beginTransaction();
         try {
-            $dataUpdate = Karyawan::find($id);
-             $dataUpdate->update($request->validated());
+            $karyawan->update([
+                'nama_karyawan' => $request->nama_karyawan,
+                'nrk' => $request->nrk,
+                'nip' => $request->nip,
+                'jabatan' => $request->jabatan,
 
-            
+											]);
 
-        Alert::success('Data Karyawan Berhasil Diperbarui');
-        return redirect()->route('data-karyawan.index');
 
+            $karyawan->user()->update([
+                'nama_karyawan' => $request->nama_karyawan,
+                'email' => $request->nrk,
+            ]);
+
+            $karyawan->user->syncRoles([$request->role]);
+            DB::commit();
+
+
+            Alert::success('Data Pengguna Berhasil Diperbarui');
+            return redirect()->route('data-pengguna.index');
         } catch (\Throwable $th) {
-             return redirect()
-            ->back()
-            ->withInput()
-            ->with(
-                'error',
-                'Terjadi kesalahan saat memperbarui data karyawan.'
-            );
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data Pengguna.');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Karyawan $karyawan, $id)
-    {
-        $a = Karyawan::find($id);
-
-        // dd($a);
-        // Alert::success('iyaa');
-        // return redirect()->back();
+   public function destroy(User $user)
+{
+    // guard: gak bisa hapus diri sendiri, pakai $user->id (dari route binding), bukan $id terpisah
+    if (Auth::user()->id === $user->id) {
+        return back()->with('error', 'Kamu tidak dapat menghapus akunmu sendiri.');
     }
+
+    $relasiTerpakai = $user->permintaan()->exists()
+        || $user->pengajuan()->exists()
+        || $user->peminjaman()->exists()
+        || $user->pembelian()->exists();
+
+    if ($relasiTerpakai) {
+        return back()->with('error', "Nama Pengguna {$user->nama_karyawan} tidak bisa dihapus karena memiliki histori pengajuan/permintaan/peminjaman.");
+    }
+
+		else{
+			// $user->karyawan()?->delete();
+			// $user->delete();
+
+			Alert::success('Berhasil', "Pengguna \"{$user->nama_karyawan}\" berhasil dihapus.");
+		}
+
+    // baru di sini beneran hapus, gak ada lagi return duluan yang bikin ini gak kejalan
+
+    return redirect()->route('data-pengguna.index');
+}
 }

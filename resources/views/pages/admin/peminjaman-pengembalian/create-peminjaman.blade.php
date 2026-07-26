@@ -36,6 +36,5 @@ parentTitle="Data Karyawan"
         </div>
         <br>
     @endif
-
             <x-form.form-data-karyawan.data-karyawan />
 @endsection

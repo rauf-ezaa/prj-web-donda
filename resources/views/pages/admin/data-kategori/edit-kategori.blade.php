@@ -24,21 +24,22 @@
     parentTitle="Data Category"
     :parentRoute="route('category.index')" />
 
-     @if($errors->any())
-        <div class="space-y-5 sm:space-y-6">
-            <x-ui.alert
+    @if ($errors->any())
+    <div class="space-y-5 sm:space-y-6">
+        <x-ui.alert
             variant="error"
-            title="Gagal Menambahkan Data Kategori."
-            message="gagal menambahkan data Kategori"
-                        linkHref="/"
-                        />
-        </div>
-        <br>
-    @endif
-    
-    
+            title="Gagal Memperbarui Data Kategori."
+            :message="implode(' ', $errors->all())"
+            linkHref="/"
+        />
+    </div>
+    <br>
+@endif
+
+
             <x-form.form-kategori.edit-kategori
-               
+               :data="$data"
+							 :dataKib="$dataKib"
             />
 
 @endsection

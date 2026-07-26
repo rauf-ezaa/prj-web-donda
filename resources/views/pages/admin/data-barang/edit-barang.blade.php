@@ -18,7 +18,6 @@
     ');
 @endphp
 @section('content')
-@section('content')
 
     <x-common.page-breadcrumb pageTitle="Edit Data Barang"
     parentTitle="Data Barang"
@@ -35,10 +34,11 @@
         </div>
         <br>
     @endif
-    
+
      <x-form.form-data-barang.edit-barang
-            
-            :detailBarangUpdate="$detailBarangUpdate"/>
-    
-            
+            :detailBarangUpdate="$detailBarangUpdate"
+						:dataKategori="$dataKategori"
+			/>
+
+
 @endsection

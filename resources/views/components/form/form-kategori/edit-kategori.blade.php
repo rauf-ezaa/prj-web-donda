@@ -1,14 +1,22 @@
-<form action="{{route('category.store')}}" method="POST">
+<div x-data="{
+
+	data:@js($data)
+	dataKib:@js($dataKib)
+
+}">
+
+<form action="{{route('category.update',$data['id'])}}" method="POST">
     @CSRF
+		@method('PUT')
 <x-common.component-card title="Form Edit Data Kategori">
     <!-- Elements -->
     <div>
         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
             Nama Kategori
         </label>
-        <input type="text" placeholder="Masukkan Nama Kategori" name="nama_kategori" value="{{ old('nama_kategori') }}"
+        <input type="text" placeholder="Masukkan Nama Kategori" name="nama_kategori" value="{{ $data['nama_kategori'] }}"
             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-           
+
             @error('nama_kategori')
             <p class="mt-1 text-sm text-error-500">
                 {{ $message }}
@@ -25,19 +33,16 @@
                 name="jenis_barang"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :class="isOptionSelected && 'text-gray-800 dark:text-white/90'" @change="isOptionSelected = true">
-               
-                    <option value="" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                        -- Pilih Jenis Aset --
-                    </option>
-                    
-                    <option value="persediaan" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                        Persediaan
-                    </option>
 
-                     <option value="aset" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                        Aset
-                    </option>
-        
+								<option value="" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
+										-- Pilih Jenis Aset --
+								</option>
+							 <option value="persediaan" {{ ($data['jenis_barang'] ?? '') === 'persediaan' ? 'selected' : '' }}>
+										Persediaan
+								</option>
+								<option value="aset" {{ ($data['jenis_barang'] ?? '') === 'aset' ? 'selected' : '' }}>
+										Aset
+								</option>
             </select>
             <span
                 class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -65,12 +70,15 @@
                 name="kode_kib"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :class="isOptionSelected && 'text-gray-800 dark:text-white/90'" @change="isOptionSelected = true">
-               
-                    <option value="" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                        -- Pilih Jenis Aset --
-                    </option>
-                    
-                   
+
+                    <option value="" disabled {{ !$data['kode_kib'] ? 'selected' : '' }}>
+													Pilih klasifikasi KIB
+											</option>
+											@foreach ($dataKib as $kib)
+													<option value="{{ $kib->id }}" {{ $data['kode_kib'] == $kib->id ? 'selected' : '' }}>
+															{{ $kib->kode_kib }} ({{ $kib->klasifikasi }})
+													</option>
+											@endforeach
 
             </select>
             <span
@@ -99,10 +107,10 @@
                 name="kategori_aset"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :class="isOptionSelected && 'text-gray-800 dark:text-white/90'" @change="isOptionSelected = true">
-                
+
                  <option value="">Pilih Kategori Aset</option>
 
-               
+
 
             </select>
             <span

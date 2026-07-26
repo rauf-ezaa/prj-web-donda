@@ -50,8 +50,8 @@
 
             <!-- Logo (mobile only) -->
             <a href="/" class="xl:hidden">
-                <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
-                <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" />
+                <img class="dark:hidden max-w-[80px] h-auto" src="/images/logo/preview.png" alt="Logo" />
+                <img class="hidden dark:block max-w-[80px] h-auto" src="/images/logo/preview.png" alt="Logo" />
             </a>
 
             <!-- Application Menu Toggle (mobile only) -->
@@ -65,7 +65,7 @@
                 </svg>
             </button>
 
-            
+
         </div>
 
         <!-- Application Menu (mobile) and Right Side Actions (desktop) -->

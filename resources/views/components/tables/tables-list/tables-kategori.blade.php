@@ -15,7 +15,7 @@
     formatRupiah(value) {
         return 'Rp. ' + new Intl.NumberFormat('id-ID').format(value);
     },
-    
+
     get displayedPages() {
         const range = [];
         for (let i = 1; i <= this.totalPages; i++) {
@@ -91,7 +91,7 @@
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">detail</th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Edit</th>
 
-        
+
                             <th scope="col" class="relative px-4 py-3 capitalize">
                                 <span class="sr-only">Actions</span>
                             </th>
@@ -102,7 +102,7 @@
                             <tr>
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                       
+
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="index + 1"></div>
                                         </div>
@@ -119,26 +119,49 @@
                                </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.detail"></div>
-                               
+
                                <td class="px-4 py-4">
+																	<div class="flex items-center gap-2">
                                     <a :href="'/category/' + transaction.id + '/edit'"
                                     class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                                        
-                                        <svg xmlns="http://www.w3.org/2000/svg" 
-                                            class="w-4 h-4" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="w-4 h-4"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
                                             stroke="currentColor">
-                                            <path stroke-linecap="round" 
-                                                stroke-linejoin="round" 
-                                                stroke-width="2" 
+                                            <path stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z" />
                                         </svg>
                                     </a>
-                                </td>
+										<form :action="'/category/' + transaction.id"
+ 												x-ref="deleteFormCategory"
+												method="POST"
+												>
+												@csrf
+												@method('DELETE')
 
-                                
-                            </tr>
+												<button type="button" @click="confirmDeleteCategory($el.closest('form'))"
+												class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+
+														<svg xmlns="http://www.w3.org/2000/svg"
+																class="w-4 h-4"
+																fill="none"
+																viewBox="0 0 24 24"
+																stroke="currentColor">
+
+																<path stroke-linecap="round"
+																		stroke-linejoin="round"
+																		stroke-width="2"
+																		d="M19 7H5m5 4v6m4-6v6m-5-10V5a1 1 0 011-1h4a1 1 0 011 1v2m-9 0h10l-1 12a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z" />
+														</svg>
+												</button>
+										</form>
+									</div>
+              </td>
+						</tr>
                         </template>
                     </tbody>
                 </table>
@@ -179,7 +202,20 @@
     </div>
 </div>
 <script>
-$(document).ready( function () {
-    $('#TestTab').DataTable();
-} );
+function confirmDeleteCategory(deleteFormCategory) {
+    const form = deleteFormCategory;
+    Swal.fire({
+        title: 'Yakin?',
+        text: 'Data akan dihapus',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            form.submit();
+        }
+
+    });
+}
 </script>

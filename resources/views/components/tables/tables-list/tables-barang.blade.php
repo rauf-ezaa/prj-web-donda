@@ -19,7 +19,7 @@
     formatRupiah(value) {
         return 'Rp. ' + new Intl.NumberFormat('id-ID').format(value);
     },
-    
+
     get displayedPages() {
         const range = [];
         for (let i = 1; i <= this.totalPages; i++) {
@@ -106,7 +106,7 @@
                             <tr>
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                       
+
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="index + 1"></div>
                                         </div>
@@ -129,37 +129,63 @@
                                     <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.deskripsi"></div>
                                 </td>
 
+					<td class="px-4 py-4">
+						<div class="flex items-center gap-2">
 
+										<!-- Tombol Edit -->
+										<a :href="'/data-barang/' + transaction.id + '/edit'"
+												class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+												>
 
-                               
-                                <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                    <div class="flex justify-center relative">
-                                        <x-common.table-dropdown>
-                                            <x-slot name="button">
-                                                <button type="button" id="options-menu" aria-haspopup="true" aria-expanded="true" class="text-gray-500 dark:text-gray-400'">
-                                                    <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z" fill="currentColor" />
-                                                    </svg>
-                                                </button>
-                                            </x-slot>
-        
-                                            <x-slot name="content">
-                                            <a :href="'/data-barang/' + transaction.id + '/edit'"
-                                                    class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">
-                                                     edit
-                                                </a>
-                                                <a href="#" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">
-                                                    Delete
-                                                </a>
-                                            </x-slot>
-                                        </x-common.table-dropdown>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+												<svg xmlns="http://www.w3.org/2000/svg"
+														class="w-4 h-4"
+														fill="none"
+														viewBox="0 0 24 24"
+														stroke="currentColor">
+
+														<path stroke-linecap="round"
+																stroke-linejoin="round"
+																stroke-width="2"
+																d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z" />
+												</svg>
+										</a>
+
+										<!-- Tombol Delete -->
+										<form :action="'/data-barang/' + transaction.id"
+ 												x-ref="deleteForm"
+												method="POST"
+												>
+
+												@csrf
+												@method('DELETE')
+
+												<button type="button" @click="confirmDelete($el.closest('form'))"
+												class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+
+														<svg xmlns="http://www.w3.org/2000/svg"
+																class="w-4 h-4"
+																fill="none"
+																viewBox="0 0 24 24"
+																stroke="currentColor">
+
+																<path stroke-linecap="round"
+																		stroke-linejoin="round"
+																		stroke-width="2"
+																		d="M19 7H5m5 4v6m4-6v6m-5-10V5a1 1 0 011-1h4a1 1 0 011 1v2m-9 0h10l-1 12a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z" />
+														</svg>
+												</button>
+
+										</form>
+
+								</div>
+							</td>
+																<!-- pembatas -->
+
+                </template>
+            </tbody>
+       </table>
+    </div>
+</div>
 
         <!-- Pagination -->
         <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]">
@@ -195,7 +221,20 @@
     </div>
 </div>
 <script>
-$(document).ready( function () {
-    $('#TestTab').DataTable();
-} );
+function confirmDelete(deleteForm) {
+    const form = deleteForm;
+    Swal.fire({
+        title: 'Yakin?',
+        text: 'Data akan dihapus',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            form.submit();
+        }
+
+    });
+}
 </script>

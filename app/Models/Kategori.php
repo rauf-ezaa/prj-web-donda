@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Barang;
 use App\Models\KIB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,4 +15,9 @@ class Kategori extends Model
     {
         return $this->belongsTo(KIB::class,'kode_kib');
     }
+
+		public function barang()
+		{
+			return $this->hasMany(Barang::class);
+		}
 }

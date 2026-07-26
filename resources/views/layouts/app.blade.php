@@ -2,15 +2,17 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? 'Dashboard' }} | TailAdmin - Laravel Tailwind CSS Admin Dashboard Template</title>
+    <title>SIMANTAP SMPN 206 Jakarta</title>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+		<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 
     <!-- Alpine.js -->
     {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
@@ -91,7 +93,7 @@
             }
         })();
     </script>
-    
+
 </head>
 
 <body
@@ -107,11 +109,11 @@ const checkMobile = () => {
             }
             };
             window.addEventListener('resize', checkMobile);">
-            
+
             {{-- preloader --}}
             <x-common.preloader/>
             {{-- preloader end --}}
-            
+
     <div class="min-h-screen xl:flex">
         @include('sweetalert::alert')
         @include('layouts.backdrop')
@@ -126,6 +128,16 @@ const checkMobile = () => {
             <!-- app header start -->
             @include('layouts.app-header')
             <!-- app header end -->
+						 @php
+								$opnameLockService = app(\App\Services\OpnameLockService::class);
+								$activeLock = $opnameLockService->activeLock();
+						@endphp
+
+						@if($activeLock)
+								<div class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-center text-sm text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+										⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+								</div>
+						@endif
             <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
                 @yield('content')
             </div>

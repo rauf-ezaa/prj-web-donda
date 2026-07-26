@@ -5,19 +5,102 @@ namespace App\Helpers;
 class MenuHelper
 {
 
+// pembuka block admin //supervisor
+
+public static function saldoAwal(){
+	return  [
+			[
+				'icon' => 'dashboard',
+				'name' => 'Setup',
+				'title' => 'Setup',
+				 'subItems' => [
+                    ['name' => 'Saldo Awal',
+										'path' => '/spv/saldo-awal',
+                    'icon' => 'dashboard',
+                    ],
+
+										['name' => 'Setup Periode',
+										'path' => '/spv/periode',
+                    'icon' => 'dashboard',
+                    ],
+
+										['name' => 'Stok Opname',
+										'path' => '/spv/stok-opname',
+                    'icon' => 'dashboard',
+                    ],
+
+				 ],
+					'roles' => 'spv',
+					],
+		];
+}
+
+		public static function verifikasiPermintaan(){
+			return [
+				[
+					 			'icon' => 'verifikasi_permintaan',
+                'name' => 'Verifikasi Permintaan',
+                'path' => '/spv/permintaan',
+								'roles' => 'spv'
+				],
+
+				[
+					 			'icon' => 'peminjaman_barang',
+                'name' => ' Verifikasi Peminjaman',
+                'path' => '/spv/peminjaman',
+								'roles' => 'spv'
+				],
+
+					[
+					 			'icon' => 'verifikasi_pengembalian',
+                'name' => ' Verifikasi Pengembalian',
+                'path' => '/spv/pengembalian',
+								'roles' => 'spv'
+				],
+
+					[
+					 			'icon' => 'verifikasi_pengajuan',
+                'name' => ' Verifikasi Pengajuan',
+                'path' => '/spv/pengajuan',
+								'roles' => 'spv'
+				],
+
+
+				// [
+				// 	 			'icon' => 'archive',
+        //         'name' => ' Verifikasi Persediaan',
+        //         'path' => '/spv/persediaan',
+				// 				'roles' => 'admin'
+				// ],
+			];
+		}
+
+		// penutup block admin // supervisor
+
+
+
+		// pembuka block admin // admin
+
+
+
     public static function getTest()
     {
         return [
             [
-                'icon' => 'dashboard',
-                'name' => 'Pengajuan',
+                'icon' => 'pengajuan_barang',
+                'name' => 'Pengajuan Barang',
                 'path' => '/pengajuan',
+								'roles' =>  'staf',
+
+
             ],
 
             [
-                'icon' => 'dashboard',
+                'icon' => 'permintaan_barang',
                 'name' => 'Permintaan',
-                'path' => '/permintaan',
+								'path' => '/permintaan',
+                // 'path' => '/permintaan',
+								'roles' => 'staf',
             ],
         ];
     }
@@ -26,55 +109,54 @@ class MenuHelper
     {
         return [
             [
-                'icon' => 'dashboard',
-                'name' => 'Data Master',
-                'subItems' => [
-                    ['name' => 'Data Barang', 'path' => '/data-barang',
-                     'icon' => 'dashboard',
-                    ],
+                'icon' => 'aset_tetap_kib_b',
+                'name' => 'Aset Tetap (KIB-B)',
+								'roles' =>  'admin',
+								'path' => '/admin/asset-tetap',
 
-                    ['name' => 'Data KIB', 'path' => '/kartu-inventaris-barang',
-                      'icon' => 'dashboard',
-                    ],
 
-                    ['name' => 'Kategori Barang', 'path' => '/category',
-                      'icon' => 'dashboard',
-                    ],
-                    
-                ],
             ],
             [
-                'icon' => 'dashboard',
-                'name' => 'Aset',
+                'icon' => 'aset_lancar',
+                'name' => 'Aset lancar',
                 'subItems' => [
-                    ['name' => 'BOP', 'path' => '/bop',
-                     'icon' => 'dashboard',
+                    ['name' => 'Sarpras',
+										'path' => '/admin/sarpras',
+                    'icon' => 'dashboard',
                     ],
-                    ['name' => 'BOS', 'path' => '/bos',
+                    ['name' => 'ATK',
+										'path' => '/admin/atk',
                     'icon' => 'dashboard',
                    ],
-                ],
-            ],
-            // [
-            //     'icon' => 'dashboard',
-            //     'name' => 'Pengembalian',
-            //     'subItems' => [
-            //         ['name' => 'Data Pengembalian Barang', 'path' => '/pengembalian',
-            //          'icon' => 'dashboard',
-            //         ],
 
-            //         ['name' => 'History Pengembalian', 'path' => '/history-pengembalian',
-            //          'icon' => 'dashboard',
-            //         ],
-                    
-            //     ],
-                
-            // ],
-            [
-                'icon' => 'archive',
-                'name' => 'Persedian',
-                'path' => '/calendar',
+
+                ],
+								'roles' => 'admin',
             ],
+            [
+                'icon' => 'data_master',
+                'name' => 'Data Master',
+                'path' => '/admin/data-barang',
+								'roles' => 'admin'
+								// 'roles' => 'view-laporan',
+            ],
+
+						[
+                'icon' => 'archive',
+                'name' => 'Saldo Awal',
+                'path' => '/admin/saldo-awal',
+								'roles' => 'admin'
+								// 'roles' => 'view-laporan',
+            ],
+
+							[
+                'icon' => 'opname_stok',
+                'name' => 'Stok Opname',
+                'path' => '/admin/stok-opname',
+								'roles' => 'admin'
+								// 'roles' => 'view-laporan',
+            ],
+
             // [
             //     'name' => 'Forms',
             //     'icon' => 'forms',
@@ -98,6 +180,8 @@ class MenuHelper
             //     ],
             // ],
         ];
+
+				 return self::filterByroles($groups);
     }
 
 
@@ -134,38 +218,161 @@ class MenuHelper
             //     ],
             // ],
             [
-                'icon' => 'archive',
+                'icon' => 'peminjaman_barang',
                 'name' => 'Peminjaman',
                 'path' => '/peminjaman',
+								'roles' => 'staf'
             ],
 
-            [
-                'icon' => 'archive',
-                'name' => 'Pengembalian',
-                'path' => '/pengembalian',
-            ],
+
+						[
+								'icon' => 'pengembalian_barang',
+								'name' => 'Pengembalian',
+								'title' => 'Pengembalian',
+								'subItems' => [
+														['name' => 'Data Pengembalian',
+														'path' => '/pengembalian',
+														'icon' => 'dashboard',
+														],
+
+
+														['name' => 'Riwayat Pengembalian',
+														'path' => '/pengembalian/riwayat',
+														'icon' => 'riwayat',
+														],
+								],
+									'roles' => 'staf',
+									],
+
+            // [
+            //     'icon' => 'archive',
+            //     'name' => 'Pengembalian',
+            //     'path' => '/pengembalian',
+						// 			'roles' => 'staf'
+            // ],
 
         ];
+
+
     }
 
     public static function getKaryawanItems(){
 
         return [
             [
-                'icon' => 'archive',
-                'name' => 'Data Karyawan',
-                'path' => '/data-karyawan',
+                'icon' => 'manajemen_pengguna',
+                'name' => 'Data Pengguna',
+                'path' => '/admin/data-pengguna',
+								'roles' => 'admin'
             ],
+
+
         ];
     }
 
-    public static function getMenuGroups()
-    {
+				public static function getRiwayatUserItems(){
+
         return [
             [
-                'title' => 'Menu Utama',
+                'icon' => 'riwayat',
+                'name' => 'Riwayat',
+                'path' => '/riwayat-saya',
+								'roles' => 'staf'
+            ],
+
+        ];
+    }
+
+
+
+		public static function getRiwayatItems(){
+
+        return [
+            [
+                'icon' => 'riwayat',
+                'name' => 'Riwayat',
+                'path' => '/laporan',
+								'roles' => 'admin'
+            ],
+
+
+        ];
+    }
+
+		 public static function getVerificationDataAdmin(){
+
+        return [
+            [
+                'icon' => 'permintaan_barang',
+                'name' => 'Permintaan',
+                'path' => '/admin/permintaan',
+								'roles' => 'admin'
+            ],
+
+						//  [
+            //     'icon' => 'archive',
+            //     'name' => 'Pembelian',
+            //     'path' => '/admin/pembelian',
+						// 		'roles' => 'spv'
+            // ],
+
+						 [
+                'icon' => 'verifikasi_peminjaman',
+                'name' => 'Peminjaman',
+                'path' => '/admin/peminjaman',
+								'roles' => 'admin'
+            ],
+
+						 [
+                'icon' => 'verifikasi_pengembalian',
+                'name' => 'Pengembalian',
+                'path' => '/admin/pengembalian',
+								'roles' => 'admin'
+            ],
+
+						 [
+                'icon' => 'verifikasi_pengajuan',
+                'name' => 'pengajuan',
+                'path' => '/admin/pengajuan',
+								'roles' => 'admin'
+            ],
+
+						 [
+                'icon' => 'ecommerce',
+                'name' => 'Pembelian',
+                'path' => '/admin/pembelian',
+								'roles' => 'admin'
+            ],
+
+        ];
+    }
+
+
+
+    public static function getMenuGroups()
+    {
+        $groups = [
+            [
+                'title' => 'Data Master',
                 'items' => self::getMainNavItems()
             ],
+
+						[
+								'title' => 'Setup',
+								'items' => self::saldoAwal()
+						],
+
+						[
+								'title' => 'Verifikasi Permintaan ',
+                'items' => self::getVerificationDataAdmin()
+						],
+
+
+						[
+								'title' => 'Verifikasi Permintaan ',
+                'items' => self::verifikasiPermintaan()
+
+						],
             [
                 'title' => 'Pengajuan & Permintaan Barang',
                 'items' => self::getTest()
@@ -175,10 +382,22 @@ class MenuHelper
                 'items' => self::getOthersItems()
             ],
             [
-                'title' => 'Kelola Data Pegawai',
+                'title' => 'Kelola Data Pengguna',
                 'items' => self::getKaryawanItems()
+
             ],
+						 [
+                'title' => 'Riwayat',
+                'items' => self::getRiwayatItems()
+            ],
+
+						 [
+                'title' => 'Riwayat',
+                'items' => self::getRiwayatUserItems()
+            ],
+
         ];
+				 return self::filterByroles($groups);
     }
 
     public static function isActive($path)
@@ -186,9 +405,72 @@ class MenuHelper
         return request()->is(ltrim($path, '/'));
     }
 
+		protected static function filterByroles(array $groups)
+	{
+		$user = auth()->user();
+
+    return collect($groups)
+        ->filter(function ($group) use ($user) {
+            if (!isset($group['roles'])) {
+                return true;
+            }
+            return $user?->hasAnyRole($group['roles']) ?? false;
+        })
+        ->map(function ($group) use ($user) {
+            $group['items'] = collect($group['items'])
+                ->filter(function ($item) use ($user) {
+                    if (!isset($item['roles'])) {
+                        return true;
+                    }
+                    return $user?->hasAnyRole($item['roles']) ?? false;
+                })
+                ->values()
+                ->toArray();
+            return $group;
+        })
+        ->filter(fn ($group) => count($group['items']) > 0)
+        ->values()
+        ->toArray();
+	}
+
     public static function getIconSvg($iconName)
     {
-        $icons = [
+							$icons = [
+
+							'saldo_awal' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C8.41 4.5 5.5 6.067 5.5 8V16C5.5 17.933 8.41 19.5 12 19.5C15.59 19.5 18.5 17.933 18.5 16V8C18.5 6.067 15.59 4.5 12 4.5Z" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 8C5.5 9.933 8.41 11.5 12 11.5C15.59 11.5 18.5 9.933 18.5 8" stroke="currentColor" stroke-width="1.8"/><path d="M9 14.5H13.5C14.328 14.5 15 15.172 15 16C15 16.828 14.328 17.5 13.5 17.5H10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.5 13V18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+							'manajemen_pengguna' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 11C10.933 11 12.5 9.433 12.5 7.5C12.5 5.567 10.933 4 9 4C7.067 4 5.5 5.567 5.5 7.5C5.5 9.433 7.067 11 9 11Z" stroke="currentColor" stroke-width="1.8"/><path d="M4.75 19C4.75 16.652 6.652 14.75 9 14.75C11.348 14.75 13.25 16.652 13.25 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 7.25H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.25 5.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.25 12.5H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.25 15.75H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.25 19H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+						'dashboard' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5.5C4 4.672 4.672 4 5.5 4H9.5C10.328 4 11 4.672 11 5.5V9.5C11 10.328 10.328 11 9.5 11H5.5C4.672 11 4 10.328 4 9.5V5.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 5.5C13 4.672 13.672 4 14.5 4H18.5C19.328 4 20 4.672 20 5.5V9.5C20 10.328 19.328 11 18.5 11H14.5C13.672 11 13 10.328 13 9.5V5.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 14.5C4 13.672 4.672 13 5.5 13H9.5C10.328 13 11 13.672 11 14.5V18.5C11 19.328 10.328 20 9.5 20H5.5C4.672 20 4 19.328 4 18.5V14.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 14.5C13 13.672 13.672 13 14.5 13H18.5C19.328 13 20 13.672 20 14.5V18.5C20 19.328 19.328 20 18.5 20H14.5C13.672 20 13 19.328 13 18.5V14.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+
+						'pengajuan_barang' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4H13.5L18 8.5V20H7C5.895 20 5 19.105 5 18V6C5 4.895 5.895 4 7 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.5 4V8.5H18" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 11V16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.5 13.5H14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+						'permintaan_barang' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.75H17C18.105 4.75 19 5.645 19 6.75V17.25C19 18.355 18.105 19.25 17 19.25H7C5.895 19.25 5 18.355 5 17.25V6.75C5 5.645 5.895 4.75 7 4.75Z" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 9H15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 12H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 15H12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+						'peminjaman_barang' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 8H16.5C17.881 8 19 9.119 19 10.5V15.5C19 16.881 17.881 18 16.5 18H7.5C6.119 18 5 16.881 5 15.5V10.5C5 9.119 6.119 8 7.5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 8V6.75C10 5.784 10.784 5 11.75 5H12.25C13.216 5 14 5.784 14 6.75V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13 12H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 9.5L18 12L15.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'pengembalian_barang' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 8H16.5C17.881 8 19 9.119 19 10.5V15.5C19 16.881 17.881 18 16.5 18H7.5C6.119 18 5 16.881 5 15.5V10.5C5 9.119 6.119 8 7.5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 8V6.75C11 5.784 11.784 5 12.75 5H13.25C14.216 5 15 5.784 15 6.75V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11 12H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 9.5L6 12L8.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'verifikasi_pengajuan' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4H13.5L18 8.5V20H7C5.895 20 5 19.105 5 18V6C5 4.895 5.895 4 7 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.5 4V8.5H18" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.25 13.25L11.25 15.25L14.75 11.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'verifikasi_permintaan' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.75H17C18.105 4.75 19 5.645 19 6.75V17.25C19 18.355 18.105 19.25 17 19.25H7C5.895 19.25 5 18.355 5 17.25V6.75C5 5.645 5.895 4.75 7 4.75Z" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 9H15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 12H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 15H12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.25 17L11 18.75L14.75 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'verifikasi_peminjaman' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 8H16.5C17.881 8 19 9.119 19 10.5V15.5C19 16.881 17.881 18 16.5 18H7.5C6.119 18 5 16.881 5 15.5V10.5C5 9.119 6.119 8 7.5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 8V6.75C10 5.784 10.784 5 11.75 5H12.25C13.216 5 14 5.784 14 6.75V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.25 12.75L11 14.5L14.75 10.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'verifikasi_pengembalian' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 8H16.5C17.881 8 19 9.119 19 10.5V15.5C19 16.881 17.881 18 16.5 18H7.5C6.119 18 5 16.881 5 15.5V10.5C5 9.119 6.119 8 7.5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 8V6.75C11 5.784 11.784 5 12.75 5H13.25C14.216 5 15 5.784 15 6.75V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 12H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13.5 9.5L11 12L13.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.25 15.25L11 17L14.75 13.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'data_master' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="6" rx="6.75" ry="2.75" stroke="currentColor" stroke-width="1.8"/><path d="M5.25 6V12C5.25 13.518 8.264 14.75 12 14.75C15.736 14.75 18.75 13.518 18.75 12V6" stroke="currentColor" stroke-width="1.8"/><path d="M5.25 12V18C5.25 19.518 8.264 20.75 12 20.75C15.736 20.75 18.75 19.518 18.75 18V12" stroke="currentColor" stroke-width="1.8"/></svg>',
+
+						'aset_tetap_kib_b' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.75 8.25H17.25C18.493 8.25 19.5 9.257 19.5 10.5V17.25C19.5 18.493 18.493 19.5 17.25 19.5H6.75C5.507 19.5 4.5 18.493 4.5 17.25V10.5C4.5 9.257 5.507 8.25 6.75 8.25Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.75 8.25V6.75C8.75 5.784 9.534 5 10.5 5H13.5C14.466 5 15.25 5.784 15.25 6.75V8.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.75 12.5H15.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.75 15.5H13.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+						'aset_lancar' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 5.75H17L19.25 10.25V18C19.25 19.242 18.243 20.25 17 20.25H7C5.757 20.25 4.75 19.242 4.75 18V10.25L7 5.75Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4.75 10.25H19.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 13.25H15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.75 16.25H13.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+
+						'verifikasi_so' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.75 5.75H18.25C19.493 5.75 20.5 6.757 20.5 8V18C20.5 19.243 19.493 20.25 18.25 20.25H5.75C4.507 20.25 3.5 19.243 3.5 18V8C3.5 6.757 4.507 5.75 5.75 5.75Z" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 10H16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 13.5H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 17H10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12.75 16.5L14.25 18L17.25 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'opname_stok' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.75 5.75H17.25C18.493 5.75 19.5 6.757 19.5 8V18C19.5 19.243 18.493 20.25 17.25 20.25H6.75C5.507 20.25 4.5 19.243 4.5 18V8C4.5 6.757 5.507 5.75 6.75 5.75Z" stroke="currentColor" stroke-width="1.8"/><path d="M7.75 10H16.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.75 13.5H16.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.75 17H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14.25 16.5L15.75 18L18.5 15.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
+						'riwayat' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12C5 8.134 8.134 5 12 5C14.483 5 16.668 6.292 17.92 8.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17.92 8.25V5.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17.92 8.25H15.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M19 12C19 15.866 15.866 19 12 19C9.517 19 7.332 17.708 6.08 15.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6.08 15.75V18.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6.08 15.75H8.58" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8.25V12L14.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
             'dashboard' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V8.99998C3.25 10.2426 4.25736 11.25 5.5 11.25H9C10.2426 11.25 11.25 10.2426 11.25 8.99998V5.5C11.25 4.25736 10.2426 3.25 9 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H9C9.41421 4.75 9.75 5.08579 9.75 5.5V8.99998C9.75 9.41419 9.41421 9.74998 9 9.74998H5.5C5.08579 9.74998 4.75 9.41419 4.75 8.99998V5.5ZM5.5 12.75C4.25736 12.75 3.25 13.7574 3.25 15V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H9C10.2426 20.75 11.25 19.7427 11.25 18.5V15C11.25 13.7574 10.2426 12.75 9 12.75H5.5ZM4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H9C9.41421 14.25 9.75 14.5858 9.75 15V18.5C9.75 18.9142 9.41421 19.25 9 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15ZM12.75 5.5C12.75 4.25736 13.7574 3.25 15 3.25H18.5C19.7426 3.25 20.75 4.25736 20.75 5.5V8.99998C20.75 10.2426 19.7426 11.25 18.5 11.25H15C13.7574 11.25 12.75 10.2426 12.75 8.99998V5.5ZM15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V8.99998C14.25 9.41419 14.5858 9.74998 15 9.74998H18.5C18.9142 9.74998 19.25 9.41419 19.25 8.99998V5.5C19.25 5.08579 18.9142 4.75 18.5 4.75H15ZM15 12.75C13.7574 12.75 12.75 13.7574 12.75 15V18.5C12.75 19.7426 13.7574 20.75 15 20.75H18.5C19.7426 20.75 20.75 19.7427 20.75 18.5V15C20.75 13.7574 19.7426 12.75 18.5 12.75H15ZM14.25 15C14.25 14.5858 14.5858 14.25 15 14.25H18.5C18.9142 14.25 19.25 14.5858 19.25 15V18.5C19.25 18.9142 18.9142 19.25 18.5 19.25H15C14.5858 19.25 14.25 18.9142 14.25 18.5V15Z" fill="currentColor"></path></svg>',
 
             'ai-assistant' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.75 2.42969V7.70424M9.42261 13.673C10.0259 14.4307 10.9562 14.9164 12 14.9164C13.0438 14.9164 13.9742 14.4307 14.5775 13.673M20 12V18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5V12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18.75 2.42969V2.43969M9.50391 9.875L9.50391 9.885M14.4961 9.875V9.885" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
@@ -218,12 +500,12 @@ class MenuHelper
             'support-ticket' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 17.0518V12C20 7.58174 16.4183 4 12 4C7.58168 4 3.99994 7.58174 3.99994 12V17.0518M19.9998 14.041V19.75C19.9998 20.5784 19.3282 21.25 18.4998 21.25H13.9998M6.5 18.75H5.5C4.67157 18.75 4 18.0784 4 17.25V13.75C4 12.9216 4.67157 12.25 5.5 12.25H6.5C7.32843 12.25 8 12.9216 8 13.75V17.25C8 18.0784 7.32843 18.75 6.5 18.75ZM17.4999 18.75H18.4999C19.3284 18.75 19.9999 18.0784 19.9999 17.25V13.75C19.9999 12.9216 19.3284 12.25 18.4999 12.25H17.4999C16.6715 12.25 15.9999 12.9216 15.9999 13.75V17.25C15.9999 18.0784 16.6715 18.75 17.4999 18.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
 
             'email' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 8.187V17.25C3.5 17.6642 3.83579 18 4.25 18H19.75C20.1642 18 20.5 17.6642 20.5 17.25V8.18747L13.2873 13.2171C12.5141 13.7563 11.4866 13.7563 10.7134 13.2171L3.5 8.187ZM20.5 6.2286C20.5 6.23039 20.5 6.23218 20.5 6.23398V6.24336C20.4976 6.31753 20.4604 6.38643 20.3992 6.42905L12.4293 11.9867C12.1716 12.1664 11.8291 12.1664 11.5713 11.9867L3.60116 6.42885C3.538 6.38481 3.50035 6.31268 3.50032 6.23568C3.50028 6.10553 3.60577 6 3.73592 6H20.2644C20.3922 6 20.4963 6.10171 20.5 6.2286ZM22 6.25648V17.25C22 18.4926 20.9926 19.5 19.75 19.5H4.25C3.00736 19.5 2 18.4926 2 17.25V6.23398C2 6.22371 2.00021 6.2135 2.00061 6.20333C2.01781 5.25971 2.78812 4.5 3.73592 4.5H20.2644C21.2229 4.5 22 5.27697 22.0001 6.23549C22.0001 6.24249 22.0001 6.24949 22 6.25648Z" fill="currentColor"></path></svg>',
-                
+
             'archive' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z"/>
             </svg>',
 
-            
+
         ];
 
         return $icons[$iconName] ?? '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/></svg>';

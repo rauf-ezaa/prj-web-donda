@@ -11,7 +11,7 @@
         const end = start + this.itemsPerPage;
         return this.transactions.slice(start, end);
     },
-    
+
     get displayedPages() {
         const range = [];
         for (let i = 1; i <= this.totalPages; i++) {
@@ -86,11 +86,11 @@
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">NIP</th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Aksi</th>
 
-                            
+
                             <!-- <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Price</th>
                             <th scope="col" class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">Category</th>
                             <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Status</th> -->
-                           
+
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -98,7 +98,7 @@
                             <tr>
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        
+
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="index + 1"
                                             ></div>
@@ -107,7 +107,7 @@
                                 </td>
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        
+
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="transaction.nama"></div>
                                         </div>
@@ -116,7 +116,7 @@
 
                                 <td class="py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        
+
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="transaction.nrk"></div>
                                         </div>
@@ -156,6 +156,7 @@
             @method('DELETE')
 
             <button type="submit"
+
                 class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
 
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -176,9 +177,9 @@
     </div>
 </td>
 
-                                
 
-                                
+
+
                                 <!-- <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.price"></div>
                                 </td>
@@ -197,17 +198,17 @@
                                                     </svg>
                                                 </button>
                                             </x-slot>
-        
+
                                             <x-slot name="content">
                                                 <a :href="'/data-karyawan/' + transaction.id + '/edit'" class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem">
-                                                    Edit 
+                                                    Edit
                                                 </a>
                                                 <form x-bind:action="'/data-karyawan/' + transaction.id" method="POST">
                                                     @CSRF
                                                     @method('DELETE')
-                                                    <button  class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem" 
+                                                    <button  class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300" role="menuitem"
                                                     type="submit"
-                                                    >delete</button>   
+                                                    >delete</button>
                                                 </form>
                                             </x-slot>
                                         </x-common.table-dropdown>

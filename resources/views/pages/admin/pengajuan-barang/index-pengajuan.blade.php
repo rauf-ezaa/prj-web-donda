@@ -1,34 +1,126 @@
 @extends('layouts.app')
-@php
-    use Illuminate\Support\HtmlString;
 
-    // Page title
-    $currentPageTitle = 'Buttons';
+@section('content')
+<div class="p-4 md:p-6">
 
-    // Define BoxIcon once as an HtmlString (so it won’t get escaped)
-    $BoxIcon = new HtmlString('
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M9.77692 3.24224C9.91768 3.17186 10.0834 3.17186 10.2241 3.24224L15.3713 5.81573L10.3359 8.33331C10.1248 8.43888 9.87626 8.43888 9.66512 8.33331L4.6298 5.81573L9.77692 3.24224ZM3.70264 7.0292V13.4124C3.70264 13.6018 3.80964 13.775 3.97903 13.8597L9.25016 16.4952L9.25016 9.7837C9.16327 9.75296 9.07782 9.71671 8.99432 9.67496L3.70264 7.0292ZM10.7502 16.4955V9.78396C10.8373 9.75316 10.923 9.71683 11.0067 9.67496L16.2984 7.0292V13.4124C16.2984 13.6018 16.1914 13.775 16.022 13.8597L10.7502 16.4955ZM9.41463 17.4831L9.10612 18.1002C9.66916 18.3817 10.3319 18.3817 10.8949 18.1002L16.6928 15.2013C17.3704 14.8625 17.7984 14.17 17.7984 13.4124V6.58831C17.7984 5.83076 17.3704 5.13823 16.6928 4.79945L10.8949 1.90059C10.3319 1.61908 9.66916 1.61907 9.10612 1.90059L9.44152 2.57141L9.10612 1.90059L3.30823 4.79945C2.63065 5.13823 2.20264 5.83076 2.20264 6.58831V13.4124C2.20264 14.17 2.63065 14.8625 3.30823 15.2013L9.10612 18.1002L9.41463 17.4831Z"
-                fill="currentColor"
-            />
-        </svg>
-    ');
-@endphp
-@section('content')
-@section('content')
-    <x-common.page-breadcrumb pageTitle="Data Pengajuan" />
-    <div class="flex items-center gap-5">
-        <x-ui.button size="sm" variant="primary" :startIcon="$BoxIcon">Tambah Pengajuan</x-ui.button>
-        <!-- <x-ui.button size="sm" variant="danger" :startIcon="$BoxIcon">Hapus Barang</x-ui.button>
-        <x-ui.button size="sm" variant="success" :startIcon="$BoxIcon">Berhasil</x-ui.button> -->
+    <!-- Header -->
+    <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
+                Pengajuan Barang
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Pilih status untuk menampilkan daftar pengajuan.
+            </p>
+        </div>
+
+								@if($draftAktif)
+						<div class="flex flex-col items-end gap-1">
+								<a href="{{ route('pengajuan.draft', $draftAktif->id) }}">
+										<x-ui.button size="md" variant="primary">
+												Lanjutkan Draft ({{ $draftAktif->kode_pengajuan }})
+										</x-ui.button>
+								</a>
+								<p class="text-xs text-gray-400">
+										Selesaikan draft yang sedang berjalan sebelum membuat transaksi baru.
+								</p>
+						</div>
+				@else
+						<form action="{{ route('pengajuan.draft.start') }}" method="POST">
+								@csrf
+								<x-ui.button size="md" variant="primary" type="submit">
+										+ Buat Transaksi Baru
+								</x-ui.button>
+						</form>
+				@endif
 
     </div>
-    <br>
 
-        <!-- Table -->
-            <x-tables.tables-list.tables-kib />
+    <!-- Sort / Filter -->
+    <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
+        <form method="GET" action="{{ route('pengajuan.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div class="min-w-[220px]">
+                <label class="mb-1.5 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                    Status Persetujuan
+                </label>
+                <select name="sort"
+                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                    <option value="">-- Pilih Status --</option>
+                    <option value="draft" @selected(request('sort') == 'draft')>Draft (Belum Diajukan)</option>
+                    <option value="pending" @selected(request('sort') == 'pending')>Menunggu Persetujuan</option>
+                    <option value="approved" @selected(request('sort') == 'approved')>Disetujui</option>
+                    <option value="rejected" @selected(request('sort') == 'rejected')>Ditolak</option>
+                </select>
+            </div>
+
+            <x-ui.button size="md" variant="primary" type="submit">Tampilkan</x-ui.button>
+
+            @if(request('sort'))
+                <a href="{{ route('pengajuan.index') }}">
+                    <x-ui.button size="md" variant="secondary" type="button">Reset</x-ui.button>
+                </a>
+            @endif
+        </form>
     </div>
+
+    <!-- Table / Empty State -->
+    @if(!request('sort'))
+        <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-16 text-center dark:border-gray-700">
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                Silakan pilih status persetujuan terlebih dahulu
+            </p>
+            <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                Data akan muncul setelah kamu memilih salah satu status di atas.
+            </p>
+        </div>
+    @else
+        <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 dark:bg-white/[0.02]">
+                    <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+                        <th class="px-4 py-3">Kode</th>
+                        <th class="px-4 py-3">Nama Peminjam</th>
+                        <th class="px-4 py-3">Tanggal</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    @forelse($pengajuan as $item)
+                        <tr class="text-gray-700 dark:text-gray-300">
+                            <td class="px-4 py-3 font-medium">{{ $item->kode_pengajuan }}</td>
+                            <td class="px-4 py-3">{{ $item->requestedBy->nama_karyawan }}</td>
+                            <td class="px-4 py-3">{{ $item->created_at->format('d M Y') }}</td>
+                            <td class="px-4 py-3">
+                                <x-ui.badge :status="$item->status" />
+                            </td>
+                            <td class="px-4 py-3 text-right">
+                                @if($item->status === 'draft')
+                                    <a href="{{ route('pengajuan.draft', $item->id) }}">
+                                        <x-ui.button size="sm" variant="primary">Lanjutkan Draft</x-ui.button>
+                                    </a>
+                                @else
+                                    <a href="{{ route('pengajuan.show', $item->id) }}">
+                                        <x-ui.button size="sm" variant="secondary">Lihat Detail</x-ui.button>
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-8 text-center text-gray-400">
+                                Tidak ada data untuk status ini.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            {{ $pengajuan->links() }}
+        </div>
+    @endif
+
+</div>
 @endsection
