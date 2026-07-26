@@ -10,7 +10,10 @@ use Alert;
 
 class PengembalianStaffController extends Controller
 {
-    public function __construct(private PengembalianService $service) {}
+    public function __construct(
+			private PengembalianService $service,
+			private \App\Services\OpnameLockService $opnameLock
+			) {}
 
     /**
 		 * Menu utama: daftar peminjaman milik staff yang masih ada sisa qty untuk dikembalikan.
@@ -65,6 +68,7 @@ class PengembalianStaffController extends Controller
 
     public function store(Request $request, Peminjaman $peminjaman)
     {
+			 $this->opnameLock->assertNotLocked();
         abort_unless($peminjaman->requested_by === auth()->id(), 403);
 
            $validated = $request->validate([

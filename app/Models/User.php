@@ -15,9 +15,19 @@ class User extends Authenticatable
     use HasFactory, HasRoles, Notifiable;
 
 		public function karyawan()
-		{
-			return $this->hasOne(Karyawan::class,'users_id');
-		}
+{
+    return $this->hasOne(Karyawan::class, 'users_id');
+}
+
+public function dashboardRoute(): string
+{
+    return match(true) {
+        $this->hasRole('spv') => 'dashboard.spv',
+        $this->hasRole('admin') => 'dashboard.staf',
+        $this->hasRole('staf') => 'dashboard.pengguna',
+        default => 'login',
+    };
+}
 
     /**
      * The attributes that are mass assignable.
@@ -55,7 +65,7 @@ class User extends Authenticatable
 
 				public function permintaan()
 		{
-				return $this->hasMany(Permintaan::class, 'requested_by');
+				return $this->hasMany(Permintaan::class, 'request_by');
 		}
 
 		public function pengajuan()

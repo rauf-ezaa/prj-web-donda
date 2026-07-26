@@ -34,6 +34,7 @@ class PengembalianAdminController extends Controller
 
     public function verify(Pengembalian $pengembalian)
     {
+			 $this->opnameLock->assertNotLocked();
         try {
             $this->service->verifyByAdmin($pengembalian, auth()->id());
         } catch (\InvalidArgumentException $e) {

@@ -8,18 +8,24 @@ class MenuHelper
 // pembuka block admin //supervisor
 
 public static function saldoAwal(){
-		return  [
+	return  [
 			[
 				'icon' => 'dashboard',
 				'name' => 'Setup',
 				'title' => 'Setup',
 				 'subItems' => [
                     ['name' => 'Saldo Awal',
-										'path' => '/bop',
+										'path' => '/spv/saldo-awal',
                     'icon' => 'dashboard',
                     ],
+
+										['name' => 'Setup Periode',
+										'path' => '/spv/periode',
+                    'icon' => 'dashboard',
+                    ],
+
 				 ],
-					'roles' => 'admin',
+					'roles' => 'spv',
 					],
 		];
 }
@@ -30,37 +36,37 @@ public static function saldoAwal(){
 					 			'icon' => 'archive',
                 'name' => 'Verifikasi Permintaan',
                 'path' => '/spv/permintaan',
-								'roles' => 'admin'
+								'roles' => 'spv'
 				],
 
 				[
 					 			'icon' => 'archive',
                 'name' => ' Verifikasi Peminjaman',
                 'path' => '/spv/peminjaman',
-								'roles' => 'admin'
+								'roles' => 'spv'
 				],
 
 					[
 					 			'icon' => 'archive',
                 'name' => ' Verifikasi Pengembalian',
                 'path' => '/spv/pengembalian',
-								'roles' => 'admin'
+								'roles' => 'spv'
 				],
 
 					[
 					 			'icon' => 'archive',
                 'name' => ' Verifikasi Pengajuan',
                 'path' => '/spv/pengajuan',
-								'roles' => 'admin'
+								'roles' => 'spv'
 				],
 
 
-				[
-					 			'icon' => 'archive',
-                'name' => ' Verifikasi Persediaan',
-                'path' => '/spv/persediaan',
-								'roles' => 'admin'
-				],
+				// [
+				// 	 			'icon' => 'archive',
+        //         'name' => ' Verifikasi Persediaan',
+        //         'path' => '/spv/persediaan',
+				// 				'roles' => 'admin'
+				// ],
 			];
 		}
 
@@ -97,51 +103,52 @@ public static function saldoAwal(){
     public static function getMainNavItems()
     {
         return [
-            [
-                'icon' => 'dashboard',
-                'name' => 'Aset Tetap (KIB-B)',
-								'roles' =>  'spv',
-								'path' => '/bop',
+            // [
+            //     'icon' => 'dashboard',
+            //     'name' => 'Aset Tetap (KIB-B)',
+						// 		'roles' =>  'spv',
+						// 		'path' => '/admin/asset-tetap',
 
 
-            ],
+            // ],
             [
                 'icon' => 'dashboard',
                 'name' => 'Aset lancar',
                 'subItems' => [
                     ['name' => 'Sarpras',
-										'path' => '/bop',
+										'path' => '/admin/sarpras',
                     'icon' => 'dashboard',
                     ],
                     ['name' => 'ATK',
-										'path' => '/bos',
+										'path' => '/admin/atk',
                     'icon' => 'dashboard',
                    ],
 
 
                 ],
-								'roles' => 'spv',
+								'roles' => 'admin',
             ],
-            // [
-            //     'icon' => 'dashboard',
-            //     'name' => 'Pengembalian',
-            //     'subItems' => [
-            //         ['name' => 'Data Pengembalian Barang', 'path' => '/pengembalian',
-            //          'icon' => 'dashboard',
-            //         ],
-
-            //         ['name' => 'History Pengembalian', 'path' => '/history-pengembalian',
-            //          'icon' => 'dashboard',
-            //         ],
-
-            //     ],
-
-            // ],
             [
                 'icon' => 'archive',
+                'name' => 'Data Master',
+                'path' => '/admin/data-barang',
+								'roles' => 'admin'
+								// 'roles' => 'view-laporan',
+            ],
+
+						[
+                'icon' => 'archive',
                 'name' => 'Saldo Awal',
-                'path' => '/persediaan',
-								'roles' => 'spv'
+                'path' => '/admin/saldo-awal',
+								'roles' => 'admin'
+								// 'roles' => 'view-laporan',
+            ],
+
+							[
+                'icon' => 'archive',
+                'name' => 'Stok Opname',
+                'path' => '/admin/stok-opname',
+								'roles' => 'admin'
 								// 'roles' => 'view-laporan',
             ],
 
@@ -249,17 +256,40 @@ public static function saldoAwal(){
         return [
             [
                 'icon' => 'archive',
-                'name' => 'Pembelian',
-                'path' => '/data-karyawan',
-								'roles' => 'spv'
+                'name' => 'Data Pengguna',
+                'path' => '/admin/data-pengguna',
+								'roles' => 'admin'
             ],
 
-						 [
+
+        ];
+    }
+
+				public static function getRiwayatUserItems(){
+
+        return [
+            [
                 'icon' => 'archive',
-                'name' => 'Stock Opname',
-                'path' => '/data-karyawan',
-								'roles' => 'spv'
+                'name' => 'Riwayat',
+                'path' => '/riwayat-saya',
+								'roles' => 'staf'
             ],
+
+        ];
+    }
+
+
+
+		public static function getRiwayatItems(){
+
+        return [
+            [
+                'icon' => 'archive',
+                'name' => 'Riwayat',
+                'path' => '/laporan',
+								'roles' => 'admin'
+            ],
+
 
         ];
     }
@@ -271,35 +301,42 @@ public static function saldoAwal(){
                 'icon' => 'archive',
                 'name' => 'Permintaan',
                 'path' => '/admin/permintaan',
-								'roles' => 'spv'
+								'roles' => 'admin'
             ],
 
-						 [
-                'icon' => 'archive',
-                'name' => 'Pembelian',
-                'path' => '/admin/pembelian',
-								'roles' => 'spv'
-            ],
+						//  [
+            //     'icon' => 'archive',
+            //     'name' => 'Pembelian',
+            //     'path' => '/admin/pembelian',
+						// 		'roles' => 'spv'
+            // ],
 
 						 [
                 'icon' => 'archive',
                 'name' => 'Peminjaman',
                 'path' => '/admin/peminjaman',
-								'roles' => 'spv'
+								'roles' => 'admin'
             ],
 
 						 [
                 'icon' => 'archive',
                 'name' => 'Pengembalian',
                 'path' => '/admin/pengembalian',
-								'roles' => 'spv'
+								'roles' => 'admin'
             ],
 
 						 [
                 'icon' => 'archive',
                 'name' => 'Pengajuan',
                 'path' => '/admin/pengajuan',
-								'roles' => 'spv'
+								'roles' => 'admin'
+            ],
+
+						 [
+                'icon' => 'archive',
+                'name' => 'Pembelian',
+                'path' => '/admin/pembelian',
+								'roles' => 'admin'
             ],
 
         ];
@@ -340,9 +377,18 @@ public static function saldoAwal(){
                 'items' => self::getOthersItems()
             ],
             [
-                'title' => 'Kelola Data Pegawai',
+                'title' => 'Kelola Data Pengguna',
                 'items' => self::getKaryawanItems()
 
+            ],
+						 [
+                'title' => 'Riwayat',
+                'items' => self::getRiwayatItems()
+            ],
+
+						 [
+                'title' => 'Riwayat',
+                'items' => self::getRiwayatUserItems()
             ],
 
         ];

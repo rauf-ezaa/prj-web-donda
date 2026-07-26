@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
-use App\Models\Persedian;
-use App\Models\Permintaan;
-use App\Models\Pengajuan;
+use App\Models\Karyawan;
 use App\Models\Peminjaman;
+use App\Models\Pengajuan;
+use App\Models\Pengembalian;
+use App\Models\Permintaan;
+use App\Models\Persedian;
 
 class DashboardController extends Controller
 {
@@ -17,10 +19,11 @@ class DashboardController extends Controller
         $estimasiNilaiAset = Persedian::where('approval_status', 'diterima')->sum('harga_total');
         $stokMenipis = Barang::where('stok_tersedia', '<', 5)->count();
 
-        $menungguPermintaan = Permintaan::where('status_permintaan', 'pending')->count();
-        $menungguPengajuan = Pengajuan::where('status', 'pending')->count();
-        $menungguPeminjaman = Peminjaman::where('status', 'pending')->count();
+        $menungguPermintaan = Permintaan::where('status_permintaan', 'menunggu_spv')->count();
+        $menungguPengajuan = Pengajuan::where('status', 'menunggu_spv')->count();
+        $menungguPeminjaman = Peminjaman::where('status', 'menunggu_spv')->count();
         $menungguPersediaan = Persedian::where('approval_status', 'menunggu')->count();
+				$menungguPengembalian = Pengembalian::where('status','menunggu_verifikasi_spv')->count();
         $menungguPersetujuan = $menungguPermintaan + $menungguPengajuan + $menungguPeminjaman + $menungguPersediaan;
 
         $sedangDipinjam = Peminjaman::where('status', 'dipinjam')->count();
@@ -36,6 +39,7 @@ class DashboardController extends Controller
 
         return view('spv.dashboard', compact(
             'totalJenisAset',
+						'menungguPengembalian',
             'totalUnitAset',
             'estimasiNilaiAset',
             'stokMenipis',
@@ -49,4 +53,16 @@ class DashboardController extends Controller
             'barangMasukBulanIni',
         ));
     }
+
+		public function dashboardAdmin(){
+			$data = Karyawan::where('users_id',auth()->user()->id)->first();
+			// dd($data);
+				return view('dashboard.admin.index', compact('data'));
+		}
+
+		public function dashboardStaff(){
+					$data = Karyawan::where('users_id',auth()->user()->id)->first();
+			// dd($data);
+				return view('dashboard.staff.index', compact('data'));
+		}
 }

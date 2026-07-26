@@ -36,6 +36,7 @@ class PengembalianVerifikasiController extends Controller
 
     public function verify(Pengembalian $pengembalian)
     {
+			 $this->opnameLock->assertNotLocked();
         try {
             $this->service->verifyBySpv($pengembalian, auth()->id());
         } catch (\InvalidArgumentException $e) {

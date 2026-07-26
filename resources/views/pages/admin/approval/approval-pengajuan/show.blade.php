@@ -88,6 +88,11 @@
                 <x-ui.button size="sm" variant="secondary" type="button" @click="reject" x-bind:disabled="isProcessing">
                     Tolak
                 </x-ui.button>
+								<a href="{{ url()->previous() }}">
+                <x-ui.button size="sm" variant="secondary" type="button" class="w-full">
+                    <i class="ti ti-arrow-left"></i> Kembali
+                </x-ui.button>
+            </a>
             </div>
         @else
             <a href="{{ route('admin.pengajuan.index') }}">

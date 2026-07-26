@@ -4,7 +4,7 @@ use App\Http\Controllers\PengajuanApprovalController;
 use App\Http\Controllers\PermintaanApprovalController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin'])->prefix('spv')->name('spv.')->group(function () {
+Route::middleware(['auth', 'role:spv'])->prefix('spv')->name('spv.')->group(function () {
 
     // Pengajuan
     Route::get('/pengajuan', [PengajuanApprovalController::class, 'index'])->name('pengajuan.index');

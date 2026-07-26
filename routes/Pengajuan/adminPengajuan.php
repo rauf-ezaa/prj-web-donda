@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PengajuanApprovalAdminController;
 
-Route::middleware(['auth', 'role:spv'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
 
 Route::get('/pengajuan', [PengajuanApprovalAdminController::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/{pengajuan}', [PengajuanApprovalAdminController::class, 'show'])->name('pengajuan.show');

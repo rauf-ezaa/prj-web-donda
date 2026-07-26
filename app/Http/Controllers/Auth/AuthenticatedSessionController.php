@@ -35,14 +35,7 @@ class AuthenticatedSessionController extends Controller
 
 				 Alert::success('Berhasil', 'Selamat datang kembali, ' . $authententicated->nama_karyawan . '!');
 
-				return match (true) {
-						$authententicated->hasRole('staf') => redirect()->intended(route('dashboard')),
-						$authententicated->hasRole('admin') => redirect()->intended(route('dashboard-spv')),
-
-
-						default => redirect()->intended(route('dashboard', absolute: false)),
-				};
-
+				  return redirect()->route(auth()->user()->dashboardRoute());
     }
 
     /**

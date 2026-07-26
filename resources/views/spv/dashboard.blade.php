@@ -14,14 +14,11 @@
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Total unit aset</p>
             <p class="text-2xl font-medium text-gray-800 dark:text-white/90">{{ number_format($totalUnitAset, 0, ',', '.') }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Estimasi nilai aset</p>
-            <p class="text-2xl font-medium text-gray-800 dark:text-white/90">Rp{{ number_format($estimasiNilaiAset, 0, ',', '.') }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Stok menipis</p>
-            <p class="text-2xl font-medium text-amber-600">{{ $stokMenipis }}</p>
-        </div>
+				<div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+						<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Barang masuk bulan ini</p>
+						<p class="text-2xl font-medium text-gray-800 dark:text-white/90">{{ $barangMasukBulanIni }}</p>
+				</div>
+
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -36,10 +33,6 @@
         <div class="bg-red-50 dark:bg-red-950/30 rounded-xl p-4">
             <p class="text-xs text-error-500 mb-1">Terlambat kembali</p>
             <p class="text-2xl font-medium text-error-500">{{ $terlambatKembali }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Barang masuk bulan ini</p>
-            <p class="text-2xl font-medium text-gray-800 dark:text-white/90">{{ $barangMasukBulanIni }}</p>
         </div>
     </div>
 
@@ -71,6 +64,14 @@
 
             @if ($menungguPeminjaman > 0)
                 <a href="{{ route('spv.peminjaman.index') }}" class="flex items-center py-3 hover:bg-gray-50 dark:hover:bg-gray-800 -mx-4 px-4">
+                    <i class="ti ti-calendar-check text-lg text-amber-600 mr-3"></i>
+                    <span class="text-sm text-gray-800 dark:text-white/90 flex-1">{{ $menungguPeminjaman }} peminjaman menunggu persetujuan</span>
+                    <i class="ti ti-chevron-right text-gray-400"></i>
+                </a>
+            @endif
+
+						 @if ($menungguPengembalian > 0)
+                <a href="{{ route('spv.pengembalian.index') }}" class="flex items-center py-3 hover:bg-gray-50 dark:hover:bg-gray-800 -mx-4 px-4">
                     <i class="ti ti-calendar-check text-lg text-amber-600 mr-3"></i>
                     <span class="text-sm text-gray-800 dark:text-white/90 flex-1">{{ $menungguPeminjaman }} peminjaman menunggu persetujuan</span>
                     <i class="ti ti-chevron-right text-gray-400"></i>

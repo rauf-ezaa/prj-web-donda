@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 class PeminjamanController extends Controller
 {
 
+
+public function __construct(
+    private \App\Services\OpnameLockService $opnameLock
+) {}
+
 public function index(Request $request)
 {
 
@@ -124,9 +129,11 @@ public function removeItem(Peminjaman $peminjaman, PeminjamanDetail $detail)
 
 public function verifikasi(Peminjaman $peminjaman, Request $request)
 {
-    abort_unless(
-        in_array($peminjaman->status, ['draft', 'pending']) && $peminjaman->requested_by === auth()->id(),
-        403
+	$this->opnameLock->assertNotLocked();
+
+	abort_unless(
+		in_array($peminjaman->status, ['draft', 'pending']) && $peminjaman->requested_by === auth()->id(),
+		403
     );
 
     if ($peminjaman->details()->count() === 0) {

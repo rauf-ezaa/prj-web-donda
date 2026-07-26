@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class PermintaanApprovalController extends Controller
 {
+	public function __construct(
+
+    private \App\Services\OpnameLockService $opnameLock
+) {}
+
     public function index(Request $request)
     {
 			$status_permintaan = $request->query('status_permintaan','menunggu_spv');
@@ -45,6 +50,7 @@ class PermintaanApprovalController extends Controller
 
     public function approve(Permintaan $permintaan, Request $request)
     {
+			   $this->opnameLock->assertNotLocked();
         abort_unless($permintaan->status_permintaan === 'menunggu_spv', 404);
 
         $validated = $request->validate([

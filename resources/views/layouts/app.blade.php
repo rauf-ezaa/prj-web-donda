@@ -128,6 +128,16 @@ const checkMobile = () => {
             <!-- app header start -->
             @include('layouts.app-header')
             <!-- app header end -->
+						 @php
+								$opnameLockService = app(\App\Services\OpnameLockService::class);
+								$activeLock = $opnameLockService->activeLock();
+						@endphp
+
+						@if($activeLock)
+								<div class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-center text-sm text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+										⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+								</div>
+						@endif
             <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
                 @yield('content')
             </div>

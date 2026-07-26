@@ -2,7 +2,7 @@
 use App\Http\Controllers\PengembalianStaffController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','role:staf'])->group(function () {
     // Menu sendiri: daftar peminjaman yang bisa/sudah diproses pengembalian
     Route::get('pengembalian', [PengembalianStaffController::class, 'index'])->name('pengembalian.index');
 

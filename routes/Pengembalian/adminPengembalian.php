@@ -2,7 +2,7 @@
 use App\Http\Controllers\PengembalianAdminController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:spv'])->prefix('admin')->name('admin.')->group(function () {
+Route::name('admin.')->group(function () {
     Route::get('pengembalian', [PengembalianAdminController::class, 'index'])->name('pengembalian.index');
     Route::get('pengembalian/{pengembalian}', [PengembalianAdminController::class, 'show'])->name('pengembalian.show');
     Route::post('pengembalian/{pengembalian}/verify', [PengembalianAdminController::class, 'verify'])->name('pengembalian.verify');

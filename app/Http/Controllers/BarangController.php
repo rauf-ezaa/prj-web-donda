@@ -1,175 +1,99 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Alert;
-use App\Http\Requests\Barang\StoreBarangRequest;
 use App\Models\Barang;
-use App\Models\Kategori;
 use App\Models\KIB;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+			public function __construct(
+				private \App\Services\OpnameLockService $opnameLock
+		) {}
+
+    public function index(Request $request)
     {
+        $query = Barang::with('kib');
 
-			$barang = Barang::with(['kib'])
-			->select([
-				'id',
-				'nama_barang',
-				'harga_barang',
-				'stok_tersedia',
-				'klasifikasi_kib',
-        ])
-        ->get()
-        ->map(fn ($item) => [
-					'id' => $item->id,
-					'nama' => $item->nama_barang,
-					'stok' => $item->stok_tersedia,
-					'harga' => $item->harga_barang,
-					'deskripsi' => $item->kib?->klasifikasi,
-					'klasifikasi_kib' => $item->kib?->kode_kib
-					]);
+        if ($request->filled('search')) {
+            $query->where('nama_barang', 'like', '%' . $request->search . '%');
+        }
 
-					$title = 'Delete User!';
-					$text = "Are you sure you want to delete?";
-					confirmDelete($title, $text);
+        if ($request->filled('klasifikasi_kib')) {
+            $query->where('klasifikasi_kib', $request->klasifikasi_kib);
+        }
 
-         return view('pages.admin.data-barang.index', compact('barang'), ['title' => 'List Data Barang']);
+        $barangs = $query->latest()->paginate(10)->withQueryString();
+
+        // untuk filter dropdown + info jumlah barang per klasifikasi
+        $kibList = KIB::withCount('barang')->get();
+
+        return view('barang.index', compact('barangs', 'kibList'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $data = KIB::get();
-
-        $dataKategori = Kategori::with('kib')
-        ->get()
-        ->map(fn ($item) => [
-            'id' => $item->id,
-            'nama_kategori' => $item->nama_kategori,
-            'kib_id' => $item->kode_kib,
-            'kode_kib' => $item->kib?->kode_kib,
-            ]);
-
-        //  dd($dataKategori);
-
-        return view('pages.admin.data-barang.create-barang',compact('data','dataKategori'));
+        $kibList = KIB::all();
+        return view('barang.create', compact('kibList'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBarangRequest $request)
+    public function store(Request $request)
     {
-         try {
-           Barang::create($request->validated());
-           Alert::success('Data Barang Berhasil Ditambahkan.');
-           return redirect()->route('data-barang.index');
-
-        } catch (\Throwable $e) {
-            return redirect()
-            ->back()
-            ->with('error','ayooo')
-            ->withInput();
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Barang $barang)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Barang $barang, $id)
-    {
-
-    $dataKategori = Kategori::with('kib')
-        ->get()
-        ->map(fn ($item) => [
-            'id' => $item->id,
-            'nama_kategori' => $item->nama_kategori,
-            'kib_id' => $item->kode_kib,
-            'kode_kib' => $item->kib?->kode_kib,
+			 $this->opnameLock->assertNotLocked();
+        $validated = $request->validate([
+            'nama_barang'      => 'required|string|max:100',
+            'merk_spesifikasi' => 'nullable|string|max:255',
+            'satuan'           => 'required|in:' . implode(',', Barang::SATUAN_OPTIONS),
+            // 'harga_barang'     => 'required|numeric|min:0',
+            'stok_tersedia'    => 'required|integer|min:0',
+            'description'      => 'nullable|string',
+            'klasifikasi_kib'  => 'required|exists:kib,id',
         ]);
 
-    $item = Barang::where('id', $id)
-        ->with(['kib', 'kategori'])
-        ->select([
-            'id',
-            'nama_barang',
-            'harga_barang',
-            'stok_tersedia',
-            'klasifikasi_kib',
-            'kategori_id',
-        ])
-        ->first();
+        Barang::create($validated);
 
-    $detailBarangUpdate = [
-        'id' => $item->id,
-        'nama' => $item->nama_barang,
-        'stok' => $item->stok_tersedia,
-        'harga' => $item->harga_barang,
-        'deskripsi' => $item->kib?->klasifikasi,
-        'klasifikasi_kib' => $item->klasifikasi_kib,
-        'kategori_id' => $item->kategori_id,
-        'nama_kategori' => $item->kategori?->nama_kategori,
-    ];
-
-    return view('pages.admin.data-barang.edit-barang', compact('detailBarangUpdate', 'dataKategori'));
-}
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(StoreBarangRequest $request, Barang $barang, $id)
-    {
-         try {
-					$barangAkanUpdate = Barang::find($id);
-					$barangAkanUpdate->update($request->validated());
-
-					 Alert::success('Data Barang Berhasil Diperbarui');
-           return redirect()->route('data-barang.index');
-
-        } catch (\Throwable $e) {
-            return redirect()
-            ->back()
-            ->with('error')
-            ->withInput();
-        }
+        return redirect()->route('data-barang.index')->with('success', 'Barang berhasil ditambahkan.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function edit(Barang $barang)
+    {
 
-		public function destroy(Barang $barang)
-			{
-					$relasiTerpakai = $barang->persediaan()->exists()
-							|| $barang->permintaanDetail()->exists()
-							|| $barang->pengajuanDetail()->exists()
-							|| $barang->peminjamanDetail()->exists();
+        $kibList = KIB::all();
+        return view('barang.edit', compact('barang', 'kibList'));
+    }
 
-					if ($relasiTerpakai) {
-							return back()->with('error', "Barang \"{$barang->nama_barang}\" tidak bisa dihapus karena sudah memiliki histori transaksi (persediaan/permintaan/pengajuan/peminjaman).");
-					}
+    public function update(Request $request, Barang $barang)
+    {
+			 $this->opnameLock->assertNotLocked();
+        $validated = $request->validate([
+            'nama_barang'      => 'required|string|max:100',
+            'merk_spesifikasi' => 'nullable|string|max:255',
+            'satuan'           => 'required|in:' . implode(',', Barang::SATUAN_OPTIONS),
+            // 'harga_barang'     => 'required|numeric|min:0',
+            'description'      => 'nullable|string',
+            'klasifikasi_kib'  => 'required|exists:kib,id',
+        ]);
 
-					Alert::success('berhasil');
+        $barang->update($validated);
 
-					return redirect()
-							->route('data-barang.index')
-							->with('success', "Barang \"{$barang->nama_barang}\" berhasil dihapus.");
-			}
-		}
+        return redirect()->route('data-barang.index')->with('success', 'Barang berhasil diperbarui.');
+    }
+
+    public function destroy(Barang $barang)
+    {
+			 $this->opnameLock->assertNotLocked();
+        // cegah hapus barang yang masih dipakai di transaksi aktif
+        $dipakaiDiPeminjaman = $barang->peminjamanDetail()->exists();
+        $dipakaiDiPermintaan = $barang->permintaanDetail()->exists();
+
+        if ($dipakaiDiPeminjaman || $dipakaiDiPermintaan) {
+            return back()->withErrors(['barang' => 'Barang tidak dapat dihapus karena masih memiliki riwayat transaksi.']);
+        }
+
+				else{
+					$barang->delete();
+				}
+
+        return redirect()->route('data-barang.index')->with('success', 'Barang berhasil dihapus.');
+    }
+}

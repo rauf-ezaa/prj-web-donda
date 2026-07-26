@@ -29,7 +29,7 @@ parentTitle="Data Permintaan"
             'id' => $d->id,
             'barang_id' => $d->barang_id,
             'nama_barang' => $d->barang->nama_barang,
-            'jumlah' => $d->jumlah_diminta,
+            'jumlah_diminta' => $d->jumlah_diminta,
         ])),
         dataBarang: @js($dataBarang),
     })"
@@ -111,7 +111,7 @@ parentTitle="Data Permintaan"
                 <div class="flex items-center px-3.5 py-2.5" :class="{ 'border-b border-gray-200 dark:border-gray-700': index < items.length - 1 }">
                     <div class="flex-1">
                         <p class="text-sm m-0 text-gray-800 dark:text-white/90" x-text="item.nama_barang"></p>
-                        <p class="text-xs text-gray-400 m-0" x-text="`Qty: ${item.jumlah}`"></p>
+                        <p class="text-xs text-gray-400 m-0" x-text="`Qty: ${item.jumlah_diminta}`"></p>
                     </div>
                     <button
                         type="button"
@@ -187,7 +187,7 @@ function draftPermintaan({ permintaanId, keperluan, items, dataBarang }) {
                     },
                     body: JSON.stringify({
                         barang_id: this.selectedBarangId,
-                        jumlah: this.selectedJumlah,
+                        jumlah_diminta: this.selectedJumlah,
                     }),
                 });
 

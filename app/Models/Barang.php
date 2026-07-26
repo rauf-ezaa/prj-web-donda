@@ -5,13 +5,27 @@ namespace App\Models;
 use App\Models\Kategori;
 use App\Models\KIB;
 use App\Models\Persedian;
+use App\Models\SaldoAwalItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Barang extends Model
 {
     protected $table = 'barangs';
-		protected $attributes = ['stok_tersedia' => 0];
-    protected $fillable =   [ 'nama_barang','harga_barang','description','klasifikasi_kib','kategori_id'];
+		const SATUAN_OPTIONS = [
+        'DUS', 'KG', 'BOTOL', 'BOX', 'BUAH', 'BUNGKUS',
+        'UNIT', 'PACK', 'PCS', 'BUKU', 'RIM', 'PAD',
+    ];
+
+		public function pembelianItem()
+		{
+				return $this->hasMany(PembelianItem::class);
+		}
+
+
+    protected $attributes = [
+														 'harga_barang' => 0];
+
+    protected $fillable =   [ 'nama_barang','stok_tersedia','description','klasifikasi_kib','kategori_id'];
 
 		public function bolehDiminta(): bool
 		{
@@ -44,6 +58,11 @@ class Barang extends Model
 		public function peminjamanDetail()
 		{
 				return $this->hasMany(PeminjamanDetail::class);
+		}
+
+		public function saldoAwalItem()
+		{
+				return $this->hasMany(SaldoAwalItem::class);
 		}
 
 }
