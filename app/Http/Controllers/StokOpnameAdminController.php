@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{Periode, StokOpname};
 use App\Services\StokOpnameService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class StokOpnameAdminController extends Controller
@@ -11,6 +12,24 @@ class StokOpnameAdminController extends Controller
 			private StokOpnameService $service,
 			private \App\Services\OpnameLockService $opnameLock
 			) {}
+
+
+		public function cetakBast(StokOpname $stokOpname)
+{
+    abort_unless($stokOpname->status === 'selesai', 403, 'BAST hanya dapat dicetak untuk opname yang sudah selesai diverifikasi.');
+
+    $stokOpname->load(['items.barang', 'periode', 'dibuatOleh', 'diverifikasiOleh']);
+
+    $pdf = Pdf::loadView('admin.stok-opname.pdf.bast', [
+        'stokOpname' => $stokOpname,
+    ])->setPaper('a4', 'portrait');
+
+    $namaFile = 'BAST-' . str_replace(['/', ' '], '-', $stokOpname->no_bast) . '.pdf';
+
+    return $pdf->stream($namaFile);
+    // pakai stream() bukan download() supaya bisa langsung dipreview di tab baru,
+    // user bisa pilih print/save sendiri dari situ. Ganti ke download() kalau maunya langsung kedownload.
+}
 
     public function index()
     {

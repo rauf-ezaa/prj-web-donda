@@ -283,9 +283,7 @@ public static function saldoAwal(){
         ];
     }
 
-
-
-		public static function getRiwayatItems(){
+				public static function getRiwayatItems(){
 
         return [
             [
@@ -294,8 +292,18 @@ public static function saldoAwal(){
                 'path' => '/laporan',
 								'roles' => 'admin'
             ],
+        ];
+    }
 
+				public static function getRiwayatSpvItems(){
 
+        return [
+            [
+                'icon' => 'riwayat',
+                'name' => 'Riwayat',
+                'path' => '/laporan',
+								'roles' => 'spv'
+            ],
         ];
     }
 
@@ -395,6 +403,13 @@ public static function saldoAwal(){
                 'title' => 'Riwayat',
                 'items' => self::getRiwayatUserItems()
             ],
+
+						 [
+                'title' => 'Riwayat',
+                'items' => self::getRiwayatSpvItems()
+            ],
+
+
 
         ];
 				 return self::filterByroles($groups);

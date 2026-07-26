@@ -3,7 +3,6 @@
 @section('content')
 <div class="p-4 md:p-6 max-w-3xl mx-auto">
     <a href="{{ route('admin.stok-opname.index') }}" class="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">← Kembali</a>
-
     <div class="flex justify-between items-baseline mb-1">
         <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
             Stok Opname — {{ $stokOpname->periode->nama }}
@@ -15,8 +14,13 @@
     </p>
 
     @if($stokOpname->status === 'selesai')
-        <div class="mb-6 rounded-lg bg-success-50 border border-success-200 px-4 py-2.5 text-sm text-success-600 dark:bg-success-500/10 dark:text-success-400">
-            Diverifikasi oleh {{ $stokOpname->diverifikasiOleh->name }} pada {{ $stokOpname->diverifikasi_at->format('d M Y, H:i') }}. Stok telah disesuaikan.
+        <div class="mb-6 flex flex-col gap-3 rounded-lg bg-success-50 border border-success-200 px-4 py-3 dark:bg-success-500/10 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-success-600 dark:text-success-400">
+                Diverifikasi oleh {{ $stokOpname->diverifikasiOleh->name }} pada {{ $stokOpname->diverifikasi_at->format('d M Y, H:i') }}. Stok telah disesuaikan.
+            </p>
+            <a href="{{ route('admin.stok-opname.cetak-bast', $stokOpname->id) }}" target="_blank" class="shrink-0">
+                <x-ui.button size="sm" variant="primary">🖨 Cetak BAST</x-ui.button>
+            </a>
         </div>
     @endif
 
