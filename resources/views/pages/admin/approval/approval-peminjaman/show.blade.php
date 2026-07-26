@@ -111,7 +111,6 @@
 </x-common.component-card>
 </div>
 
-@verbatim
 <script>
 function verifikasiAdmin({ id }) {
     return {

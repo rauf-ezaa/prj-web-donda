@@ -130,29 +130,31 @@ class KaryawanController extends Controller
         }
     }
 
-    public function destroy(User $user, $id)
-    {
-        $relasiTerpakai = $user->permintaan()->exists()
-            || $user->pengajuan()->exists()
-            || $user->peminjaman()->exists();
-
-				if(Auth::user()->id == $id){
-            return back()->with('error', "Lu mau hapus diri lu sendiri hah?");
-				}
-
-        if ($relasiTerpakai) {
-            return back()->with('error', "Pengguna \"{$user->nama_karyawan}\" tidak bisa dihapus karena memiliki histori pengajuan/permintaan/peminjaman.");
-        }
-
-				if(!$relasiTerpakai){
-            return back()->with('success',"Berhasil Terhapus");
-
-					// $user->karyawan()->delete();
-					// $user->delete();
-				}
-
-
-        Alert::success('Data Pengguna Berhasil Dihapus');
-        return redirect()->route('data-pengguna.index');
+   public function destroy(User $user)
+{
+    // guard: gak bisa hapus diri sendiri, pakai $user->id (dari route binding), bukan $id terpisah
+    if (Auth::user()->id === $user->id) {
+        return back()->with('error', 'Kamu tidak dapat menghapus akunmu sendiri.');
     }
+
+    $relasiTerpakai = $user->permintaan()->exists()
+        || $user->pengajuan()->exists()
+        || $user->peminjaman()->exists()
+        || $user->pembelian()->exists();
+
+    if ($relasiTerpakai) {
+        return back()->with('error', "Nama Pengguna {$user->nama_karyawan} tidak bisa dihapus karena memiliki histori pengajuan/permintaan/peminjaman.");
+    }
+
+		else{
+			// $user->karyawan()?->delete();
+			// $user->delete();
+
+			Alert::success('Berhasil', "Pengguna \"{$user->nama_karyawan}\" berhasil dihapus.");
+		}
+
+    // baru di sini beneran hapus, gak ada lagi return duluan yang bikin ini gak kejalan
+
+    return redirect()->route('data-pengguna.index');
+}
 }

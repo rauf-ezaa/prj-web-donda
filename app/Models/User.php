@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Karyawan;
+use App\Models\Pembelian;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -81,5 +82,10 @@ public function dashboardRoute(): string
 		public function persediaan()
 		{
 				return $this->hasMany(Persedian::class, 'requested_by'); // sesuaikan kalau kolomnya beda
+		}
+
+		public function pembelian()
+			{
+				return $this->hasMany(Pembelian::class, 'dibuat_oleh'); // sesuaikan kalau kolomnya beda
 		}
 }

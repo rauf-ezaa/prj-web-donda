@@ -10,9 +10,9 @@
     </div>
 
     <div>
-        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Merk/Spesifikasi</label>
-        <input type="text" name="description" value="{{ old('description', $barang->description ?? '') }}"
-            class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Deskripsi</label>
+        <textarea name="description" rows="3"
+            class="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('description', $barang->description ?? '') }}</textarea>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
@@ -41,13 +41,5 @@
                 @endforeach
             </select>
         </div>
-    </div>
-
-
-
-    <div>
-        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Deskripsi</label>
-        <textarea name="description" rows="3"
-            class="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('description', $barang->description ?? '') }}</textarea>
     </div>
 </div>

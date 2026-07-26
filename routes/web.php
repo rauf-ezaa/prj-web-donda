@@ -29,7 +29,7 @@ Route::middleware(['auth', 'role:admin|spv'])->prefix('laporan')->name('laporan.
     Route::get('/{modul}/export-pdf', [LaporanController::class, 'exportPdf'])->name('modul.export-pdf');
 });
 
-	Route::middleware(['auth','role:staf'])->group(function () {
+	Route::middleware(['auth','role.redirect:staf'])->group(function () {
 		Route::post('/permintaan/{permintaan}/items', [PermintaanController::class, 'addItem'])->name('permintaan.items.add');
 		Route::post('/permintaan/{permintaan}/verifikasi', [PermintaanController::class, 'verifikasi'])->name('permintaan.verifikasi');
 		Route::middleware('auth')->get('riwayat-saya', [RiwayatController::class, 'index'])->name('riwayat.index');
@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
 			require __DIR__ .'/dashboard.php';
 	});
 
-	Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+	Route::middleware(['auth', 'role.redirect:admin'])->prefix('admin')->group(function () {
 		require __DIR__.'/persediaan/persediaan.php';
 		require __DIR__.'/kib/kib.php';
 		require __DIR__ .'/Permintaan/adminPermintaan.php';
@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
 			Route::get('/asset-tetap',[DashboardAssetAdminController::class,'getHalamanKIB'])->name('kib');
 });
 
-Route::middleware(['auth', 'role:spv'])->group(function () {
+Route::middleware(['auth', 'role.redirect:spv'])->group(function () {
 		require __DIR__ .'/Pengajuan/spvPengajuan.php';
 		require __DIR__ .'/Peminjaman/spvPeminjaman.php';
 		require __DIR__.'/persediaan/spvPersediaan.php';

@@ -76,7 +76,7 @@
                     <tr class="text-gray-700 dark:text-gray-300">
                         <td class="px-4 py-3">{{ $barangs->firstItem() + $index }}</td>
                         <td class="px-4 py-3 font-medium">{{ $b->nama_barang }}</td>
-                        <td class="px-4 py-3">{{ $b->merk_spesifikasi ?: '-' }}</td>
+                        <td class="px-4 py-3">{{ $b->description ?: '-' }}</td>
                         <td class="px-4 py-3">{{ $b->kib->klasifikasi }}</td>
                         <td class="px-4 py-3">{{ $b->satuan }}</td>
                         <td class="px-4 py-3">{{ $b->stok_tersedia }}</td>

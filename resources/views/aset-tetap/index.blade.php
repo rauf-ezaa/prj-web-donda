@@ -13,7 +13,7 @@
 
     <!-- Filter -->
     <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-        <form method="GET" action="{{ route('admin.atk') }}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <form method="GET" action="{{ route('kib') }}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div class="flex-1 min-w-[200px]">
                 <label class="mb-1.5 block text-xs font-medium text-gray-600 dark:text-gray-400">Cari</label>
                 <input type="text" name="search" value="{{ request('search') }}"

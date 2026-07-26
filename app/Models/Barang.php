@@ -6,6 +6,7 @@ use App\Models\Kategori;
 use App\Models\KIB;
 use App\Models\Persedian;
 use App\Models\SaldoAwalItem;
+use App\Models\StokOpnameItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Barang extends Model
@@ -64,5 +65,8 @@ class Barang extends Model
 		{
 				return $this->hasMany(SaldoAwalItem::class);
 		}
+
+    public function StokOpnameItem() { return $this->hasMany(StokOpnameItem::class); }
+
 
 }
