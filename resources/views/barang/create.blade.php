@@ -11,9 +11,8 @@
     @endif
 
     <form method="POST" action="{{ route('data-barang.store') }}">
-        @csrf
-        @include('barang._form', ['kibList' => $kibList])
-
+			@csrf
+			@include('barang._form', ['kibList' => $kibList])
         <div class="mt-6 flex gap-2">
             <x-ui.button size="md" variant="primary" type="submit">Simpan</x-ui.button>
             <a href="{{ route('data-barang.index') }}">

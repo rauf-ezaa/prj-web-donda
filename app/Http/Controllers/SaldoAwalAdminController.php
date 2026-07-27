@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Periode;
 use App\Models\SaldoAwal;
 use App\Services\SaldoAwalService;
 use Illuminate\Http\Request;
@@ -26,20 +27,23 @@ class SaldoAwalAdminController extends Controller
         return view('admin.saldo-awal.index', compact('saldoAwals'));
     }
 
-   public function create()
-{
-    $dataBarang = Barang::select('id', 'nama_barang', 'satuan', 'stok_tersedia')
-        ->orderBy('nama_barang')
-        ->get();
+		public function create()
+	{
+			$dataBarang = Barang::select('id', 'nama_barang', 'satuan')
+					->orderBy('nama_barang')
+					->get();
 
-    return view('admin.saldo-awal.create', compact('dataBarang'));
-}
+			$periodeList = \App\Models\Periode::where('status', 'aktif')->get();
 
-    public function store(Request $request)
+			return view('admin.saldo-awal.create', compact('dataBarang', 'periodeList'));
+	}
+
+public function store(Request $request)
 {
+    $this->opnameLock->assertNotLocked();
+
     $validated = $request->validate([
         'periode_id'          => 'required|exists:periodes,id',
-        'stok_opname_id'      => 'nullable|exists:stok_opnames,id',
         'tanggal_pencatatan'  => 'required|date',
         'catatan'             => 'nullable|string',
         'items'               => 'required|array|min:1',
@@ -47,20 +51,26 @@ class SaldoAwalAdminController extends Controller
         'items.*.qty'         => 'required|integer|min:1',
     ]);
 
+    // guard tambahan: pastikan periode yang dipilih beneran masih aktif
+    // (jaga-jaga kalau antara buka form dan submit, SPV keburu kunci periode itu)
+    $periode = \App\Models\Periode::findOrFail($validated['periode_id']);
+    if ($periode->status !== 'aktif') {
+        return back()->withErrors(['periode_id' => 'Periode yang dipilih sudah tidak aktif/terkunci.'])->withInput();
+    }
+
     try {
         $saldoAwal = $this->service->create(
             $validated['items'],
             $validated['tanggal_pencatatan'],
             auth()->id(),
             $validated['catatan'] ?? null,
-            $validated['periode_id'],
-            $validated['stok_opname_id'] ?? null
+            $validated['periode_id']
         );
     } catch (\InvalidArgumentException $e) {
         return back()->withErrors(['items' => $e->getMessage()])->withInput();
     }
 
-    return redirect()->route('admin.saldo-awal.index')
+    return redirect()->route('saldo-awal.index')
         ->with('success', "Saldo awal {$saldoAwal->no_transaksi} berhasil diajukan.");
 }
 
