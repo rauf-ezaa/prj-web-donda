@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 // })->name('karyawanCreate');
 
 Route::resource('data-pengguna', KaryawanController::class)
- ->parameters(['data-pengguna' => 'user']);
+ ->parameters(['data-pengguna' => 'karyawan']);
