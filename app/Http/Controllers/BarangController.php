@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\KIB;
 use Illuminate\Http\Request;
+use Alert;
 
 class BarangController extends Controller
 {
@@ -42,7 +43,7 @@ class BarangController extends Controller
 			 $this->opnameLock->assertNotLocked();
         $validated = $request->validate([
             'nama_barang'      => 'required|string|max:100',
-            'merk_spesifikasi' => 'nullable|string|max:255',
+            'merk_spesifikasi' => 'nullable',
             'satuan'           => 'required|in:' . implode(',', Barang::SATUAN_OPTIONS),
             // 'harga_barang'     => 'required|numeric|min:0',
             // 'stok_tersedia'    => 'required|integer|min:0',
@@ -50,10 +51,10 @@ class BarangController extends Controller
             'klasifikasi_kib'  => 'required|exists:kib,id',
         ]);
 
-        // dd($request->all());
+        // dd($validated);
 
          try {
-           Barang::create($request->validated());
+           Barang::create($validated);
 
            Alert::success('Data Barang Berhasil Ditambahkan.');
            return redirect()->route('data-barang.index');
@@ -63,11 +64,10 @@ class BarangController extends Controller
             ->back()
             ->with('error','ayooo')
             ->withInput();
+						}
 						return redirect()->route('data-barang.index')->with('success', 'Barang berhasil ditambahkan.');
-        }
-				}
 
-
+    }
 
     public function edit(Barang $barang)
     {

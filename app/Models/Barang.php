@@ -17,16 +17,16 @@ class Barang extends Model
         'UNIT', 'PACK', 'PCS', 'BUKU', 'RIM', 'PAD',
     ];
 
+    protected $attributes = [
+			'stok_tersedia' => 0,
+		'harga_barang' => 0];
+
+    protected $fillable =   [ 'nama_barang','merk_spesifikasi','description','klasifikasi_kib'];
+
 		public function pembelianItem()
 		{
 				return $this->hasMany(PembelianItem::class);
 		}
-
-
-    protected $attributes = [
-														 'harga_barang' => 0];
-
-    protected $fillable =   [ 'nama_barang','stok_tersedia','description','klasifikasi_kib','kategori_id'];
 
 		public function bolehDiminta(): bool
 		{
