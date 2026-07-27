@@ -12,6 +12,13 @@ class PengajuanController extends Controller
    public function index(Request $request)
 {
 
+			$hitung = [
+						'pending' => Pengajuan::whereIn('status', ['pending','menunggu_spv'])->where('requested_by',auth()->id())->count(),
+						'approved' => Pengajuan::where('status', 'approved')->where('requested_by',auth()->id())->count(),
+						'rejected' => Pengajuan::where('status', 'rejected')->where('requested_by',auth()->id())->count(),
+						'draft' => Pengajuan::where('status', 'draft')->where('requested_by',auth()->id())->count(),
+				];
+
 		$draftAktif = Pengajuan::where('requested_by', auth()->id())
         ->where('status', 'draft')
         ->latest()
@@ -20,31 +27,33 @@ class PengajuanController extends Controller
     if (!$request->filled('sort')) {
         return view('pages.admin.pengajuan-barang.index-pengajuan', [
             'pengajuan' => null,
+						'hitung' => $hitung,
             'draftAktif' => $draftAktif,
         ]);
     }
 
     // Kalau belum pilih sort, jangan query apa-apa
     if (!$request->filled('sort')) {
-        return view('pages.admin.pengajuan-barang.index-pengajuan',compact('draftAktif'), ['pengajuan' => null]);
+        return view('pages.admin.pengajuan-barang.index-pengajuan',compact('draftAktif','hitung'), ['pengajuan' => null]);
     }
-
 
     $query = Pengajuan::with('requestedBy')
         ->where('requested_by', auth()->id());
 
     match ($request->sort) {
         'draft'     => $query->where('status', 'draft'),
-        'pending'  => $query->where('status', 'pending'),
+        'pending'  => $query->whereIn('status', ['pending','menunggu_spv']),
         'approved' => $query->where('status', 'approved'),
         'rejected'   => $query->where('status', 'rejected'),
     };
 
-    $pengajuan = $query->orderBy('created_at', 'desc')
-        ->paginate(10)
-        ->withQueryString();
 
-        return view('pages.admin.pengajuan-barang.index-pengajuan', compact('pengajuan','draftAktif'));
+    $pengajuan = $query->orderBy('created_at', 'desc')
+		->paginate(10)
+		->withQueryString();
+
+
+        return view('pages.admin.pengajuan-barang.index-pengajuan', compact('pengajuan','draftAktif','hitung'));
     }
 
     public function startDraft()
@@ -61,8 +70,12 @@ class PengajuanController extends Controller
 
     public function showDraft(Pengajuan $pengajuan)
 {
-    abort_unless($pengajuan->status === 'draft' || $pengajuan->status === 'pending' && $pengajuan->requested_by == auth()->id(), 403);
-    $pengajuan->load('details');
+    abort_unless(
+						in_array($pengajuan->status, ['draft', 'pending']) &&
+						$pengajuan->requested_by == auth()->id(),
+						403
+				);
+		$pengajuan->load('details');
 
     return view('pages.admin.pengajuan-barang.draft', compact('pengajuan')); // dataBarang dihapus
 }
@@ -70,7 +83,11 @@ class PengajuanController extends Controller
 
     public function addItem(Pengajuan $pengajuan, Request $request)
 {
-    abort_unless($pengajuan->status === 'draft' && $pengajuan->requested_by == auth()->id(), 403);
+    abort_unless(
+						in_array($pengajuan->status, ['draft', 'pending']) &&
+						$pengajuan->requested_by == auth()->id(),
+						403
+				);
 
     $validated = $request->validate([
         'nama_barang_diajukan' => 'required|string|max:255',
@@ -94,8 +111,11 @@ class PengajuanController extends Controller
 
     public function removeItem(Pengajuan $pengajuan, PengajuanDetail $detail)
     {
-        abort_unless($pengajuan->status === 'draft' && $pengajuan->requested_by == auth()->id(), 403);
-        abort_unless($detail->pengajuan_id == $pengajuan->id, 404);
+					abort_unless(
+								in_array($pengajuan->status, ['draft', 'pending']) &&
+								$pengajuan->requested_by == auth()->id(),
+								403
+						);
 
         $detail->delete();
 
@@ -104,7 +124,12 @@ class PengajuanController extends Controller
 
     public function verifikasi(Pengajuan $pengajuan, Request $request)
     {
-        abort_unless($pengajuan->status === 'draft' || $pengajuan->status === 'pending' && $pengajuan->requested_by == auth()->id(), 403);
+       abort_unless(
+						in_array($pengajuan->status, ['draft', 'pending']) &&
+						$pengajuan->requested_by == auth()->id(),
+						403
+				);
+
 
         if ($pengajuan->details()->count() === 0) {
             return response()->json(['success' => false, 'message' => 'Belum ada barang yang diajukan'], 422);

@@ -34,17 +34,44 @@
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-4">
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Tanggal Pinjam</label>
-                <input type="date" x-model="tanggalPinjam"  :min="minTanggalPinjam"
-                    class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-            </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Wajib Kembali</label>
-                <input type="date" x-model="tanggalKembali"  :min="tanggalPinjam"
-                    class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-            </div>
-        </div>
+				<div>
+						<label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Tanggal Pinjam</label>
+						<input type="text"
+								x-model="tanggalPinjam"
+								x-init="flatpickr($el, {
+										dateFormat: 'Y-m-d',
+										minDate: minTanggalPinjam, // Mengambil variabel dari Alpine x-data lo
+										onChange: function(selectedDates, dateStr) {
+												tanggalPinjam = dateStr;
+										}
+								})"
+								placeholder="Pilih tanggal..."
+								class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+				</div>
+
+				<div>
+						<label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Wajib Kembali</label>
+						<input type="text"
+								x-model="tanggalKembali"
+								x-init="
+										// Menyesuaikan minDate Wajib Kembali jika Tanggal Pinjam diubah
+										$watch('tanggalPinjam', value => {
+												if($el._flatpickr) {
+														$el._flatpickr.set('minDate', value);
+												}
+										});
+										flatpickr($el, {
+												dateFormat: 'Y-m-d',
+												minDate: tanggalPinjam,
+												onChange: function(selectedDates, dateStr) {
+														tanggalKembali = dateStr;
+												}
+										});
+								"
+								placeholder="Pilih tanggal..."
+								class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+				</div>
+		</div>
 
         <div class="mb-4">
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Barang</label>
@@ -93,7 +120,7 @@
 
 				<div class="flex gap-2 mt-4">
 					<x-ui.button size="sm" variant="primary" type="button" @click="verifikasi" x-bind:disabled="isSubmitting || items.length === 0">
-							<span x-show="!isSubmitting">Verifikasi dan Ajukan</span>
+							<span x-show="!isSubmitting">Verifikasi</span>
 							<span x-show="isSubmitting" x-cloak>Memproses...</span>
 					</x-ui.button>
 		@if ($peminjaman->is_editable)

@@ -71,4 +71,52 @@ class PembelianAdminController extends Controller
 
         return view('admin.pembelian.show', compact('pembelian'));
     }
+
+		// tambahkan/lengkapi di PembelianAdminController
+
+public function edit(Pembelian $pembelian)
+{
+
+    abort_unless($pembelian->dibuat_oleh === auth()->id(), 403);
+    abort_unless($pembelian->status === 'menunggu_verifikasi_spv', 403, 'Pembelian ini tidak dapat diedit pada status saat ini.');
+
+    $pembelian->load('items.barang');
+    $dataBarang = Barang::select('id', 'nama_barang', 'satuan')->orderBy('nama_barang')->get();
+
+    return view('admin.pembelian.edit', compact('pembelian', 'dataBarang'));
+}
+
+public function update(Request $request, Pembelian $pembelian)
+{
+    abort_unless($pembelian->dibuat_oleh === auth()->id(), 403);
+
+    $this->opnameLock->assertNotLocked();
+
+    $validated = $request->validate([
+        'nama_supplier'          => 'required|string|max:255',
+        'tanggal_diterima'       => 'required|date',
+        'catatan'                => 'nullable|string',
+        'items'                  => 'required|array|min:1',
+        'items.*.barang_id'      => 'required|exists:barangs,id',
+        'items.*.qty'            => 'required|integer|min:1',
+        'items.*.deskripsi'      => 'nullable|string|max:500',
+    ]);
+
+    try {
+        $this->service->update(
+            $pembelian,
+            $validated['items'],
+            $validated['nama_supplier'],
+            $validated['tanggal_diterima'],
+            $validated['catatan'] ?? null
+        );
+    } catch (\InvalidArgumentException $e) {
+        return back()->withErrors(['items' => $e->getMessage()])->withInput();
+    }
+
+    return redirect()
+        ->route('admin.pembelian.show', $pembelian->id)
+        ->with('success', "Pembelian {$pembelian->no_transaksi} berhasil diperbarui.");
+}
+
 }

@@ -11,7 +11,12 @@ class PermintaanController extends Controller
 {
      public function index(Request $request)
 {
-
+	$hitung = [
+						'pending' => Permintaan::whereIn('status_permintaan', ['pending'])->where('request_by',auth()->id())->count(),
+						'approved' => Permintaan::where('status_permintaan', 'approved')->where('request_by',auth()->id())->count(),
+						'rejected' => Permintaan::where('status_permintaan', 'rejected')->where('request_by',auth()->id())->count(),
+						'draft' => Permintaan::where('status_permintaan', 'draft')->where('request_by',auth()->id())->count(),
+				];
 		$draftAktif = Permintaan::where('request_by', auth()->id())
         ->where('status_permintaan', 'draft')
         ->latest()
@@ -20,13 +25,14 @@ class PermintaanController extends Controller
     if (!$request->filled('sort')) {
         return view('pages.admin.permintaan-barang.index-permintaan', [
             'permintaan' => null,
+						'hitung' => $hitung,
             'draftAktif' => $draftAktif,
         ]);
     }
 
     // Kalau belum pilih sort, jangan query apa-apa
     if (!$request->filled('sort')) {
-        return view('pages.admin.permintaan-barang.index-permintaan',compact('draftAktif'), ['pengajuan' => null]);
+        return view('pages.admin.permintaan-barang.index-permintaan',compact('draftAktif','hitung'), ['pengajuan' => null]);
     }
 
 
@@ -44,7 +50,7 @@ class PermintaanController extends Controller
         ->paginate(10)
         ->withQueryString();
 
-        return view('pages.admin.permintaan-barang.index-permintaan', compact('permintaan', 'draftAktif'));
+        return view('pages.admin.permintaan-barang.index-permintaan', compact('permintaan', 'draftAktif','hitung'));
     }
 
     public function startDraft()

@@ -66,6 +66,49 @@ class PembelianService
         });
     }
 
+
+		// tambahkan di app/Services/PembelianService.php
+
+public function update(Pembelian $pembelian, array $itemsInput, string $namaSupplier, string $tanggalDiterima, ?string $catatan = null): Pembelian
+{
+    if ($pembelian->status !== 'menunggu_verifikasi_spv') {
+        throw new InvalidArgumentException('Pembelian ini tidak dapat diedit karena sudah diverifikasi/ditolak.');
+    }
+
+    return DB::transaction(function () use ($pembelian, $itemsInput, $namaSupplier, $tanggalDiterima, $catatan) {
+
+        $totalQty = collect($itemsInput)->sum(fn ($row) => $row['qty'] ?? 0);
+
+        if ($totalQty <= 0) {
+            throw new InvalidArgumentException('Minimal harus ada satu barang dengan qty lebih dari 0.');
+        }
+
+        $pembelian->update([
+            'nama_supplier'    => $namaSupplier,
+            'tanggal_diterima' => $tanggalDiterima,
+            'catatan'          => $catatan,
+        ]);
+
+        // hapus item lama, gantikan dengan yang baru — lebih sederhana & aman
+        // daripada diff satu-satu, karena belum ada stok yang berubah di tahap ini
+        $pembelian->items()->delete();
+
+        foreach ($itemsInput as $row) {
+            if (($row['qty'] ?? 0) <= 0) continue;
+
+            PembelianItem::create([
+                'pembelian_id' => $pembelian->id,
+                'barang_id'    => $row['barang_id'],
+                'qty'          => $row['qty'],
+                'deskripsi'    => $row['deskripsi'] ?? null,
+            ]);
+        }
+
+        return $pembelian->load('items');
+    });
+}
+
+
     public function reject(Pembelian $pembelian, int $spvId, string $alasan): void
     {
         if ($pembelian->status !== 'menunggu_verifikasi_spv') {

@@ -71,7 +71,7 @@
         </div>
 
         {{-- FORM APPROVAL — cuma tampil kalau masih actionable --}}
-        @if ($pengajuan->is_actionable)
+        @if ($pengajuan->is_actionable_admin)
             <div class="mb-5">
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Catatan (opsional untuk setuju, wajib untuk tolak)

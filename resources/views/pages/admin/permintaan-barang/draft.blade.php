@@ -135,11 +135,11 @@ parentTitle="Data Permintaan"
         </div>
 
 
-    <a href="{{ route('pengajuan.index') }}">
+    <a href="{{ route('permintaan.index') }}">
         <x-ui.button size="sm" variant="secondary">Kembali</x-ui.button>
     </a>
 		<x-ui.button size="sm" variant="primary" type="button" @click="verifikasi"  x-bind:disabled="isSubmitting || items.length === 0">
-				<span x-show="!isSubmitting">Verifikasi dan Ajukan</span>
+				<span x-show="!isSubmitting">Ajukan</span>
 				<span x-show="isSubmitting" x-cloak>Memproses...</span>
 		</x-ui.button>
 </div>

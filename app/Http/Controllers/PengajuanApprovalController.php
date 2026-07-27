@@ -10,7 +10,7 @@ class PengajuanApprovalController extends Controller
    public function index(Request $request)
     {
 
-			$status = $request->query('status', 'pending'); // default kalau nggak ada filter
+			$status = $request->query('status','menunggu_spv'); // default kalau nggak ada filter
 
     $query = Pengajuan::with('requestedBy', 'approvedBy')->latest();
 
@@ -24,7 +24,7 @@ class PengajuanApprovalController extends Controller
 
     // hitung jumlah per status, buat badge di dropdown (opsional tapi berguna)
     $counts = [
-        'pending' => Pengajuan::where('status', 'pending')->count(),
+        'menunggu_spv' => Pengajuan::where('status', 'menunggu_spv')->count(),
         'approved' => Pengajuan::where('status', 'approved')->count(),
         'rejected' => Pengajuan::where('status', 'rejected')->count(),
     ];
@@ -34,7 +34,8 @@ class PengajuanApprovalController extends Controller
 
     public function show(Pengajuan $pengajuan)
     {
-        abort_unless($pengajuan->status === 'pending', 404);
+        abort_unless($pengajuan->status === 'menunggu_spv', 404);
+
 
         $pengajuan->load('details.barang', 'requestedBy');
 
@@ -43,7 +44,7 @@ class PengajuanApprovalController extends Controller
 
     public function approve(Pengajuan $pengajuan, Request $request)
     {
-        abort_unless($pengajuan->status === 'pending', 404);
+        abort_unless($pengajuan->status === 'menunggu_spv', 404);
 
         $validated = $request->validate([
             'catatan_approval' => ['nullable', 'string', 'max:500'],

@@ -21,6 +21,7 @@ class DashboardService
     {
         return [
             'permintaan_menunggu'    => Permintaan::where('status_permintaan', 'pending')->count(),
+						'pengajuan_menunggu'		 => Pengajuan::where('status', 'pending')->count(),
             'pengembalian_menunggu'  => Pengembalian::where('status', 'menunggu_verifikasi_admin')->count(),
             'peminjaman_menunggu'    => Peminjaman::where('status', 'pending')->count(),
             'pembelian_menunggu'     => Pembelian::where('status', 'menunggu_verifikasi_spv')->count(), // pembelian admin yg buat, spv yg verify — tampilkan draft/riwayat sendiri
@@ -29,6 +30,7 @@ class DashboardService
                 ->merge(Permintaan::where('status_permintaan', 'pending')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Permintaan', 'kode' => $r->kode_permintaan, 'tanggal' => $r->created_at]))
                 ->merge(Pengembalian::where('status', 'menunggu_verifikasi_admin')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Pengembalian', 'kode' => "#{$r->id}", 'tanggal' => $r->created_at]))
                 ->merge(Peminjaman::where('status', 'pending')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Peminjaman', 'kode' => $r->kode_peminjaman, 'tanggal' => $r->created_at]))
+                ->merge(Pengajuan::where('status', 'pending')->latest()->take(3)->get()->map(fn($r) => ['label' => 'pengajuan', 'kode' => $r->kode_pengajuan, 'tanggal' => $r->created_at]))
                 ->sortByDesc('tanggal')
                 ->take(5),
         ];

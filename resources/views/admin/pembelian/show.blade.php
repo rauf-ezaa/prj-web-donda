@@ -9,6 +9,11 @@
     <div class="flex justify-between items-baseline mb-1">
         <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">{{ $pembelian->no_transaksi }}</h1>
         <span class="text-xs text-amber-600">{{ $pembelian->status_label }}</span>
+				@if($pembelian->status === 'menunggu_verifikasi_spv')
+				<a href="{{ route('pembelian.edit', $pembelian->id) }}" class="mb-4 inline-block">
+						<x-ui.button size="sm" variant="secondary">✏ Edit Transaksi</x-ui.button>
+				</a>
+@endif
     </div>
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
         Diajukan oleh {{ $pembelian->dibuatOleh->nama_karyawan }} · {{ $pembelian->created_at->format('d M Y, H:i') }}

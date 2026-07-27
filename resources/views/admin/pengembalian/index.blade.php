@@ -35,7 +35,7 @@
                         <td class="px-4 py-3">{{ $pengembalians->firstItem() + $index }}</td>
                         <td class="px-4 py-3 font-medium">{{ $p->peminjaman->kode_peminjaman }}</td>
                         <td class="px-4 py-3">{{ $p->peminjaman->requestedBy->nama_karyawan ?? '-' }}</td>
-                        <td class="px-4 py-3">{{ $p->staff->nama_karyawans }}</td>
+                        <td class="px-4 py-3">{{ $p->staff->jabatan }}</td>
                         <td class="px-4 py-3">{{ $p->tanggal_pengembalian->format('d M Y, H:i') }}</td>
                         <td class="px-4 py-3 text-right">
                             <a href="{{ route('admin.pengembalian.show', $p->id) }}">

@@ -12,8 +12,8 @@
                 onchange="this.form.submit()"
                 class="dark:bg-dark-900 h-10 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
             >
-                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>
-                    Menunggu Persetujuan ({{ $counts['pending'] }})
+                <option value="menunggu_spv" {{ $status === 'menunggu_spv' ? 'selected' : '' }}>
+                    Menunggu Persetujuan ({{ $counts['menunggu_spv'] }})
                 </option>
                 <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>
                     Disetujui ({{ $counts['approved'] }})
@@ -35,7 +35,7 @@
     @endif
 
     <x-common.component-card :title="match($status) {
-        'pending' => 'Menunggu Persetujuan Admin',
+        'menunggu_spv' => 'Menunggu Persetujuan Admin',
         'approved' => 'Riwayat Disetujui',
         'rejected' => 'Riwayat Ditolak',
         default => 'Semua Riwayat',
@@ -45,10 +45,10 @@
         @php
 						$rowClasses = 'flex items-center justify-between px-4 py-3 '
 								. (!$loop->last ? 'border-b border-gray-200 dark:border-gray-700 ' : '')
-								. ($item->is_accessible  ? 'hover:bg-gray-50 dark:hover:bg-gray-800' : 'opacity-60 cursor-not-allowed');
+								. ($item->is_actionable  ? 'hover:bg-gray-50 dark:hover:bg-gray-800' : 'opacity-60 cursor-not-allowed');
 				@endphp
 
-        @if ($item->is_accessible)
+        @if ($item->is_actionable)
             <a href="{{ route('spv.pengajuan.show', $item->id) }}" class="{{ $rowClasses }}">
         @else
             <div class="{{ $rowClasses }}">
@@ -67,7 +67,7 @@
                 {{ ucfirst(str_replace('_', ' ', $item->status)) }}
             </span>
 
-        @if ($item->is_accessible)
+        @if ($item->is_actionable)
             </a>
         @else
             </div>

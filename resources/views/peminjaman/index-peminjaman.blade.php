@@ -45,10 +45,18 @@
                 <select name="sort"
                     class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                     <option value="">-- Pilih Status --</option>
-                    <option value="draft" @selected(request('sort') == 'draft')>Draft (Belum Diajukan)</option>
-                    <option value="pending" @selected(request('sort') == 'pending')>Menunggu Persetujuan</option>
-                    <option value="approved" @selected(request('sort') == 'approved')>Disetujui</option>
-                    <option value="rejected" @selected(request('sort') == 'rejected')>Ditolak</option>
+                    <option value="draft" @selected(request('sort') == 'draft')>
+											Draft (Belum Diajukan) ({{$counts['draft']}})
+										</option>
+                    <option value="pending" @selected(request('sort') == 'pending')>
+											Menunggu Persetujuan ({{$counts['pending']}})
+										</option>
+                    <option value="approved" @selected(request('sort') == 'approved')>
+											Disetujui ({{$counts['approved']}})
+										</option>
+                    <option value="rejected" @selected(request('sort') == 'rejected')>
+											Ditolak ({{$counts['rejected']}})
+										</option>
                 </select>
             </div>
 

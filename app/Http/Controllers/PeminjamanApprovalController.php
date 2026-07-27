@@ -48,7 +48,7 @@ class PeminjamanApprovalController extends Controller
 
     public function approve(Peminjaman $peminjaman, Request $request)
 {
-    abort_unless($peminjaman->status === 'menunggu_spv' && auth()->user()->hasRole('admin'), 403);
+    abort_unless($peminjaman->status === 'menunggu_spv' && auth()->user()->hasRole('spv'), 403);
 
     $validated = $request->validate([
         'catatan_approval' => ['nullable', 'string', 'max:500'],

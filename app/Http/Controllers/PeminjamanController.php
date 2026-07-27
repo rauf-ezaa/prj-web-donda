@@ -19,6 +19,14 @@ public function __construct(
 public function index(Request $request)
 {
 
+    $counts = [
+				'draft' => Peminjaman::where('status','draft')->count(),
+        'pending' => Peminjaman::where('status', 'pending')->count(),
+        'approved' => Peminjaman::where('status', 'dipinjam')->count(),
+        'rejected' => Peminjaman::where('status', 'rejected')->count(),
+    ];
+
+
 		$draftAktif = Peminjaman::where('requested_by', auth()->id())
         ->where('status', 'draft')
         ->latest()
@@ -27,13 +35,14 @@ public function index(Request $request)
     if (!$request->filled('sort')) {
         return view('peminjaman.index-peminjaman', [
             'peminjaman' => null,
+						'counts' => $counts,
             'draftAktif' => $draftAktif,
         ]);
     }
 
     // Kalau belum pilih sort, jangan query apa-apa
     if (!$request->filled('sort')) {
-        return view('peminjaman.index-peminjaman',compact('draftAktif'), ['peminjaman' => null]);
+        return view('peminjaman.index-peminjaman',compact('draftAktif','counts'), ['peminjaman' => null]);
     }
 
     $query = Peminjaman::with('requestedBy')
@@ -41,8 +50,8 @@ public function index(Request $request)
 
     match ($request->sort) {
         'draft'     => $query->where('status', 'draft'),
-        'pending'  => $query->whereIn('status', ['pending','menunggu_spv']),
-        'approved' => $query->where('status', 'approved'),
+        'pending'  => $query->whereIn('status', ['pending']),
+        'approved' => $query->where('status', 'dipinjam'),
         'rejected'   => $query->where('status', 'rejected'),
     };
 
@@ -50,7 +59,7 @@ public function index(Request $request)
         ->paginate(10)
         ->withQueryString();
 
-        return view('peminjaman.index-peminjaman', compact('peminjaman', 'draftAktif'));
+        return view('peminjaman.index-peminjaman', compact('peminjaman', 'draftAktif','counts'));
     }
 
     public function startDraft()

@@ -40,7 +40,7 @@ class PengajuanApprovalAdminController extends Controller
     {
         abort_if($pengajuan->status === 'draft' && $pengajuan->requested_by != auth()->id(), 403);
 
-    	$pengajuan->load('details', 'requestedBy', 'approvedBy');
+    		$pengajuan->load('details', 'requestedBy', 'approvedBy');
 
         return view('pages.admin.approval.approval-pengajuan.show', compact('pengajuan'));
     }
