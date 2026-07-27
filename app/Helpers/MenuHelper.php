@@ -37,6 +37,13 @@ public static function saldoAwal(){
 
 		public static function verifikasiPermintaan(){
 			return [
+					[
+					 			'icon' => 'verifikasi_pengajuan',
+                'name' => ' Verifikasi Pengajuan',
+                'path' => '/spv/pengajuan',
+								'roles' => 'spv'
+				],
+
 				[
 					 			'icon' => 'verifikasi_permintaan',
                 'name' => 'Verifikasi Permintaan',
@@ -58,12 +65,6 @@ public static function saldoAwal(){
 								'roles' => 'spv'
 				],
 
-					[
-					 			'icon' => 'verifikasi_pengajuan',
-                'name' => ' Verifikasi Pengajuan',
-                'path' => '/spv/pengajuan',
-								'roles' => 'spv'
-				],
 
 				[
 					 			'icon' => 'ecommerce',
@@ -95,7 +96,7 @@ public static function saldoAwal(){
         return [
             [
                 'icon' => 'pengajuan_barang',
-                'name' => 'Pengajuan Barang',
+                'name' => 'Pengajuan',
                 'path' => '/pengajuan',
 								'roles' =>  'staf',
 
@@ -317,6 +318,13 @@ public static function saldoAwal(){
 		 public static function getVerificationDataAdmin(){
 
         return [
+					[
+                'icon' => 'verifikasi_pengajuan',
+                'name' => 'Pengajuan',
+                'path' => '/admin/pengajuan',
+								'roles' => 'admin'
+            ],
+
             [
                 'icon' => 'permintaan_barang',
                 'name' => 'Permintaan',
@@ -330,25 +338,17 @@ public static function saldoAwal(){
             //     'path' => '/admin/pembelian',
 						// 		'roles' => 'spv'
             // ],
+						[
+							 'icon' => 'verifikasi_pengembalian',
+							 'name' => 'Pengembalian',
+							 'path' => '/admin/pengembalian',
+							 'roles' => 'admin'
+					 ],
 
 						 [
                 'icon' => 'verifikasi_peminjaman',
                 'name' => 'Peminjaman',
                 'path' => '/admin/peminjaman',
-								'roles' => 'admin'
-            ],
-
-						 [
-                'icon' => 'verifikasi_pengembalian',
-                'name' => 'Pengembalian',
-                'path' => '/admin/pengembalian',
-								'roles' => 'admin'
-            ],
-
-						 [
-                'icon' => 'verifikasi_pengajuan',
-                'name' => 'pengajuan',
-                'path' => '/admin/pengajuan',
 								'roles' => 'admin'
             ],
 
@@ -378,13 +378,13 @@ public static function saldoAwal(){
 						],
 
 						[
-								'title' => 'Verifikasi Permintaan ',
+								'title' => 'Verifikasi ',
                 'items' => self::getVerificationDataAdmin()
 						],
 
 
 						[
-								'title' => 'Verifikasi Permintaan ',
+								'title' => 'Verifikasi ',
                 'items' => self::verifikasiPermintaan()
 
 						],

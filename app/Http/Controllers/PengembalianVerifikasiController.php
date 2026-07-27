@@ -55,7 +55,7 @@ class PengembalianVerifikasiController extends Controller
     {
         $request->validate(['alasan' => 'required|string']);
 
-        $this->service->rejectReturn($pengembalian, auth()->id(), $request->alasan);
+        $this->service->rejectBySpv($pengembalian, auth()->id(), $request->alasan);
 
         return redirect()
             ->route('admin.pengembalian.index')

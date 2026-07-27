@@ -59,7 +59,7 @@
 
 
 <div class="flex gap-2 mt-4">
-    @if ($pengajuan->is_editable)
+    @if ($pengajuan->is_accessible)
         <a href="{{ route('pengajuan.draft', $pengajuan->id) }}">
             <x-ui.button size="sm" variant="secondary">Edit Barang</x-ui.button>
         </a>

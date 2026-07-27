@@ -1,9 +1,20 @@
 @extends('layouts.app')
-@php $currentPageTitle = 'Input Pembelian Barang'; @endphp
+@php $currentPageTitle = 'Edit Pembelian Barang'; @endphp
 @section('content')
 
-<div x-data="pembelianForm({ dataBarang: @js($dataBarang), existingItems: [] })" class="max-w-2xl mx-auto">
-    <x-common.component-card title="Input Pembelian Barang (Barang Masuk)">
+<div x-data="pembelianForm({
+        dataBarang: @js($dataBarang),
+        existingItems: @js($pembelian->items->map(fn($i) => [
+            'barang_id' => $i->barang_id,
+            'qty' => $i->qty,
+            'deskripsi' => $i->deskripsi,
+        ])),
+    })" class="max-w-2xl mx-auto">
+    <x-common.component-card title="Edit Pembelian Barang — {{ $pembelian->no_transaksi }}">
+
+        <div class="mb-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5 text-sm text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+            Transaksi ini masih menunggu verifikasi supervisor. Kamu bisa mengubah datanya sebelum diverifikasi.
+        </div>
 
         <div x-show="errorMessage" x-cloak class="mb-3 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500" x-text="errorMessage"></div>
 
@@ -13,22 +24,23 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('pembelian.store') }}">
+        <form method="POST" action="{{ route('pembelian.update', $pembelian->id) }}">
             @csrf
+            @method('PUT')
 
             <div class="grid grid-cols-2 gap-3 mb-4">
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Nama Supplier <span class="text-error-500">*</span>
                     </label>
-                    <input type="text" name="nama_supplier" value="{{ old('nama_supplier') }}"
+                    <input type="text" name="nama_supplier" value="{{ old('nama_supplier', $pembelian->nama_supplier) }}"
                         class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
                 </div>
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Tanggal Diterima <span class="text-error-500">*</span>
                     </label>
-                    <input type="date" name="tanggal_diterima" value="{{ old('tanggal_diterima', date('Y-m-d')) }}"
+                    <input type="date" name="tanggal_diterima" value="{{ old('tanggal_diterima', $pembelian->tanggal_diterima->format('Y-m-d')) }}"
                         class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
                 </div>
             </div>
@@ -77,12 +89,12 @@
             <div class="mb-5">
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Catatan (opsional)</label>
                 <textarea name="catatan" rows="2"
-                    class="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm dark:border-gray-700 dark:text-white/90">{{ old('catatan') }}</textarea>
+                    class="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm dark:border-gray-700 dark:text-white/90">{{ old('catatan', $pembelian->catatan) }}</textarea>
             </div>
 
             <div class="flex gap-2">
-                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Ajukan Data Pembelian</x-ui.button>
-                <a href="{{ route('pembelian.index') }}">
+                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Simpan Perubahan</x-ui.button>
+                <a href="{{ route('pembelian.show', $pembelian->id) }}">
                     <x-ui.button size="md" variant="secondary" type="button">Batal</x-ui.button>
                 </a>
             </div>
@@ -92,10 +104,13 @@
 
 @verbatim
 <script>
-function pembelianForm({ dataBarang }) {
+function pembelianForm({ dataBarang, existingItems }) {
     return {
         dataBarang,
-        rows: [{ barang_id: '', qty: 1, deskripsi: '' }],
+        // kalau ada existingItems (mode edit), pakai itu; kalau kosong (mode create), mulai 1 baris kosong
+        rows: existingItems && existingItems.length > 0
+            ? existingItems.map(i => ({ barang_id: i.barang_id, qty: i.qty, deskripsi: i.deskripsi || '' }))
+            : [{ barang_id: '', qty: 1, deskripsi: '' }],
         errorMessage: '',
 
         addRow() {

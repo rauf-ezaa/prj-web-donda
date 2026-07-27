@@ -18,6 +18,11 @@ class Pengajuan extends Model
 
 		public function getIsActionableAttribute(): bool
 		{
+				return $this->status === 'menunggu_spv'; // cuma ini yang boleh diproses SPV
+		}
+
+		public function getIsActionableAdminAttribute(): bool
+		{
 				return $this->status === 'pending'; // cuma ini yang boleh diproses SPV
 		}
 
