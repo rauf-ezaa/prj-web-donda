@@ -27,6 +27,8 @@ class PengajuanApprovalAdminController extends Controller
         'pending' => Pengajuan::where('status', 'pending')->count(),
         'approved' => Pengajuan::where('status', 'approved')->count(),
         'rejected' => Pengajuan::where('status', 'rejected')->count(),
+        'menunggu_spv' => Pengajuan::where('status', 'menunggu_spv')->count(),
+
     ];
 
 						// dd($pengajuan);

@@ -15,6 +15,10 @@
                 <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>
                     Menunggu Persetujuan ({{ $counts['pending'] }})
                 </option>
+
+								 <option value="menunggu_spv" {{ $status === 'menunggu_spv' ? 'selected' : '' }}>
+                    Menunggu Persetujuan SPV ({{ $counts['menunggu_spv'] }})
+                </option>
                 <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>
                     Disetujui ({{ $counts['approved'] }})
                 </option>

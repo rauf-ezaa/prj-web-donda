@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 class PengembalianAdminController extends Controller
 {
-    public function __construct(private PengembalianService $service) {}
+    public function __construct(
+		private PengembalianService $service,
+		private \App\Services\OpnameLockService $opnameLock
+		) {}
 
     public function index()
     {
