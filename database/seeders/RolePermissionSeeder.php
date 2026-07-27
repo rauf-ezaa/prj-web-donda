@@ -49,10 +49,10 @@ class RolePermissionSeeder extends Seeder
         }
 
         // ==== ROLES ====
-        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $admin = Role::firstOrCreate(['name' => 'spv', 'guard_name' => 'web']);
         $admin->givePermissionTo(Permission::all()); // admin dapat semua akses
 
-        $spv = Role::firstOrCreate(['name' => 'spv', 'guard_name' => 'web']);
+        $spv = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
         $spv->givePermissionTo([
             'view-pengajuan',
             'view-permintaan',
