@@ -65,6 +65,13 @@ public static function saldoAwal(){
 								'roles' => 'spv'
 				],
 
+				[
+					 			'icon' => 'ecommerce',
+                'name' => 'Verifikasi Pembelian',
+                'path' => '/spv/pembelian',
+								'roles' => 'spv'
+				],
+
 
 				// [
 				// 	 			'icon' => 'archive',

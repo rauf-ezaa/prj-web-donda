@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 // app/Http/Controllers/Admin/PengembalianVerifikasiController.php
 class PengembalianVerifikasiController extends Controller
 {
-    public function __construct(private PengembalianService $service) {}
+    public function __construct(
+			private PengembalianService $service,
+			private \App\Services\OpnameLockService $opnameLock
+			) {}
 
     public function index()
     {

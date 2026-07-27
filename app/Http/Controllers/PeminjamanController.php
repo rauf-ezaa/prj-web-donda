@@ -41,7 +41,7 @@ public function index(Request $request)
 
     match ($request->sort) {
         'draft'     => $query->where('status', 'draft'),
-        'pending'  => $query->where('status', 'pending'),
+        'pending'  => $query->whereIn('status', ['pending','menunggu_spv']),
         'approved' => $query->where('status', 'approved'),
         'rejected'   => $query->where('status', 'rejected'),
     };

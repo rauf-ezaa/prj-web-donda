@@ -8,15 +8,15 @@
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <a href="{{ route('permintaan.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <a href="{{ route('admin.permintaan.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Permintaan Menunggu</p>
             <p class="text-2xl font-semibold text-amber-600">{{ $permintaan_menunggu }}</p>
         </a>
-        <a href="{{ route('pengembalian.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <a href="{{ route('admin.pengembalian.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Pengembalian Menunggu</p>
             <p class="text-2xl font-semibold text-orange-600">{{ $pengembalian_menunggu }}</p>
         </a>
-        <a href="#" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <a href="{{ route('admin.peminjaman.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Peminjaman Pending</p>
             <p class="text-2xl font-semibold text-blue-600">{{ $peminjaman_menunggu }}</p>
         </a>

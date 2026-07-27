@@ -3,45 +3,45 @@ namespace App\Services;
 
 use App\Models\Pembelian;
 use App\Models\PembelianItem;
-use App\Models\SaldoAwal;
-use App\Models\SaldoAwalItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class PembelianService
 {
-    public function create(array $itemsInput, string $tanggalPencatatan, int $adminId, ?string $catatan = null): SaldoAwal
-{
-    return DB::transaction(function () use ($itemsInput, $tanggalPencatatan, $adminId, $catatan) {
+    public function createPembelian(array $itemsInput, string $namaSupplier, string $tanggalDiterima, int $adminId, ?string $catatan = null): Pembelian
+    {
+        return DB::transaction(function () use ($itemsInput, $namaSupplier, $tanggalDiterima, $adminId, $catatan) {
 
-        $totalQty = collect($itemsInput)->sum(fn ($row) => $row['qty'] ?? 0);
+            $totalQty = collect($itemsInput)->sum(fn ($row) => $row['qty'] ?? 0);
 
-        if ($totalQty <= 0) {
-            throw new InvalidArgumentException('Minimal harus ada satu barang dengan qty lebih dari 0.');
-        }
+            if ($totalQty <= 0) {
+                throw new InvalidArgumentException('Minimal harus ada satu barang dengan qty lebih dari 0.');
+            }
 
-        $saldoAwal = SaldoAwal::create([
-            'no_transaksi'       => $this->generateNoTransaksi(),
-            'tanggal_pencatatan' => $tanggalPencatatan,
-            'catatan'            => $catatan,
-            'dibuat_oleh'        => $adminId,
-            'status'             => 'menunggu_verifikasi_spv',
-        ]);
-
-        foreach ($itemsInput as $row) {
-            if (($row['qty'] ?? 0) <= 0) continue;
-
-            SaldoAwalItem::create([
-                'saldo_awal_id' => $saldoAwal->id,
-                'barang_id'     => $row['barang_id'],
-                'qty'           => $row['qty'],
+            $pembelian = Pembelian::create([
+                'no_transaksi'     => $this->generateNoTransaksi(),
+                'nama_supplier'    => $namaSupplier,
+                'tanggal_diterima' => $tanggalDiterima,
+                'catatan'          => $catatan,
+                'dibuat_oleh'      => $adminId,
+                'status'           => 'menunggu_verifikasi_spv',
             ]);
-        }
 
-        return $saldoAwal->load('items');
-    });
-}
+            foreach ($itemsInput as $row) {
+                if (($row['qty'] ?? 0) <= 0) continue;
+
+                PembelianItem::create([
+                    'pembelian_id' => $pembelian->id,
+                    'barang_id'    => $row['barang_id'],
+                    'qty'          => $row['qty'],
+                    'deskripsi'    => $row['deskripsi'] ?? null,
+                ]);
+            }
+
+            return $pembelian->load('items');
+        });
+    }
 
     /**
      * Verifikasi SPV — di sinilah stok_tersedia baru bertambah.
