@@ -5,7 +5,7 @@
     <a href="{{ route('admin.stok-opname.index') }}" class="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">← Kembali</a>
     <div class="flex justify-between items-baseline mb-1">
         <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
-            Stok Opname — {{ $stokOpname->periode->nama }}
+            Stok Opname — {{ $stokOpname->nama_bulan }}
         </h1>
         <span class="text-xs text-amber-600">{{ $stokOpname->status_label }}</span>
     </div>
@@ -42,7 +42,7 @@
                         <td class="px-4 py-3">{{ $index + 1 }}</td>
                         <td class="px-4 py-3">{{ $item->barang->nama_barang }}</td>
                         <td class="px-4 py-3">{{ $item->stok_sistem }}</td>
-                        <td class="px-4 py-3">{{ $item->stok_fisik }}</td>
+                        <td class="px-4 py-3">{{ $item->stok_fisik ?? "tidak ada data"  }}</td>
                         <td class="px-4 py-3">
                             @if($item->selisih !== 0)
                                 <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs text-error-500 dark:bg-red-500/15 dark:text-red-400">

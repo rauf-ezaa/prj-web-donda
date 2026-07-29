@@ -2,19 +2,24 @@
 @php $currentPageTitle = 'Verifikasi SPV - Peminjaman'; @endphp
 @section('content')
 
-<div x-data="verifikasiPeminjaman({
-        peminjamanId: {{ $peminjaman->id }},
-        items: @js($peminjaman->details->map(fn($d) => [
-            'detail_id' => $d->id,
-            'nama_barang' => $d->barang->nama_barang,
-            'jumlah_pinjam' => $d->qty_pinjam,
-            'stok_tersedia' => $d->barang->stok_tersedia,
-        ])),
-    })"
-    class="max-w-2xl mx-auto"
->
 
-    @php
+<div x-data="verifikasiPeminjaman({
+	peminjamanId: {{ $peminjaman->id }},
+	items: @js($peminjaman->details->map(fn($d) => [
+	'detail_id' => $d->id,
+	'nama_barang' => $d->barang->nama_barang,
+	'jumlah_pinjam' => $d->qty_pinjam,
+	'stok_tersedia' => $d->barang->stok_tersedia,
+	])),
+	})"
+	class="max-w-2xl mx-auto"
+	>
+
+
+	@php
+		 $opnameLockService = app(\App\Services\OpnameLockService::class);
+		 $activeLock = $opnameLockService->activeLock();
+
         $bannerConfig = match($peminjaman->status) {
             'dipinjam' => ['bg' => 'bg-green-50 dark:bg-green-950/30', 'text' => 'text-green-700 dark:text-green-400', 'icon' => 'ti-circle-check', 'label' => 'Disetujui SPV'],
             'ditolak' => ['bg' => 'bg-red-50 dark:bg-red-950/30', 'text' => 'text-error-500', 'icon' => 'ti-circle-x', 'label' => 'Ditolak SPV'],
@@ -22,6 +27,7 @@
             default => ['bg' => 'bg-gray-50 dark:bg-gray-800', 'text' => 'text-gray-600 dark:text-gray-400', 'icon' => 'ti-info-circle', 'label' => ucfirst($peminjaman->status)],
         };
     @endphp
+
 
     <div class="flex justify-between items-baseline mb-1">
         <h3 class="text-lg font-medium text-gray-800 dark:text-white/90">Verifikasi SPV</h3>
@@ -89,8 +95,19 @@
             </template>
         </div>
 
-        @if ($peminjaman->status === 'menunggu_spv')
-            <div class="mb-5">
+								@if($activeLock)
+								<div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500">
+										⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+									</div>
+									<div class="mb-5">
+											<a href="{{ route('spv.peminjaman.index') }}">
+												<x-ui.button size="sm" variant="danger" type="button">
+													<i class="ti ti-arrow-left"></i> Kembali
+												</x-ui.button>
+											</a>
+							@else
+						 @if ($peminjaman->status === 'menunggu_spv')
+						 <div class="mb-5">
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Catatan (opsional untuk approve, wajib untuk tolak)
                 </label>
@@ -113,11 +130,13 @@
                 </a>
             </div>
         @else
-            <a href="{{ route('spv.peminjaman.index') }}">
-                <x-ui.button size="sm" variant="danger" type="button" class="w-full">
-                    <i class="ti ti-arrow-left"></i> Kembali
-                </x-ui.button>
-            </a>
+				<a href="{{ route('spv.peminjaman.index') }}">
+						<x-ui.button size="sm" variant="danger" type="button" class="w-full">
+								<i class="ti ti-arrow-left"></i> Kembali
+						</x-ui.button>
+				</a>
+				@endif
+
         @endif
     </x-common.component-card>
 </div>

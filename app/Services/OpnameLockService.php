@@ -23,7 +23,7 @@ class OpnameLockService
         if ($opname) {
             throw new HttpResponseException(
                 back()->withErrors([
-                    'opname_lock' => "Sistem sedang dalam proses Stok Opname ({$opname->no_bast}) yang menunggu keputusan supervisor. Transaksi yang mempengaruhi stok dibekukan sementara sampai opname ini diverifikasi atau dibatalkan.",
+                    'errors' => "Sistem sedang dalam proses Stok Opname ({$opname->no_bast}) yang menunggu keputusan supervisor. Transaksi yang mempengaruhi stok dibekukan sementara sampai opname ini diverifikasi atau dibatalkan.",
                 ])
             );
         }

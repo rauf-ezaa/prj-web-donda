@@ -9,7 +9,6 @@ class PengembalianAdminController extends Controller
 {
     public function __construct(
 		private PengembalianService $service,
-		private \App\Services\OpnameLockService $opnameLock
 		) {}
 
     public function index()
@@ -37,7 +36,6 @@ class PengembalianAdminController extends Controller
 
     public function verify(Pengembalian $pengembalian)
     {
-			 $this->opnameLock->assertNotLocked();
         try {
             $this->service->verifyByAdmin($pengembalian, auth()->id());
         } catch (\InvalidArgumentException $e) {

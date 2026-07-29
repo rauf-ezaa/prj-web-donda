@@ -1,6 +1,11 @@
 @extends('layouts.app')
 @php $currentPageTitle = 'Detail Verifikasi Pengembalian'; @endphp
 @section('content')
+	@php
+		 $opnameLockService = app(\App\Services\OpnameLockService::class);
+		 $activeLock = $opnameLockService->activeLock();
+
+  @endphp
 <div class="p-4 md:p-6 max-w-3xl mx-auto">
 
     <a href="{{ route('spv.pengembalian.index') }}" class="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">
@@ -108,6 +113,11 @@
         </div>
     @endif
 
+		@if($activeLock)
+								<div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500">
+										⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+									</div>
+		@else
     <div class="flex gap-2">
         <form action="{{ route('spv.pengembalian.verify', $pengembalian->id) }}" method="POST"
               onsubmit="return confirm('Yakin verifikasi pengembalian ini ?')">
@@ -122,5 +132,6 @@
             <x-ui.button size="md" variant="secondary" type="submit">Tolak</x-ui.button>
         </form>
     </div>
+		@endif
 </div>
 @endsection

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class PeminjamanApprovalController extends Controller
 {
+	public function __construct(
+				private \App\Services\OpnameLockService $opnameLock
+		) {}
     public function index(Request $request)
     {
         $status = $request->query('status', 'menunggu_spv'); // default kalau nggak ada filter
@@ -48,6 +51,7 @@ class PeminjamanApprovalController extends Controller
 
     public function approve(Peminjaman $peminjaman, Request $request)
 {
+		$this->opnameLock->assertNotLocked();
     abort_unless($peminjaman->status === 'menunggu_spv' && auth()->user()->hasRole('spv'), 403);
 
     $validated = $request->validate([
@@ -104,6 +108,7 @@ class PeminjamanApprovalController extends Controller
 
     public function konfirmasiKembali(Peminjaman $peminjaman, Request $request)
     {
+				$this->opnameLock->assertNotLocked();
         abort_unless(in_array($peminjaman->status, ['dipinjam', 'menunggu_konfirmasi_kembali']), 404);
 
         $validated = $request->validate([

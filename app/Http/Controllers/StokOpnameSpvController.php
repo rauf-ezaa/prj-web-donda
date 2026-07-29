@@ -11,7 +11,7 @@ class StokOpnameSpvController extends Controller
 
     public function index()
     {
-        $stokOpnames = StokOpname::with(['periode', 'dibuatOleh'])
+        $stokOpnames = StokOpname::with(['dibuatOleh'])
             ->where('status', 'menunggu_verifikasi_spv')
             ->latest()
             ->paginate(10);
@@ -22,7 +22,7 @@ class StokOpnameSpvController extends Controller
     public function show(StokOpname $stokOpname)
     {
         abort_unless($stokOpname->status === 'menunggu_verifikasi_spv', 403, 'Opname ini bukan di tahap verifikasi.');
-        $stokOpname->load('items.barang', 'periode', 'dibuatOleh');
+        $stokOpname->load('items.barang','dibuatOleh');
 
         return view('spv.stok-opname.show', compact('stokOpname'));
     }

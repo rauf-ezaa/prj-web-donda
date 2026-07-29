@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @php $currentPageTitle = 'Verifikasi Pembelian'; @endphp
 @section('content')
+
+ 						@php
+								$opnameLockService = app(\App\Services\OpnameLockService::class);
+								$activeLock = $opnameLockService->activeLock();
+						@endphp
+
+
 <div class="p-4 md:p-6 max-w-3xl mx-auto">
     <a href="{{ route('spv.pembelian.index') }}" class="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">
         ← Kembali
@@ -66,18 +73,24 @@
         Setelah verifikasi, stok barang akan langsung bertambah sesuai qty di atas.
     </div>
 
-    <div class="flex gap-2">
-        <form action="{{ route('spv.pembelian.verify', $pembelian->id) }}" method="POST"
-              onsubmit="return confirm('Yakin verifikasi? Stok akan langsung diperbarui.')">
+			@if($activeLock)
+					<div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500">
+							⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+					</div>
+			@else
+					<div class="flex gap-2">
+						<form action="{{ route('spv.pembelian.verify', $pembelian->id) }}" method="POST"
+						onsubmit="return confirm('Yakin verifikasi? Stok akan langsung diperbarui.')">
             @csrf
             <x-ui.button size="md" variant="primary" type="submit">Verifikasi & Tambah Stok</x-ui.button>
+					</form>
+					<form action="{{ route('spv.pembelian.reject', $pembelian->id) }}" method="POST"
+					onsubmit="return confirm('Yakin tolak pembelian ini?')">
+					@csrf
+					<input type="hidden" name="alasan" value="Ditolak oleh supervisor">
+					<x-ui.button size="md" variant="secondary" type="submit">Tolak</x-ui.button>
         </form>
-        <form action="{{ route('spv.pembelian.reject', $pembelian->id) }}" method="POST"
-              onsubmit="return confirm('Yakin tolak pembelian ini?')">
-            @csrf
-            <input type="hidden" name="alasan" value="Ditolak oleh supervisor">
-            <x-ui.button size="md" variant="secondary" type="submit">Tolak</x-ui.button>
-        </form>
-    </div>
+			</div>
+		@endif
 </div>
 @endsection

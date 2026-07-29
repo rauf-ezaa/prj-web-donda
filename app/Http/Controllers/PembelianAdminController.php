@@ -10,7 +10,6 @@ class PembelianAdminController extends Controller
 {
     public function __construct(
 			private PembelianService $service,
-			private \App\Services\OpnameLockService $opnameLock
 		) {}
 
     public function index(Request $request)
@@ -35,7 +34,6 @@ class PembelianAdminController extends Controller
 
     public function store(Request $request)
     {
-			   $this->opnameLock->assertNotLocked();
         $validated = $request->validate([
             'nama_supplier'          => 'required|string|max:255',
             'tanggal_diterima'       => 'required|date',
@@ -89,8 +87,6 @@ public function edit(Pembelian $pembelian)
 public function update(Request $request, Pembelian $pembelian)
 {
     abort_unless($pembelian->dibuat_oleh === auth()->id(), 403);
-
-    $this->opnameLock->assertNotLocked();
 
     $validated = $request->validate([
         'nama_supplier'          => 'required|string|max:255',

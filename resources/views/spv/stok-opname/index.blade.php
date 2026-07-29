@@ -18,7 +18,7 @@
             <thead class="bg-gray-50 dark:bg-white/[0.02]">
                 <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                     <th class="px-4 py-3">No</th>
-                    <th class="px-4 py-3">Periode</th>
+                    <th class="px-4 py-3">Bulan Periode</th>
                     <th class="px-4 py-3">No. BAST</th>
                     <th class="px-4 py-3">Diajukan Oleh</th>
                     <th class="px-4 py-3 text-right">Aksi</th>
@@ -28,9 +28,9 @@
                 @forelse($stokOpnames as $index => $so)
                     <tr class="text-gray-700 dark:text-gray-300">
                         <td class="px-4 py-3">{{ $stokOpnames->firstItem() + $index }}</td>
-                        <td class="px-4 py-3 font-medium">{{ $so->periode->nama }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $so->nama_bulan }}</td>
                         <td class="px-4 py-3">{{ $so->no_bast }}</td>
-                        <td class="px-4 py-3">{{ $so->dibuatOleh->name }}</td>
+                        <td class="px-4 py-3">{{ $so->dibuatOleh->nama_karyawan }}</td>
                         <td class="px-4 py-3 text-right">
                             <a href="{{ route('spv.stok-opname.show', $so->id) }}">
                                 <x-ui.button size="sm" variant="primary">Review</x-ui.button>

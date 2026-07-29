@@ -7,12 +7,12 @@
 
     <div class="flex justify-between items-baseline mb-1">
         <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">
-            Stok Opname — {{ $stokOpname->periode->nama }}
+            Stok Opname — {{ $stokOpname->nama_bulan }}
         </h1>
         <span class="text-xs text-amber-600">{{ $stokOpname->status_label }}</span>
     </div>
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        Diajukan oleh {{ $stokOpname->dibuatOleh->name }} · No. BAST: {{ $stokOpname->no_bast }} · {{ $stokOpname->tanggal_bast->translatedFormat('d F Y') }}
+        Diajukan oleh {{ $stokOpname->dibuatOleh->nama_karyawan }} · No. BAST: {{ $stokOpname->no_bast }} · {{ $stokOpname->tanggal_bast->translatedFormat('d F Y') }}
     </p>
 
     @if($errors->any())

@@ -11,7 +11,7 @@
         'keterangan' => $i->keterangan ?? '',
     ])) })" class="max-w-3xl mx-auto">
 
-    <x-common.component-card title="Input Stok Opname — {{ $stokOpname->periode->nama }}">
+    <x-common.component-card title="Input Stok Opname ">
 
         @if($stokOpname->status === 'dibatalkan_spv')
             <div class="mb-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5 text-sm text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
@@ -83,6 +83,7 @@
                                         placeholder="Wajib diisi jika ada selisih"
                                         class="h-9 w-full min-w-[180px] rounded-lg border border-gray-300 bg-transparent px-2 text-sm dark:border-gray-700 dark:text-white/90">
                                 </td>
+
                             </tr>
                         </template>
                     </tbody>
@@ -96,7 +97,7 @@
             </div>
 
             <div class="flex gap-2">
-                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Ajukan ke Supervisor</x-ui.button>
+                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Ajukan</x-ui.button>
                 <a href="{{ route('admin.stok-opname.index') }}">
                     <x-ui.button size="md" variant="secondary" type="button">Batal</x-ui.button>
                 </a>

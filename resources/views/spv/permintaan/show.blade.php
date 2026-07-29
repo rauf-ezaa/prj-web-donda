@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @php $currentPageTitle = 'Verifikasi Pengajuan'; @endphp
 @section('content')
+
+ 						@php
+								$opnameLockService = app(\App\Services\OpnameLockService::class);
+								$activeLock = $opnameLockService->activeLock();
+						@endphp
+
 <div x-data="approvalPermintaan({
         permintaanId: {{ $permintaan->id }},
         items: @js($permintaan->details->map(fn($d) => [
@@ -13,17 +19,20 @@
     })"
     class="max-w-2xl mx-auto"
 >
-    <div class="flex justify-between items-baseline mb-1">
-        <h3 class="text-lg font-medium text-gray-800 dark:text-white/90">Verifikasi Permintaan</h3>
-        <span class="text-xs text-gray-400 font-mono">{{ $permintaan->kode_permintaan }}</span>
-    </div>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
-        Diajukan oleh {{ $permintaan->requestedBy->nama_karyawan ?? '-' }} · {{ $permintaan->keperluan }}
-    </p>
 
-    <div x-show="errorMessage" x-cloak class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500" x-text="errorMessage"></div>
 
-    <x-common.component-card title="Daftar Barang Diminta">
+<div class="flex justify-between items-baseline mb-1">
+	<h3 class="text-lg font-medium text-gray-800 dark:text-white/90">Verifikasi Permintaan</h3>
+	<span class="text-xs text-gray-400 font-mono">{{ $permintaan->kode_permintaan }}</span>
+</div>
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
+	Diajukan oleh {{ $permintaan->requestedBy->nama_karyawan ?? '-' }} · {{ $permintaan->keperluan }}
+</p>
+
+<div x-show="errorMessage" x-cloak class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500" x-text="errorMessage"></div>
+
+
+<x-common.component-card title="Daftar Barang Diminta">
         <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden mb-5">
             <template x-for="(item, index) in items" :key="item.detail_id">
                 <div class="px-4 py-3" :class="{ 'border-b border-gray-200 dark:border-gray-700': index < items.length - 1 }">
@@ -57,7 +66,11 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
             ></textarea>
         </div>
-
+				@if($activeLock)
+					<div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500">
+							⚠ Sistem sedang dalam proses Stok Opname ({{ $activeLock->no_bast }}), transaksi yang mempengaruhi stok dibekukan sementara.
+					</div>
+				@else
         <div class="flex gap-2">
             <x-ui.button size="sm" variant="primary" type="button" @click="approve" x-bind:disabled="isProcessing">
                 <span x-show="!isProcessing">Setujui</span>
@@ -67,6 +80,7 @@
                 Tolak
             </x-ui.button>
         </div>
+				@endif
     </x-common.component-card>
 </div>
 
