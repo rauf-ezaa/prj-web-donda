@@ -3,6 +3,7 @@
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardAssetAdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DetailPdfController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PermintaanApprovalController;
 use App\Http\Controllers\PermintaanController;
@@ -20,13 +21,14 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('guest.home');
 
+Route::middleware(['auth', 'role:admin|spv'])->get('statistik', [LaporanController::class, 'statistik'])->name('laporan.statistik');
+Route::middleware(['auth','role:staf'])->get('riwayat-saya/statistik', [RiwayatController::class, 'statistikSaya'])->name('riwayat.statistik');
 
 Route::middleware(['auth', 'role:admin|spv'])->prefix('laporan')->name('laporan.')->group(function () {
     Route::get('/', [LaporanController::class, 'index'])->name('index');
     Route::get('/{modul}', [LaporanController::class, 'modul'])->name('modul');
-		Route::get('/', [LaporanController::class, 'index'])->name('index');
-    Route::get('/{modul}', [LaporanController::class, 'modul'])->name('modul');
     Route::get('/{modul}/export-pdf', [LaporanController::class, 'exportPdf'])->name('modul.export-pdf');
+    Route::get('/{modul}/{id}/detail-pdf', [LaporanController::class, 'detailPdf'])->name('modul.detail-pdf');
 });
 
 	Route::middleware(['auth','role.redirect:staf'])->group(function () {

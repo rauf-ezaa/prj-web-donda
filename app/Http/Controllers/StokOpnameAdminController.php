@@ -31,41 +31,56 @@ class StokOpnameAdminController extends Controller
     // user bisa pilih print/save sendiri dari situ. Ganti ke download() kalau maunya langsung kedownload.
 }
 
-    public function index()
-    {
-        $stokOpnames = StokOpname::with(['periode', 'dibuatOleh', 'diverifikasiOleh'])
-            ->where('dibuat_oleh', auth()->id())
-            ->latest()
-            ->paginate(10);
+public function index(Request $request)
+{
+		$isDraftOrTransactionExist = StokOpname::where('status',
+					'draft'
+				)->latest()
+        ->first();
 
-        return view('admin.stok-opname.index', compact('stokOpnames'));
+    $query = StokOpname::with(['dibuatOleh', 'diverifikasiOleh'])
+        ->where('dibuat_oleh', auth()->id());
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nama_bulan', 'like', "%{$search}%")
+              ->orWhere('no_bast', 'like', "%{$search}%");
+        });
     }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $stokOpnames = $query->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('admin.stok-opname.index', compact('stokOpnames','isDraftOrTransactionExist'));
+}
 
 		public function create()
 		{
-				// hanya periode yang belum punya opname draft/pending milik admin ini
-				$periodes = Periode::where('status', 'aktif')
-						->whereDoesntHave('stokOpnames', function ($q) {
-								$q->where('dibuat_oleh', auth()->id())
-									->whereIn('status', ['draft', 'menunggu_verifikasi_spv', 'dibatalkan_spv']);
-						})
-						->get();
 
-				return view('admin.stok-opname.create', compact('periodes'));
+				// hanya periode yang belum punya opname draft/pending milik admin ini
+			 	$tanggalMinimal = app(\App\Services\StokOpnameService::class)->tanggalSaldoAwalPertama();
+
+    		return view('admin.stok-opname.create', compact('tanggalMinimal'));
 		}
 
     public function start(Request $request)
     {
-			 $this->opnameLock->assertNotLocked();
-        $validated = $request->validate(['periode_id' => 'required|exists:periodes,id']);
-        $periode = Periode::findOrFail($validated['periode_id']);
+			 $validated = $request->validate([
+        'bulan' => 'required|integer|min:1|max:12',
+        'tahun' => 'required|integer|min:2020|max:2100',
+    ]);
 
-        try {
-            $stokOpname = $this->service->start($periode, auth()->id());
-        } catch (\InvalidArgumentException $e) {
-            return back()->withErrors(['opname' => $e->getMessage()]);
-        }
-
+    try {
+        $stokOpname = $this->service->start($validated['bulan'], $validated['tahun'], auth()->id());
+    } catch (\InvalidArgumentException $e) {
+        return back()->withErrors(['opname' => $e->getMessage()]);
+    }
         return redirect()->route('admin.stok-opname.edit', $stokOpname->id);
     }
 
@@ -74,7 +89,7 @@ class StokOpnameAdminController extends Controller
         abort_unless($stokOpname->dibuat_oleh === auth()->id(), 403);
         abort_unless(in_array($stokOpname->status, ['draft', 'dibatalkan_spv']), 403, 'Opname ini tidak dapat diedit pada status saat ini.');
 
-        $stokOpname->load('items.barang', 'periode');
+        $stokOpname->load('items.barang');
 
         return view('admin.stok-opname.edit', compact('stokOpname'));
     }
@@ -114,7 +129,7 @@ class StokOpnameAdminController extends Controller
     public function show(StokOpname $stokOpname)
     {
         abort_unless($stokOpname->dibuat_oleh === auth()->id(), 403);
-        $stokOpname->load('items.barang', 'periode', 'diverifikasiOleh');
+        $stokOpname->load('items.barang', 'diverifikasiOleh');
 
         return view('admin.stok-opname.show', compact('stokOpname'));
     }

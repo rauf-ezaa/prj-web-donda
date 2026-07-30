@@ -50,8 +50,8 @@ class PermintaanApprovalController extends Controller
 
     public function approve(Permintaan $permintaan, Request $request)
     {
-			   $this->opnameLock->assertNotLocked();
-        abort_unless($permintaan->status_permintaan === 'menunggu_spv', 404);
+			$this->opnameLock->assertNotLocked();
+			abort_unless($permintaan->status_permintaan === 'menunggu_spv', 404);
 
         $validated = $request->validate([
             'items' => ['required', 'array'],

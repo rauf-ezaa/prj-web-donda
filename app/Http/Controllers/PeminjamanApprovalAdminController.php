@@ -10,7 +10,6 @@ class PeminjamanApprovalAdminController extends Controller
 {
     public function index(Request $request)
     {
-
 			$status = $request->query('status', 'pending'); // default kalau nggak ada filter
 
     $query = Peminjaman::with('requestedBy', 'approvedBy')->latest();
@@ -69,6 +68,7 @@ class PeminjamanApprovalAdminController extends Controller
             ->route('admin.peminjaman.index')
             ->with('success', "Peminjaman {$peminjaman->kode_peminjaman} diteruskan ke SPV");
     }
+
 
     public function reject(Peminjaman $peminjaman, Request $request)
     {

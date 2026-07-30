@@ -9,6 +9,14 @@ class LaporanController extends Controller
 {
     public function __construct(private ReportService $service) {}
 
+
+		public function statistik()
+		{
+				$statistik = $this->service->statistikBarang(); // global, semua user
+				return view('laporan.statistik', compact('statistik'));
+		}
+
+
     public function index()
     {
         $ringkasan = $this->service->ringkasanSemuaModul();
@@ -58,5 +66,30 @@ public function exportPdf(Request $request, string $modul)
 
         return $pdf->download($namaFile);
     }
+
+public function detailPdf(string $modul, int $id)
+{
+    $daftarModul = $this->service->daftarModul();
+    abort_unless(isset($daftarModul[$modul]), 404);
+
+    ['modul' => $modulInfo, 'row' => $row] = $this->service->detailTransaksi($modul, $id);
+
+    $namaRelasiItems = $modulInfo['nama_relasi_items'];
+    $items = $row->{$namaRelasiItems};
+
+    $pdf = Pdf::loadView('laporan.pdf.detail', [
+        'modulKey'    => $modul,
+        'modulInfo'   => $modulInfo,
+        'row'         => $row,
+        'items'       => $items,
+        'kolomKode'   => $modulInfo['kolom_kode'],
+        'service'     => $this->service,
+    ])->setPaper('a4', 'portrait');
+
+    $kode = $row->{$modulInfo['kolom_kode']} ?? "#{$row->id}";
+    $namaFile = str_replace(['/', ' '], '-', "{$modulInfo['label']}-{$kode}") . '.pdf';
+
+    return $pdf->stream($namaFile);
+}
 
 }

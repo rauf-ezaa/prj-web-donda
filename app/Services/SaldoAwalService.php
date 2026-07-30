@@ -9,9 +9,9 @@ use InvalidArgumentException;
 class SaldoAwalService
 {
 
-  public function create(array $itemsInput, string $tanggalPencatatan, int $adminId, ?string $catatan, int $periodeId, ?int $stokOpnameId = null): SaldoAwal
+  public function create(array $itemsInput, string $tanggalPencatatan, int $adminId, ?string $catatan, ?int $stokOpnameId = null): SaldoAwal
 {
-    return DB::transaction(function () use ($itemsInput, $tanggalPencatatan, $adminId, $catatan, $periodeId, $stokOpnameId) {
+    return DB::transaction(function () use ($itemsInput, $tanggalPencatatan, $adminId, $catatan, $stokOpnameId) {
 
         $totalQty = collect($itemsInput)->sum(fn ($row) => $row['qty'] ?? 0);
         if ($totalQty <= 0) {
@@ -20,7 +20,6 @@ class SaldoAwalService
 
         $saldoAwal = SaldoAwal::create([
             'no_transaksi'       => $this->generateNoTransaksi(),
-            'periode_id'         => $periodeId,
             'tanggal_pencatatan' => $tanggalPencatatan,
             'catatan'            => $catatan,
             'sumber'             => $stokOpnameId ? 'dari_opname' : 'manual',
@@ -62,6 +61,44 @@ class SaldoAwalService
             ]);
         });
     }
+
+		// tambahkan di app/Services/SaldoAwalService.php
+
+public function update(SaldoAwal $saldoAwal, array $itemsInput, string $tanggalPencatatan, ?string $catatan = null): SaldoAwal
+{
+    if ($saldoAwal->status !== 'menunggu_verifikasi_spv') {
+        throw new InvalidArgumentException('Saldo awal ini tidak dapat diedit karena sudah diverifikasi/ditolak.');
+    }
+
+    return DB::transaction(function () use ($saldoAwal, $itemsInput, $tanggalPencatatan, $catatan) {
+
+        $totalQty = collect($itemsInput)->sum(fn ($row) => $row['qty'] ?? 0);
+
+        if ($totalQty <= 0) {
+            throw new InvalidArgumentException('Minimal harus ada satu barang dengan qty lebih dari 0.');
+        }
+
+        $saldoAwal->update([
+            'tanggal_pencatatan' => $tanggalPencatatan,
+            'catatan'            => $catatan,
+        ]);
+
+        // ganti semua item lama dengan yang baru — aman karena stok belum pernah disentuh di tahap ini
+        $saldoAwal->items()->delete();
+
+        foreach ($itemsInput as $row) {
+            if (($row['qty'] ?? 0) <= 0) continue;
+
+            SaldoAwalItem::create([
+                'saldo_awal_id' => $saldoAwal->id,
+                'barang_id'     => $row['barang_id'],
+                'qty'           => $row['qty'],
+            ]);
+        }
+
+        return $saldoAwal->load('items');
+    });
+}
 
     public function reject(SaldoAwal $saldoAwal, int $spvId, string $alasan): void
     {

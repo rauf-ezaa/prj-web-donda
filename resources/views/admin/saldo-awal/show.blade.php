@@ -59,5 +59,10 @@
             <strong>Alasan ditolak:</strong> {{ $saldoAwal->alasan_tolak }}
         </div>
     @endif
+		@if($saldoAwal->status === 'menunggu_verifikasi_spv')
+    <a href="{{ route('saldo-awal.edit', $saldoAwal->id) }}" class="mb-4 inline-block">
+        <x-ui.button size="sm" variant="secondary">✏ Edit Transaksi</x-ui.button>
+    </a>
+@endif
 </div>
 @endsection

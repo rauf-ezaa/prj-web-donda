@@ -13,4 +13,10 @@ class RiwayatController extends Controller
 
         return view('riwayat.index', compact('riwayat'));
     }
+
+				public function statistikSaya()
+		{
+				$statistik = $this->service->statistikBarang(auth()->id());
+				return view('riwayat.statistik', compact('statistik'));
+		}
 }

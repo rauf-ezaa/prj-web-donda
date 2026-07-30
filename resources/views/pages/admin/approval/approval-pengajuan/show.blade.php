@@ -13,7 +13,11 @@
 
     {{-- STATUS BANNER --}}
     @php
-        $bannerConfig = match($pengajuan->status) {
+
+								$opnameLockService = app(\App\Services\OpnameLockService::class);
+								$activeLock = $opnameLockService->activeLock();
+
+					$bannerConfig = match($pengajuan->status) {
             'approved' => ['bg' => 'bg-green-50 dark:bg-green-950/30', 'text' => 'text-green-700 dark:text-green-400', 'icon' => 'ti-circle-check', 'label' => 'Disetujui SPV'],
             'rejected' => ['bg' => 'bg-red-50 dark:bg-red-950/30', 'text' => 'text-error-500', 'icon' => 'ti-circle-x', 'label' => 'Ditolak'],
             'menunggu_spv' => ['bg' => 'bg-amber-50 dark:bg-amber-950/30', 'text' => 'text-amber-600', 'icon' => 'ti-clock', 'label' => 'Menunggu Persetujuan SPV'],
@@ -47,8 +51,6 @@
             </div>
         </div>
     </div>
-
-    <div x-show="errorMessage" x-cloak class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500" x-text="errorMessage"></div>
 
     <x-common.component-card title="Detail Pengajuan">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Alasan Pengajuan</p>

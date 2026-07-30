@@ -40,10 +40,9 @@ class SaldoAwalAdminController extends Controller
 
 public function store(Request $request)
 {
-    $this->opnameLock->assertNotLocked();
 
     $validated = $request->validate([
-        'periode_id'          => 'required|exists:periodes,id',
+
         'tanggal_pencatatan'  => 'required|date',
         'catatan'             => 'nullable|string',
         'items'               => 'required|array|min:1',
@@ -53,18 +52,12 @@ public function store(Request $request)
 
     // guard tambahan: pastikan periode yang dipilih beneran masih aktif
     // (jaga-jaga kalau antara buka form dan submit, SPV keburu kunci periode itu)
-    $periode = \App\Models\Periode::findOrFail($validated['periode_id']);
-    if ($periode->status !== 'aktif') {
-        return back()->withErrors(['periode_id' => 'Periode yang dipilih sudah tidak aktif/terkunci.'])->withInput();
-    }
-
     try {
         $saldoAwal = $this->service->create(
             $validated['items'],
             $validated['tanggal_pencatatan'],
             auth()->id(),
             $validated['catatan'] ?? null,
-            $validated['periode_id']
         );
     } catch (\InvalidArgumentException $e) {
         return back()->withErrors(['items' => $e->getMessage()])->withInput();
@@ -73,6 +66,49 @@ public function store(Request $request)
     return redirect()->route('saldo-awal.index')
         ->with('success', "Saldo awal {$saldoAwal->no_transaksi} berhasil diajukan.");
 }
+
+// tambahkan di SaldoAwalAdminController
+
+public function edit(SaldoAwal $saldoAwal)
+{
+    abort_unless($saldoAwal->dibuat_oleh === auth()->id(), 403);
+    abort_unless($saldoAwal->status === 'menunggu_verifikasi_spv', 403, 'Saldo awal ini tidak dapat diedit pada status saat ini.');
+
+    $saldoAwal->load('items.barang');
+    $dataBarang = Barang::select('id', 'nama_barang', 'satuan')->orderBy('nama_barang')->get();
+
+    return view('admin.saldo-awal.edit', compact('saldoAwal', 'dataBarang'));
+}
+
+		public function update(Request $request, SaldoAwal $saldoAwal)
+		{
+				abort_unless($saldoAwal->dibuat_oleh === auth()->id(), 403);
+
+				$this->opnameLock->assertNotLocked();
+
+				$validated = $request->validate([
+						'tanggal_pencatatan'  => 'required|date',
+						'catatan'             => 'nullable|string',
+						'items'               => 'required|array|min:1',
+						'items.*.barang_id'   => 'required|exists:barangs,id',
+						'items.*.qty'         => 'required|integer|min:1',
+				]);
+
+				try {
+						$this->service->update(
+								$saldoAwal,
+								$validated['items'],
+								$validated['tanggal_pencatatan'],
+								$validated['catatan'] ?? null
+						);
+				} catch (\InvalidArgumentException $e) {
+						return back()->withErrors(['items' => $e->getMessage()])->withInput();
+				}
+
+				return redirect()
+						->route('admin.saldo-awal.show', $saldoAwal->id)
+						->with('success', "Saldo awal {$saldoAwal->no_transaksi} berhasil diperbarui.");
+		}
 
     public function show(SaldoAwal $saldoAwal)
     {

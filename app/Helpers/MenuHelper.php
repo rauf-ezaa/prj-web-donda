@@ -19,11 +19,6 @@ public static function saldoAwal(){
                     'icon' => 'dashboard',
                     ],
 
-										['name' => 'Setup Periode',
-										'path' => '/spv/periode',
-                    'icon' => 'dashboard',
-                    ],
-
 										['name' => 'Stok Opname',
 										'path' => '/spv/stok-opname',
                     'icon' => 'dashboard',
@@ -284,9 +279,11 @@ public static function saldoAwal(){
             [
                 'icon' => 'riwayat',
                 'name' => 'Riwayat',
-                'path' => '/riwayat-saya',
+                'path' => '/riwayat-saya/statistik',
 								'roles' => 'staf'
             ],
+
+
 
         ];
     }
@@ -300,6 +297,13 @@ public static function saldoAwal(){
                 'path' => '/laporan',
 								'roles' => 'admin'
             ],
+
+						 [
+                'icon' => 'Statistik',
+                'name' => 'Statistik',
+                'path' => '/statistik',
+								'roles' => 'admin'
+            ],
         ];
     }
 
@@ -310,6 +314,13 @@ public static function saldoAwal(){
                 'icon' => 'riwayat',
                 'name' => 'Riwayat',
                 'path' => '/laporan',
+								'roles' => 'spv'
+            ],
+
+						 [
+                'icon' => 'Statistik',
+                'name' => 'Statistik',
+                'path' => '/statistik',
 								'roles' => 'spv'
             ],
         ];
@@ -402,17 +413,17 @@ public static function saldoAwal(){
 
             ],
 						 [
-                'title' => 'Riwayat',
+                'title' => 'Riwayat Transaksi',
                 'items' => self::getRiwayatItems()
             ],
 
 						 [
-                'title' => 'Riwayat',
+                'title' => 'Riwayat Transaksi',
                 'items' => self::getRiwayatUserItems()
             ],
 
 						 [
-                'title' => 'Riwayat',
+                'title' => 'Riwayat Transaksi',
                 'items' => self::getRiwayatSpvItems()
             ],
 

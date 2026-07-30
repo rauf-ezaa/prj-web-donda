@@ -34,8 +34,8 @@ class Permintaan extends Model
 
 
 		protected $table = 'permintaans';
-    protected $fillable = ['kode_permintaan', 'request_by', 'keperluan', 'status_permintaan', 'approved_by', 'approved_at', 'catatan_approval'];
-    protected $casts = ['approved_at' => 'datetime'];
+    protected $fillable = ['kode_permintaan', 'request_by', 'keperluan', 'status_permintaan', 'approved_by', 'approved_date', 'catatan_approval'];
+    protected $casts = ['approved_date' => 'datetime'];
 
 
 		public function verifiedByAdmin()

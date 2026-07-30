@@ -2,12 +2,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\SaldoAwal;
+use App\Services\OpnameLockService;
 use App\Services\SaldoAwalService;
 use Illuminate\Http\Request;
 
 class SaldoAwalSpvController extends Controller
 {
-    public function __construct(private SaldoAwalService $service) {}
+    public function __construct(
+			private SaldoAwalService $service,
+			private OpnameLockService $opnameLock,
+		) {}
+
 
     public function index()
     {
