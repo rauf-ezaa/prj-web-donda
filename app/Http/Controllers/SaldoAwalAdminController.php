@@ -71,13 +71,45 @@ public function store(Request $request)
 
 public function edit(SaldoAwal $saldoAwal)
 {
-    abort_unless($saldoAwal->dibuat_oleh === auth()->id(), 403);
-    abort_unless($saldoAwal->status === 'menunggu_verifikasi_spv', 403, 'Saldo awal ini tidak dapat diedit pada status saat ini.');
 
-    $saldoAwal->load('items.barang');
-    $dataBarang = Barang::select('id', 'nama_barang', 'satuan')->orderBy('nama_barang')->get();
+		abort_unless($saldoAwal->dibuat_oleh === auth()->id(), 403);
 
-    return view('admin.saldo-awal.edit', compact('saldoAwal', 'dataBarang'));
+		abort_unless(
+				$saldoAwal->status === 'menunggu_verifikasi_spv',
+				403,
+				'Saldo awal ini tidak dapat diedit pada status saat ini.'
+		);
+
+		$saldoAwal->load('items.barang');
+
+		$dataBarang = Barang::select(
+				'id',
+				'nama_barang',
+				'satuan'
+		)
+		->orderBy('nama_barang')
+		->get();
+
+		$existingItems = $saldoAwal->items
+				->map(function ($item) {
+						return [
+								'barang_id'   => $item->barang_id,
+								'nama_barang' => $item->barang->nama_barang,
+								'satuan'      => $item->barang->satuan,
+								'qty'         => $item->qty,
+						];
+				})
+				->values();
+
+		return view(
+				'admin.saldo-awal.edit',
+				compact(
+						'saldoAwal',
+						'dataBarang',
+						'existingItems'
+				)
+		);
+
 }
 
 		public function update(Request $request, SaldoAwal $saldoAwal)
@@ -106,7 +138,7 @@ public function edit(SaldoAwal $saldoAwal)
 				}
 
 				return redirect()
-						->route('admin.saldo-awal.show', $saldoAwal->id)
+						->route('saldo-awal.show', $saldoAwal->id)
 						->with('success', "Saldo awal {$saldoAwal->no_transaksi} berhasil diperbarui.");
 		}
 

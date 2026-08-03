@@ -67,7 +67,6 @@
                     <th class="px-4 py-3">Merk/Spesifikasi</th>
                     <th class="px-4 py-3">Klasifikasi</th>
                     <th class="px-4 py-3">Satuan</th>
-                    <th class="px-4 py-3">Stok</th>
                     <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
@@ -79,7 +78,6 @@
                         <td class="px-4 py-3">{{ $b->description ?: '-' }}</td>
                         <td class="px-4 py-3">{{ $b->kib->klasifikasi }}</td>
                         <td class="px-4 py-3">{{ $b->satuan }}</td>
-                        <td class="px-4 py-3">{{ $b->stok_tersedia }}</td>
                        <td class="px-4 py-3 text-right">
                             <div class="flex justify-end gap-2">
                                 <a href="{{ route('data-barang.edit', $b->id) }}">

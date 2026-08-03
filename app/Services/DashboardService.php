@@ -40,6 +40,7 @@ class DashboardService
     {
         return [
             'permintaan_menunggu'    => Permintaan::where('status_permintaan', 'menunggu_spv')->count(),
+						'pengajuan_menunggu'		 => Pengajuan::where('status','menunggu_spv')->count(),
             'peminjaman_menunggu'    => Peminjaman::where('status', 'menunggu_spv')->count(),
             'pengembalian_menunggu'  => Pengembalian::where('status', 'menunggu_verifikasi_spv')->count(),
             'pembelian_menunggu'     => Pembelian::where('status', 'menunggu_verifikasi_spv')->count(),
@@ -49,6 +50,7 @@ class DashboardService
                 ->merge(Peminjaman::where('status', 'menunggu_spv')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Peminjaman', 'kode' => $r->kode_peminjaman, 'tanggal' => $r->created_at]))
                 ->merge(Pengembalian::where('status', 'menunggu_verifikasi_spv')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Pengembalian', 'kode' => "#{$r->id}", 'tanggal' => $r->created_at]))
                 ->merge(StokOpname::where('status', 'menunggu_verifikasi_spv')->latest()->take(3)->get()->map(fn($r) => ['label' => 'Stok Opname', 'kode' => $r->no_bast, 'tanggal' => $r->created_at]))
+
                 ->sortByDesc('tanggal')
                 ->take(5),
         ];

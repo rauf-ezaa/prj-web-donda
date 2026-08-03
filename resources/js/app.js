@@ -8,8 +8,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 // FullCalendar
 import { Calendar } from '@fullcalendar/core';
 
-
-
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
@@ -48,4 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#calendar')) {
         import('./components/calendar-init').then(module => module.calendarInit());
     }
+
+
+
 });

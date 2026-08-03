@@ -40,13 +40,22 @@
                         class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
                 </div>
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Tanggal BAST <span class="text-error-500">*</span>
-                    </label>
-                    <input type="date" name="tanggal_bast" value="{{ old('tanggal_bast', $stokOpname->tanggal_bast?->format('Y-m-d') ?? date('Y-m-d')) }}"
-                        class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-                </div>
-            </div>
+								<label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+										Tanggal BAST <span class="text-error-500">*</span>
+								</label>
+								<input type="text"
+										name="tanggal_bast"
+										x-model="tanggalBast"
+										x-init="flatpickr($el, {
+												dateFormat: 'Y-m-d',
+												onChange: function(selectedDates, dateStr) {
+														tanggalBast = dateStr;
+												}
+										})"
+										placeholder="Pilih tanggal..."
+										class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+								</div>
+						</div>
 
             <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 mb-5">
                 <table class="min-w-full text-sm">

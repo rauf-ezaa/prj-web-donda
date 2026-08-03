@@ -24,13 +24,19 @@
                     <input type="text" name="nama_supplier" value="{{ old('nama_supplier') }}"
                         class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
                 </div>
-                <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Tanggal Diterima <span class="text-error-500">*</span>
-                    </label>
-                    <input type="date" name="tanggal_diterima" value="{{ old('tanggal_diterima', date('Y-m-d')) }}"
-                        class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-                </div>
+               <div>
+									<label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+											Tanggal Diterima <span class="text-error-500">*</span>
+									</label>
+
+									<input
+											type="text"
+											id="tanggal_diterima"
+											name="tanggal_diterima"
+											value="{{ old('tanggal_diterima', date('Y-m-d')) }}"
+											placeholder="Pilih tanggal"
+											class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+							</div>
             </div>
 
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
@@ -179,6 +185,14 @@ function pembelianForm({ dataBarang }) {
         },
     };
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    flatpickr("#tanggal_diterima", {
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        defaultDate: "{{ old('tanggal_diterima', date('Y-m-d')) }}"
+    });
+});
 </script>
 @endverbatim
 @endsection

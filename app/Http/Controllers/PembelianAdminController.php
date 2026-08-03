@@ -76,16 +76,47 @@ public function edit(Pembelian $pembelian)
 {
 
     abort_unless($pembelian->dibuat_oleh === auth()->id(), 403);
-    abort_unless($pembelian->status === 'menunggu_verifikasi_spv', 403, 'Pembelian ini tidak dapat diedit pada status saat ini.');
+abort_unless(
+    $pembelian->status === 'menunggu_verifikasi_spv',
+    403,
+    'Pembelian ini tidak dapat diedit pada status saat ini.'
+);
 
-    $pembelian->load('items.barang');
-    $dataBarang = Barang::select('id', 'nama_barang', 'satuan')->orderBy('nama_barang')->get();
+$pembelian->load('items.barang');
 
-    return view('admin.pembelian.edit', compact('pembelian', 'dataBarang'));
+$dataBarang = Barang::select(
+    'id',
+    'nama_barang',
+    'satuan'
+)
+->orderBy('nama_barang')
+->get();
+
+$existingItems = $pembelian->items
+    ->map(function ($item) {
+        return [
+            'barang_id'    => $item->barang_id,
+            'nama_barang'  => $item->barang->nama_barang,
+            'satuan'       => $item->barang->satuan,
+            'qty'          => $item->qty,
+            'deskripsi'    => $item->deskripsi,
+        ];
+    })
+    ->values();
+
+return view(
+    'admin.pembelian.edit',
+    compact(
+        'pembelian',
+        'dataBarang',
+        'existingItems'
+    )
+);
 }
 
 public function update(Request $request, Pembelian $pembelian)
 {
+
     abort_unless($pembelian->dibuat_oleh === auth()->id(), 403);
 
     $validated = $request->validate([
@@ -111,7 +142,7 @@ public function update(Request $request, Pembelian $pembelian)
     }
 
     return redirect()
-        ->route('admin.pembelian.show', $pembelian->id)
+        ->route('pembelian.show', $pembelian->id)
         ->with('success', "Pembelian {$pembelian->no_transaksi} berhasil diperbarui.");
 }
 

@@ -47,7 +47,7 @@ class BarangController extends Controller
             'satuan'           => 'required|in:' . implode(',', Barang::SATUAN_OPTIONS),
             // 'harga_barang'     => 'required|numeric|min:0',
             // 'stok_tersedia'    => 'required|integer|min:0',
-            'description'      => 'nullable|string',
+            'description'      => 'required|string',
             'klasifikasi_kib'  => 'required|exists:kib,id',
         ]);
 
@@ -84,7 +84,7 @@ class BarangController extends Controller
             'merk_spesifikasi' => 'nullable|string|max:255',
             'satuan'           => 'required|in:' . implode(',', Barang::SATUAN_OPTIONS),
             // 'harga_barang'     => 'required|numeric|min:0',
-            'description'      => 'nullable|string',
+            'description'      => 'required|string',
             'klasifikasi_kib'  => 'required|exists:kib,id',
         ]);
 
