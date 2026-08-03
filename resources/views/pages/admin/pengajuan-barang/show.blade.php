@@ -59,6 +59,7 @@
 
 
 <div class="flex gap-2 mt-4">
+
     @if ($pengajuan->is_accessible)
         <a href="{{ route('pengajuan.draft', $pengajuan->id) }}">
             <x-ui.button size="sm" variant="secondary">Edit Barang</x-ui.button>
@@ -68,8 +69,7 @@
             <x-ui.button size="sm" variant="secondary" type="submit">Batalkan Pengajuan</x-ui.button>
         </form>
     @endif
-
-    <a href="{{ route('pengajuan.index') }}">
+		 <a href="{{ route('pengajuan.index') }}">
         <x-ui.button size="sm" variant="secondary">Kembali</x-ui.button>
     </a>
 </div>

@@ -9,11 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 class Pengajuan extends Model
 {
 
-		const DENIED_STATUS = ['menunggu_spv'];
+		const DENIED_STATUS = ['menunggu_spv','approved','rejected'];
 
 		public function getIsAccessibleAttribute(): bool
 		{
 			return !in_array($this->status, self::DENIED_STATUS);
+		}
+
+		public function getIsNotAccesibleAttribute(): bool
+		{
+			return $this->status === (['Approved','rejected']);
 		}
 
 		public function getIsActionableAttribute(): bool

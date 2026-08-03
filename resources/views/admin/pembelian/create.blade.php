@@ -19,7 +19,7 @@
             <div class="grid grid-cols-2 gap-3 mb-4">
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Nama Supplier <span class="text-error-500">*</span>
+                        Kode Transaksi <span class="text-error-500">*</span>
                     </label>
                     <input type="text" name="nama_supplier" value="{{ old('nama_supplier') }}"
                         class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
@@ -123,7 +123,7 @@
             </div>
 
             <div class="flex gap-2">
-                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Ajukan Data Pembelian</x-ui.button>
+                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Ajukan</x-ui.button>
                 <a href="{{ route('pembelian.index') }}">
                     <x-ui.button size="md" variant="secondary" type="button">Batal</x-ui.button>
                 </a>

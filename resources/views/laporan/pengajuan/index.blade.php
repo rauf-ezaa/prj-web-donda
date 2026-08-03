@@ -32,7 +32,8 @@
                         id="start_date"
                         name="start_date"
                         value="{{ request('start_date') }}"
-                        class="form-input w-full">
+                      	class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+
                 </div>
 
                 <div>
@@ -45,7 +46,8 @@
                         id="end_date"
                         name="end_date"
                         value="{{ request('end_date') }}"
-                        class="form-input w-full">
+                        class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+
                 </div>
 
                 <div class="flex items-end">
