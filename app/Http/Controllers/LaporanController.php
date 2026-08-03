@@ -1,13 +1,86 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Pengajuan;
+use App\Models\PengajuanDetail;
 use App\Services\ReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LaporanController extends Controller
 {
     public function __construct(private ReportService $service) {}
+
+
+		public function dataPengajuan(Request $request)
+		{
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $pengajuanQuery = Pengajuan::query();
+
+        if ($startDate && $endDate) {
+            $pengajuanQuery->whereBetween('created_at', [
+                $startDate . ' 00:00:00',
+                $endDate . ' 23:59:59'
+            ]);
+        }
+
+        $pengajuanIds = (clone $pengajuanQuery)->pluck('id');
+
+        $summary = [
+            'total_pengajuan' => (clone $pengajuanQuery)->count(),
+
+            'total_item_unik' => PengajuanDetail::query()
+                ->whereIn('pengajuan_id', $pengajuanIds)
+                ->distinct('nama_barang_diajukan')
+                ->count('nama_barang_diajukan'),
+
+            'total_qty' => PengajuanDetail::query()
+                ->whereIn('pengajuan_id', $pengajuanIds)
+                ->sum('jumlah_diajukan'),
+        ];
+
+        $topBarang = PengajuanDetail::query()
+            ->whereIn('pengajuan_id', $pengajuanIds)
+            ->select([
+                'nama_barang_diajukan',
+
+                DB::raw('COUNT(*) as frekuensi'),
+
+                DB::raw('SUM(jumlah_diajukan) as total_qty'),
+
+                DB::raw('MAX(created_at) as terakhir_diajukan'),
+            ])
+            ->groupBy('nama_barang_diajukan')
+            ->orderByDesc('frekuensi')
+            ->limit(20)
+            ->get();
+
+        $barangTeratas = $topBarang->first();
+
+        $riwayat = (clone $pengajuanQuery)
+            ->with([
+                'requestedBy:id,nama_karyawan'
+            ])
+            ->withCount('details')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view(
+            'laporan.pengajuan.index',
+            compact(
+                'summary',
+                'topBarang',
+                'barangTeratas',
+                'riwayat',
+                'startDate',
+                'endDate'
+            )
+        );
+    }
 
 
 		public function statistik()
@@ -58,7 +131,7 @@ public function exportPdf(Request $request, string $modul)
             'kolomKode'   => $daftarModul[$modul]['kolom_kode'],
             'data'        => $data,
             'filter'      => $filter,
-            'dicetakOleh' => auth()->user()->name,
+            'dicetakOleh' => auth()->user()->nama_karyawan,
             'dicetakPada' => now(),
         ])->setPaper('a4', 'portrait');
 

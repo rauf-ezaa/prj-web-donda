@@ -1,136 +1,389 @@
 @extends('layouts.app')
-@php $currentPageTitle = 'Edit Pembelian Barang'; @endphp
+
+@php
+$currentPageTitle = 'Edit Pembelian Barang';
+@endphp
+
 @section('content')
 
-<div x-data="pembelianForm({
+<div
+    x-data="pembelianForm({
         dataBarang: @js($dataBarang),
-        existingItems: @js($pembelian->items->map(fn($i) => [
-            'barang_id' => $i->barang_id,
-            'qty' => $i->qty,
-            'deskripsi' => $i->deskripsi,
-        ])),
-    })" class="max-w-2xl mx-auto">
-    <x-common.component-card title="Edit Pembelian Barang — {{ $pembelian->no_transaksi }}">
+        existingItems: @js($existingItems)
+    })"
+    class="max-w-2xl mx-auto">
 
-        <div class="mb-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5 text-sm text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
-            Transaksi ini masih menunggu verifikasi supervisor. Kamu bisa mengubah datanya sebelum diverifikasi.
+    <x-common.component-card
+        title="Edit Pembelian Barang — {{ $pembelian->no_transaksi }}">
+
+        <div class="mb-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-2.5 text-sm text-amber-700">
+            Transaksi masih menunggu verifikasi supervisor.
         </div>
 
-        <div x-show="errorMessage" x-cloak class="mb-3 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500" x-text="errorMessage"></div>
+        <div
+            x-show="errorMessage"
+            x-cloak
+            class="mb-3 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500"
+            x-text="errorMessage">
+        </div>
 
         @if($errors->any())
             <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-error-500">
-                @foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach
+                @foreach($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
             </div>
         @endif
 
-        <form method="POST" action="{{ route('pembelian.update', $pembelian->id) }}">
+        <form
+            method="POST"
+            action="{{ route('pembelian.update', $pembelian->id) }}">
+
             @csrf
             @method('PUT')
 
             <div class="grid grid-cols-2 gap-3 mb-4">
+
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Nama Supplier <span class="text-error-500">*</span>
+                    <label class="mb-1.5 block text-sm font-medium">
+                        Nama Supplier
                     </label>
-                    <input type="text" name="nama_supplier" value="{{ old('nama_supplier', $pembelian->nama_supplier) }}"
-                        class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+
+                    <input
+                        type="text"
+                        name="nama_supplier"
+                        value="{{ old('nama_supplier', $pembelian->nama_supplier) }}"
+                        class="h-11 w-full rounded-lg border border-gray-300 px-4 text-sm" />
                 </div>
+
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Tanggal Diterima <span class="text-error-500">*</span>
+                    <label class="mb-1.5 block text-sm font-medium">
+                        Tanggal Diterima
                     </label>
-                    <input type="date" name="tanggal_diterima" value="{{ old('tanggal_diterima', $pembelian->tanggal_diterima->format('Y-m-d')) }}"
-                        class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+
+                    <input
+                        type="text"
+                        id="tanggal_diterima"
+                        name="tanggal_diterima"
+                        value="{{ old('tanggal_diterima', $pembelian->tanggal_diterima->format('Y-m-d')) }}"
+                        class="h-11 w-full rounded-lg border border-gray-300 px-4 text-sm" />
                 </div>
+
             </div>
 
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
-                <p class="text-sm font-medium text-gray-700 dark:text-gray-400 mb-3">Daftar Barang Masuk</p>
+            <div class="border-t border-gray-200 pt-4 mb-4">
 
-                <template x-for="(row, index) in rows" :key="index">
-                    <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-800 mb-3">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Barang</label>
-                                <select x-model="row.barang_id" :name="`items[${index}][barang_id]`"
-                                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                                    <option value="">Pilih Barang</option>
-                                    <template x-for="barang in dataBarang" :key="barang.id">
-                                        <option :value="barang.id" x-text="`${barang.nama_barang} (${barang.satuan})`"></option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Qty</label>
-                                <input type="number" min="1" x-model.number="row.qty" :name="`items[${index}][qty]`"
-                                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Deskripsi (opsional)</label>
-                            <input type="text" x-model="row.deskripsi" :name="`items[${index}][deskripsi]`"
-                                placeholder="Contoh: kondisi kemasan baik, no. batch, dsb"
-                                class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-                        </div>
+                <p class="text-sm font-medium mb-3">
+                    Tambah Barang Masuk
+                </p>
 
-                        <button type="button" @click="removeRow(index)" x-show="rows.length > 1"
-                            class="mt-2 text-xs text-error-500 hover:underline">
-                            Hapus baris
-                        </button>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+
+                    <div>
+                        <label class="mb-1 block text-xs text-gray-500">
+                            Barang
+                        </label>
+
+                        <select
+                            x-model="selectedBarangId"
+                            class="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm">
+
+                            <option value="">
+                                Pilih Barang
+                            </option>
+
+                            <template
+                                x-for="barang in availableBarang"
+                                :key="barang.id">
+
+                                <option
+                                    :value="barang.id"
+                                    x-text="`${barang.nama_barang} (${barang.satuan})`">
+                                </option>
+
+                            </template>
+
+                        </select>
                     </div>
-                </template>
 
-                <x-ui.button size="sm" variant="secondary" type="button" @click="addRow">
-                    + Tambah Barang
+                    <div>
+                        <label class="mb-1 block text-xs text-gray-500">
+                            Qty
+                        </label>
+
+                        <input
+                            type="number"
+                            min="1"
+                            x-model.number="selectedQty"
+                            class="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm" />
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="mb-1 block text-xs text-gray-500">
+                        Deskripsi
+                    </label>
+
+                    <input
+                        type="text"
+                        x-model="selectedDeskripsi"
+                        class="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm" />
+
+                </div>
+
+                <x-ui.button
+                    size="sm"
+                    variant="secondary"
+                    type="button"
+                    @click="addItem">
+
+                    + Tambah ke Daftar
+
                 </x-ui.button>
+
+                <div
+                    class="text-sm text-gray-500 mt-5 mb-1.5"
+                    x-text="`Daftar barang masuk (${items.length})`">
+                </div>
+
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+
+                    <template x-if="items.length === 0">
+
+                        <div class="p-6 text-center text-sm text-gray-400">
+                            Belum ada barang.
+                        </div>
+
+                    </template>
+
+                    <template x-if="items.length > 0">
+
+                        <table class="min-w-full text-sm">
+
+                            <thead class="bg-gray-50">
+
+                                <tr>
+
+                                    <th class="px-3 py-2 text-left">
+                                        No
+                                    </th>
+
+                                    <th class="px-3 py-2 text-left">
+                                        Barang
+                                    </th>
+
+                                    <th class="px-3 py-2 text-center">
+                                        Qty
+                                    </th>
+
+                                    <th class="px-3 py-2 text-left">
+                                        Deskripsi
+                                    </th>
+
+                                    <th class="px-3 py-2 text-right">
+                                        Aksi
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <template
+                                    x-for="(item,index) in items"
+                                    :key="item.barang_id">
+
+                                    <tr>
+
+                                        <td class="px-3 py-2"
+                                            x-text="index+1">
+                                        </td>
+
+                                        <td
+                                            class="px-3 py-2"
+                                            x-text="`${item.nama_barang} (${item.satuan})`">
+                                        </td>
+
+                                        <td
+                                            class="px-3 py-2 text-center"
+                                            x-text="item.qty">
+                                        </td>
+
+                                        <td
+                                            class="px-3 py-2"
+                                            x-text="item.deskripsi || '-'">
+                                        </td>
+
+                                        <td class="px-3 py-2 text-right">
+
+                                            <button
+                                                type="button"
+                                                @click="removeItem(index)"
+                                                class="text-error-500">
+
+                                                Hapus
+
+                                            </button>
+
+                                        </td>
+
+                                        <input
+                                            type="hidden"
+                                            :name="`items[${index}][barang_id]`"
+                                            :value="item.barang_id">
+
+                                        <input
+                                            type="hidden"
+                                            :name="`items[${index}][qty]`"
+                                            :value="item.qty">
+
+                                        <input
+                                            type="hidden"
+                                            :name="`items[${index}][deskripsi]`"
+                                            :value="item.deskripsi">
+
+                                    </tr>
+
+                                </template>
+
+                            </tbody>
+
+                        </table>
+
+                    </template>
+
+                </div>
+
             </div>
 
             <div class="mb-5">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Catatan (opsional)</label>
-                <textarea name="catatan" rows="2"
-                    class="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm dark:border-gray-700 dark:text-white/90">{{ old('catatan', $pembelian->catatan) }}</textarea>
+
+                <label class="mb-1.5 block text-sm font-medium">
+                    Catatan
+                </label>
+
+                <textarea
+                    name="catatan"
+                    rows="2"
+                    class="w-full rounded-lg border border-gray-300 p-3 text-sm">{{ old('catatan', $pembelian->catatan) }}</textarea>
+
             </div>
 
             <div class="flex gap-2">
-                <x-ui.button size="md" variant="primary" type="submit" @click="validateBeforeSubmit">Simpan Perubahan</x-ui.button>
-                <a href="{{ route('pembelian.show', $pembelian->id) }}">
-                    <x-ui.button size="md" variant="secondary" type="button">Batal</x-ui.button>
-                </a>
+
+                <x-ui.button
+                    size="md"
+                    variant="primary"
+                    type="submit"
+                    @click="validateBeforeSubmit">
+
+                    Simpan Perubahan
+
+                </x-ui.button>
+
             </div>
+
         </form>
+
     </x-common.component-card>
+
 </div>
 
-@verbatim
 <script>
-function pembelianForm({ dataBarang, existingItems }) {
+function pembelianForm({
+    dataBarang,
+    existingItems = []
+}) {
+
     return {
+
         dataBarang,
-        // kalau ada existingItems (mode edit), pakai itu; kalau kosong (mode create), mulai 1 baris kosong
-        rows: existingItems && existingItems.length > 0
-            ? existingItems.map(i => ({ barang_id: i.barang_id, qty: i.qty, deskripsi: i.deskripsi || '' }))
-            : [{ barang_id: '', qty: 1, deskripsi: '' }],
+
+        items: existingItems,
+
+        selectedBarangId: '',
+        selectedQty: 1,
+        selectedDeskripsi: '',
+
         errorMessage: '',
 
-        addRow() {
-            this.rows.push({ barang_id: '', qty: 1, deskripsi: '' });
+        get availableBarang() {
+
+            return this.dataBarang.filter(
+                b => !this.items.some(
+                    i => i.barang_id == b.id
+                )
+            );
+
         },
 
-        removeRow(index) {
-            this.rows.splice(index, 1);
+        addItem() {
+
+            if (
+                !this.selectedBarangId ||
+                this.selectedQty < 1
+            ) {
+                return;
+            }
+
+            const barang =
+                this.dataBarang.find(
+                    b => b.id == this.selectedBarangId
+                );
+
+            this.items.push({
+
+                barang_id: barang.id,
+
+                nama_barang: barang.nama_barang,
+
+                satuan: barang.satuan,
+
+                qty: this.selectedQty,
+
+                deskripsi: this.selectedDeskripsi
+
+            });
+
+            this.selectedBarangId = '';
+            this.selectedQty = 1;
+            this.selectedDeskripsi = '';
+
+        },
+
+        removeItem(index) {
+
+            this.items.splice(index, 1);
+
         },
 
         validateBeforeSubmit(e) {
-            this.errorMessage = '';
-            const invalid = this.rows.some(r => !r.barang_id || !r.qty || r.qty < 1);
-            if (invalid) {
+
+            if (this.items.length === 0) {
+
                 e.preventDefault();
-                this.errorMessage = 'Pastikan semua baris barang sudah dipilih dan qty diisi minimal 1.';
+
+                this.errorMessage =
+                    'Minimal satu barang harus ada.';
+
             }
-        },
+
+        }
+
     };
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    flatpickr("#tanggal_diterima", {
+        dateFormat: "Y-m-d",
+        allowInput: true
+    });
+
+});
 </script>
-@endverbatim
+
 @endsection

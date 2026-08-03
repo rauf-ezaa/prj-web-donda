@@ -32,6 +32,10 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Stok Opname Menunggu</p>
             <p class="text-2xl font-semibold text-pink-600">{{ $stok_opname_menunggu }}</p>
         </a>
+				 <a href="{{ route('spv.pengajuan.index') }}" class="rounded-xl border border-gray-200 bg-white p-5 transition hover:shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Pengajuan Menunggu</p>
+            <p class="text-2xl font-semibold text-blue-600">{{ $pengajuan_menunggu }}</p>
+        </a>
     </div>
 
     <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">

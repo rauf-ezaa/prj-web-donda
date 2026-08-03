@@ -108,8 +108,8 @@
                         SIMANTAP
                     </h2>
                     <p class="max-w-md text-sm leading-relaxed text-gray-300">
-                        Kelola aset, peminjaman, pengembalian, dan pengajuan pengadaan barang sekolah dalam satu platform terpadu.
-                    </p>
+                  Peningkatan Pengendalian Penggunaan Barang Melalui Penerapan Sistem Informasi Terpadu di SMP Negeri 206 Jakarta
+									</p>
                 </div>
             </div>
 

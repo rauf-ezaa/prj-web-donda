@@ -21,7 +21,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('guest.home');
 
-Route::middleware(['auth', 'role:admin|spv'])->get('statistik', [LaporanController::class, 'statistik'])->name('laporan.statistik');
+Route::middleware(['auth', 'role:admin|spv'])->get('statistik/barang', [LaporanController::class, 'statistik'])->name('laporan.statistik');
+Route::middleware(['auth', 'role:admin|spv'])->get('statistik/pengajuan', [LaporanController::class, 'dataPengajuan'])->name('laporan.pengajuan');
 Route::middleware(['auth','role:staf'])->get('riwayat-saya/statistik', [RiwayatController::class, 'statistikSaya'])->name('riwayat.statistik');
 
 Route::middleware(['auth', 'role:admin|spv'])->prefix('laporan')->name('laporan.')->group(function () {
