@@ -18,7 +18,7 @@
         <span class="text-xs text-amber-600">{{ $pembelian->status_label }}</span>
     </div>
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-        Diajukan oleh {{ $pembelian->dibuatOleh->name }} · {{ $pembelian->created_at->format('d M Y, H:i') }}
+        Diajukan oleh {{ $pembelian->dibuatOleh->nama_karyawan }} · {{ $pembelian->created_at->format('d M Y, H:i') }}
     </p>
 
     @if($errors->any())

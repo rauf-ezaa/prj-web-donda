@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @php $currentPageTitle = 'Laporan ' . $modulLabel; @endphp
 @section('content')
+
+@php
+    $daftarModul = app(\App\Services\ReportService::class)->daftarModul();
+    $statusBolehCetak = $daftarModul[$modul]['status_boleh_cetak'] ?? [];
+@endphp
+
+
 <div class="p-4 md:p-6">
     <a href="{{ route('laporan.index') }}" class="mb-4 inline-block text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">← Kembali ke Laporan</a>
 
@@ -43,23 +50,33 @@
                     <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @forelse($data as $index => $row)
-                    <tr class="text-gray-700 dark:text-gray-300">
-                        <td class="px-4 py-3">{{ $data->firstItem() + $index }}</td>
-                        <td class="px-4 py-3 font-medium">{{ $row->{$kolomKode} ?? "#{$row->id}" }}</td>
-                        <td class="px-4 py-3">{{ str_replace('_', ' ', ucfirst($row->status ?? $row->status_permintaan ?? $row->status_pemintaan ?? '-')) }}</td>
-                        <td class="px-4 py-3">{{ $row->created_at->format('d M Y, H:i') }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <a href="{{ route('laporan.modul.detail-pdf', [$modul, $row->id]) }}" target="_blank">
-                                <x-ui.button size="sm" variant="secondary">📄 Detail PDF</x-ui.button>
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Tidak ada data.</td></tr>
-                @endforelse
-            </tbody>
+           <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+    @forelse($data as $index => $row)
+        @php
+            $statusRow = $row->status ?? $row->status_permintaan ?? $row->status_pemintaan ?? null;
+            $bolehCetak = in_array($statusRow, $statusBolehCetak);
+        @endphp
+        <tr class="text-gray-700 dark:text-gray-300">
+            <td class="px-4 py-3">{{ $data->firstItem() + $index }}</td>
+            <td class="px-4 py-3 font-medium">{{ $row->{$kolomKode} ?? "#{$row->id}" }}</td>
+            <td class="px-4 py-3">{{ str_replace('_', ' ', ucfirst($statusRow ?? '-')) }}</td>
+            <td class="px-4 py-3">{{ $row->created_at->format('d M Y, H:i') }}</td>
+            <td class="px-4 py-3 text-right">
+                @if($bolehCetak)
+                    <a href="{{ route('laporan.modul.detail-pdf', [$modul, $row->id]) }}" target="_blank">
+                        <x-ui.button size="sm" variant="secondary">📄 Detail PDF</x-ui.button>
+                    </a>
+                @else
+                    <span class="text-xs text-gray-400 dark:text-gray-600" title="Transaksi belum final">
+                        Belum final
+                    </span>
+                @endif
+            </td>
+        </tr>
+    @empty
+        <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Tidak ada data.</td></tr>
+    @endforelse
+</tbody>
         </table>
     </div>
 

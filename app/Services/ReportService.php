@@ -25,6 +25,8 @@ public function daftarModul(): array
                 ['label' => 'Rusak Berat', 'field' => 'qty_kembali_rusak_berat'],
                 ['label' => 'Hilang', 'field' => 'qty_kembali_hilang'],
             ],
+
+						'status_boleh_cetak' => ['approved','rejected','dipinjam','dikembalikan','selesai','dibatalkan'],
         ],
         'permintaan' => [
             'label' => 'Permintaan', 'model' => Permintaan::class,
@@ -35,6 +37,8 @@ public function daftarModul(): array
                 ['label' => 'Diminta', 'field' => 'jumlah_diminta'],
                 ['label' => 'Disetujui', 'field' => 'jumlah_disetujui'],
             ],
+
+						'status_boleh_cetak' => ['approved', 'rejected'],
         ],
         'pengajuan' => [
             'label' => 'Pengajuan', 'model' => Pengajuan::class,
@@ -44,6 +48,7 @@ public function daftarModul(): array
                 ['label' => 'Nama Barang Diajukan', 'field' => 'nama_barang_diajukan'],
                 ['label' => 'Jumlah Diajukan', 'field' => 'jumlah_diajukan'],
             ],
+					'status_boleh_cetak' => ['approved', 'rejected', 'dibatalkan'],
         ],
         'pembelian' => [
             'label' => 'Pembelian', 'model' => Pembelian::class,
@@ -54,6 +59,8 @@ public function daftarModul(): array
                 ['label' => 'Qty', 'field' => 'qty'],
                 ['label' => 'Deskripsi', 'field' => 'deskripsi'],
             ],
+						 'status_boleh_cetak' => ['selesai', 'ditolak'],
+
         ],
         'pengembalian' => [
             'label' => 'Pengembalian', 'model' => Pengembalian::class,
@@ -67,6 +74,7 @@ public function daftarModul(): array
                 ['label' => 'Hilang', 'field' => 'qty_hilang'],
                 ['label' => 'Habis Terpakai', 'field' => 'qty_habis_terpakai'],
             ],
+						 'status_boleh_cetak' => ['selesai', 'ditolak_admin', 'ditolak_spv'],
         ],
         'saldo_awal' => [
             'label' => 'Saldo Awal', 'model' => SaldoAwal::class,
@@ -76,6 +84,8 @@ public function daftarModul(): array
                 ['label' => 'Barang', 'field' => 'barang.nama_barang'],
                 ['label' => 'Qty', 'field' => 'qty'],
             ],
+
+						  'status_boleh_cetak' => ['selesai','ditolak_admin','ditolak_spv'],
         ],
         'stok_opname' => [
             'label' => 'Stok Opname', 'model' => StokOpname::class,
@@ -87,6 +97,7 @@ public function daftarModul(): array
                 ['label' => 'Stok Fisik', 'field' => 'stok_fisik'],
                 ['label' => 'Selisih', 'field' => 'selisih'],
             ],
+						 'status_boleh_cetak' => ['selesai','dibatalkan_spv'],
         ],
     ];
 }

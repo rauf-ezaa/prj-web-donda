@@ -24,7 +24,7 @@
                 <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                     <th class="px-4 py-3">No</th>
                     <th class="px-4 py-3">No. Transaksi</th>
-                    <th class="px-4 py-3">Supplier</th>
+                    <th class="px-4 py-3">No. Invoice</th>
                     <th class="px-4 py-3">Tanggal Diterima</th>
                     <th class="px-4 py-3">Status</th>
                     <th class="px-4 py-3 text-right">Aksi</th>

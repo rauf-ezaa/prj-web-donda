@@ -142,8 +142,19 @@ public function exportPdf(Request $request, string $modul)
 
 public function detailPdf(string $modul, int $id)
 {
-    $daftarModul = $this->service->daftarModul();
+     $daftarModul = $this->service->daftarModul();
     abort_unless(isset($daftarModul[$modul]), 404);
+
+    ['modul' => $modulInfo, 'row' => $row] = $this->service->detailTransaksi($modul, $id);
+
+    $statusRow = $row->status ?? $row->status_permintaan ?? $row->status_pemintaan ?? null;
+    $statusBolehCetak = $modulInfo['status_boleh_cetak'] ?? [];
+
+    abort_unless(
+        in_array($statusRow, $statusBolehCetak),
+        403,
+        'Transaksi ini belum final (masih dalam proses draft/verifikasi), belum dapat dicetak.'
+    );
 
     ['modul' => $modulInfo, 'row' => $row] = $this->service->detailTransaksi($modul, $id);
 

@@ -31,7 +31,7 @@
                         <td class="px-4 py-3">{{ $pembelians->firstItem() + $index }}</td>
                         <td class="px-4 py-3 font-medium">{{ $p->no_transaksi }}</td>
                         <td class="px-4 py-3">{{ $p->nama_supplier }}</td>
-                        <td class="px-4 py-3">{{ $p->dibuatOleh->name }}</td>
+                        <td class="px-4 py-3">{{ $p->dibuatOleh->nama_karyawan }} ({{$p->dibuatOleh->karyawan->jabatan}})</td>
                         <td class="px-4 py-3">{{ $p->tanggal_diterima->translatedFormat('d M Y') }}</td>
                         <td class="px-4 py-3 text-right">
                             <a href="{{ route('spv.pembelian.show', $p->id) }}">
