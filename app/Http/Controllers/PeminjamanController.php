@@ -16,7 +16,7 @@ public function index(Request $request)
 
     $counts = [
 				'draft' => Peminjaman::where('status','draft')->count(),
-        'pending' => Peminjaman::where('status', 'pending')->count(),
+        'pending' => Peminjaman::whereIn('status',['pending','menunggu_spv'])->count(),
         'approved' => Peminjaman::where('status', 'dipinjam')->count(),
         'rejected' => Peminjaman::where('status', 'rejected')->count(),
     ];
@@ -45,7 +45,7 @@ public function index(Request $request)
 
     match ($request->sort) {
         'draft'     => $query->where('status', 'draft'),
-        'pending'  => $query->whereIn('status', ['pending']),
+        'pending'  => $query->whereIn('status', ['pending','menunggu_spv']),
         'approved' => $query->where('status', 'dipinjam'),
         'rejected'   => $query->where('status', 'rejected'),
     };

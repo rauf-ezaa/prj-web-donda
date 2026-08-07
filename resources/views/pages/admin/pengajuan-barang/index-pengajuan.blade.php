@@ -87,7 +87,7 @@
                 <thead class="bg-gray-50 dark:bg-white/[0.02]">
                     <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400">
                         <th class="px-4 py-3">Kode</th>
-                        <th class="px-4 py-3">Nama Peminjam</th>
+                        <th class="px-4 py-3">Nama Pengaju</th>
                         <th class="px-4 py-3">Tanggal</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3 text-right">Aksi</th>

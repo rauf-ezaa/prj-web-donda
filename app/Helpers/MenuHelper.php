@@ -328,7 +328,7 @@ public static function saldoAwal(){
                     'icon' => 'dashboard',
                     ],
                     ['name' => 'Statistik Barang',
-										'path' => '/statistik',
+										'path' => '/statistik/barang',
                     'icon' => 'dashboard',
 										],
 							 ],

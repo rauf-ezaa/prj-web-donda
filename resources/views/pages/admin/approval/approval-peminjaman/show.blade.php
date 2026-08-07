@@ -29,7 +29,7 @@
         <span class="text-xs text-gray-400 font-mono">{{ $peminjaman->kode_peminjaman }}</span>
     </div>
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
-        {{ $peminjaman->requestedBy->nama_karyawan ?? '-' }} · Jabatan  · {{ $peminjaman->keperluan }}
+        {{ $peminjaman->requestedBy->nama_karyawan ?? '-' }} - {{ $peminjaman->requestedBy->karyawan->jabatan }}
 				<br>
     </p>
 

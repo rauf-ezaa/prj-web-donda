@@ -5,7 +5,7 @@
 <div class="p-4 md:p-6">
     <div class="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">Data Barang</h1>
+            <h1 class="text-title-sm font-semibold text-gray-800 dark:text-white/90">Data Barang Sarpras</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400">Kelola data master barang inventaris.</p>
         </div>
 
