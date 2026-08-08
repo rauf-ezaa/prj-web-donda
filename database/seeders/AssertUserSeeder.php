@@ -19,7 +19,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Tarsono, M.Si.',
         'nrk'           => '140121',
-        'nip'           => '',
         'jabatan'       => 'Kepala Sekolah',
         'password'      => 'password',
         'role'          => 'spv',
@@ -27,7 +26,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Dra. Menuk Resti A., M.Pd.',
         'nrk'           => '173037',
-        'nip'           => '',
         'jabatan'       => 'Kasatpel',
         'password'      => 'password',
         'role'          => 'spv',
@@ -35,7 +33,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Lina Sabila, S.E',
         'nrk'           => '212119',
-        'nip'           => '',
         'jabatan'       => 'Staff',
         'password'      => 'password',
         'role'          => 'admin',
@@ -43,7 +40,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Donda Banjarnahor, A.Md.S.I.Ak',
         'nrk'           => '222019',
-        'nip'           => '',
         'jabatan'       => 'Staff',
         'password'      => 'password',
         'role'          => 'admin',
@@ -51,7 +47,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Maryani, S.Pd.',
         'nrk'           => '212051',
-        'nip'           => '',
         'jabatan'       => 'Staff',
         'password'      => 'password',
         'role'          => 'staf',
@@ -59,7 +54,6 @@ protected array $data = [
     [
         'nama_karyawan' => 'Idaman Hosea D., S.Pd',
         'nrk'           => '218539',
-        'nip'           => '',
         'jabatan'       => 'Guru',
         'password'      => 'password',
         'role'          => 'staf',
@@ -80,7 +74,6 @@ protected array $data = [
                 $user->karyawan()->create([
                     'nama_karyawan' => $item['nama_karyawan'],
                     'nrk'           => $item['nrk'],
-                    'nip'           => $item['nip'],
                     'jabatan'       => $item['jabatan'],
                 ]);
 
